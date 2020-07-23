@@ -259,7 +259,7 @@ jumbo_static_library("browser") {
     "//ui/gfx",
   ]
 
-  if ((!is_android || enable_vr) && !is_ios) {
+  if (true || (!is_android || enable_vr) && !is_ios) {
     deps += [ ":vector_icons" ]
   }
 

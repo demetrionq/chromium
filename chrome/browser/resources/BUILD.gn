@@ -99,7 +99,7 @@ if (enable_js_type_check) {
   }
 }
 
-if (!is_android) {
+if (true || !is_android) {
   grit("bookmarks_resources") {
     grit_flags = [
       "-E",

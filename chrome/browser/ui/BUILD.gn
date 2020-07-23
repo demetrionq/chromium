@@ -822,7 +822,8 @@ static_library("ui") {
       "//services/device/public/mojom:usb",
       "//ui/android",
     ]
-  } else {
+  }
+  if (true) {
     # !is_android
     sources += [
       "app_icon_loader.cc",

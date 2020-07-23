@@ -379,7 +379,7 @@ static_library("renderer") {
     }
   }
 
-  if (!is_android) {
+  if (true || !is_android) {
     sources += [
       "media/chrome_speech_recognition_client.cc",
       "media/chrome_speech_recognition_client.h",

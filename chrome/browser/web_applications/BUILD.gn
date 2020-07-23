@@ -241,6 +241,7 @@ source_set("web_applications_unit_tests") {
   }
 }
 
+if (false) {
 source_set("web_applications_browser_tests") {
   testonly = true
 
@@ -278,6 +279,7 @@ source_set("web_applications_browser_tests") {
       "//chrome/browser/ui",
     ]
   }
+}
 }
 
 # TODO(crbug.com/877898): Erase this and move WebAppProvider into
@@ -333,6 +335,7 @@ source_set("web_applications_on_extensions_test_support") {
   ]
 }
 
+if (false) {
 group("unit_tests") {
   testonly = true
 
@@ -353,4 +356,5 @@ group("browser_tests") {
     ":web_applications_browser_tests",
     "//chrome/browser/web_applications/components:browser_tests",
   ]
+}
 }
