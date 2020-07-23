@@ -10,7 +10,7 @@ group("closure_compile") {
     "js:closure_compile_modules",
   ]
 
-  if (!is_android) {
+  if (true || !is_android) {
     deps += [
       "cr_components:closure_compile",
       "cr_elements:closure_compile",
@@ -25,7 +25,7 @@ group("modulize") {
     "js/cr/ui:modulize",
   ]
 
-  if (!is_android) {
+  if (true || !is_android) {
     public_deps += [
       "cr_components:polymer3_elements",
       "cr_elements:polymer3_elements",
