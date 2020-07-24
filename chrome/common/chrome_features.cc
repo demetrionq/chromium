@@ -48,7 +48,7 @@ const base::Feature kShow10_9ObsoleteInfobar{"Show109ObsoleteInfobar",
                                              base::FEATURE_DISABLED_BY_DEFAULT};
 #endif  // defined(OS_MACOSX)
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 // App Service related flags. See components/services/app_service/README.md.
 const base::Feature kAppServiceIntentHandling{"AppServiceIntentHandling",
                                               base::FEATURE_ENABLED_BY_DEFAULT};
@@ -356,7 +356,7 @@ const base::Feature kGdiTextPrinting{"GdiTextPrinting",
 const base::Feature kGeoLanguage{"GeoLanguage",
                                  base::FEATURE_DISABLED_BY_DEFAULT};
 
-#if defined(OS_CHROMEOS)
+#if true || defined(OS_CHROMEOS)
 // Enables or disables the Happiness Tracking System for the device.
 const base::Feature kHappinessTrackingSystem{"HappinessTrackingSystem",
                                              base::FEATURE_DISABLED_BY_DEFAULT};
@@ -502,7 +502,7 @@ const base::Feature kAcknowledgeNtpOverrideOnDeactivate{
 const base::Feature kMixedContentSiteSetting{"MixedContentSiteSetting",
                                              base::FEATURE_ENABLED_BY_DEFAULT};
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 const base::Feature kOnConnectNative{"OnConnectNative",
                                      base::FEATURE_DISABLED_BY_DEFAULT};
 #endif

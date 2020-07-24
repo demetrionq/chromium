@@ -90,12 +90,7 @@ std::string GetProfileId(const Profile* profile) {
 // Returns last policy fetch timestamp of machine level user cloud policy if
 // it exists. Otherwise, returns zero.
 int64_t GetMachineLevelUserCloudPolicyFetchTimestamp() {
-  policy::MachineLevelUserCloudPolicyManager* manager =
-      g_browser_process->browser_policy_connector()
-          ->machine_level_user_cloud_policy_manager();
-  if (!manager || !manager->IsClientRegistered())
-    return 0;
-  return manager->core()->client()->last_policy_timestamp().ToJavaTime();
+  return 0;
 }
 
 void AppendAdditionalBrowserInformation(em::ChromeDesktopReportRequest* request,
@@ -397,6 +392,9 @@ base::FilePath GetEndpointVerificationDir() {
   if (true)
 #endif
     return path;
+
+// TODO CHECK begin
+/*
 #if defined(OS_LINUX)
   path = path.AppendASCII("google");
 #else
@@ -404,6 +402,8 @@ base::FilePath GetEndpointVerificationDir() {
 #endif
   path = path.AppendASCII("Endpoint Verification");
   return path;
+*/
+// TODO CHECK end
 }
 
 }  // namespace

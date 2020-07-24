@@ -81,6 +81,7 @@ class PreMenuEventDispatchHandler : public ui::EventHandler,
 #endif  // OS_MACOSX
 
 void TransferGesture(Widget* source, Widget* target) {
+/*
 #if defined(OS_MACOSX)
   NOTIMPLEMENTED();
 #else   // !defined(OS_MACOSX)
@@ -88,6 +89,7 @@ void TransferGesture(Widget* source, Widget* target) {
       source->GetNativeView(), target->GetNativeView(),
       ui::TransferTouchesBehavior::kDontCancel);
 #endif  // defined(OS_MACOSX)
+*/
 }
 
 }  // namespace internal
@@ -138,11 +140,13 @@ void MenuHost::InitMenuHost(Widget* parent,
 #endif
   Init(std::move(params));
 
+/*
 #if !defined(OS_MACOSX)
   pre_dispatch_handler_ =
       std::make_unique<internal::PreMenuEventDispatchHandler>(
           menu_controller, submenu_, GetNativeView());
 #endif
+*/
 
   DCHECK(!owner_);
   owner_ = parent;

@@ -106,7 +106,7 @@ class PasswordManagerPresenter
       const std::string& sort_key,
       password_manager::PasswordManagerClient* client);
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
   // Requests to reveal the plain text password corresponding to |sort_key|. If
   // |sort_key| is a valid key into |password_map_|, runs |callback| with the
   // corresponding value, or nullopt otherwise.

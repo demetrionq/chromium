@@ -48,6 +48,15 @@
 #include "ui/base/l10n/time_format.h"
 #include "url/gurl.h"
 
+// TODO CHECK begin
+#ifndef IDS_SETTINGS_PASSWORDS_JUST_NOW
+#define IDS_SETTINGS_PASSWORDS_JUST_NOW 4290
+#endif
+#ifndef IDS_SETTINGS_PASSWORDS_ANDROID_APP
+#define IDS_SETTINGS_PASSWORDS_ANDROID_APP 4327
+#endif
+// TODO CHECK end
+
 namespace extensions {
 
 namespace {

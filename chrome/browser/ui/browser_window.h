@@ -31,8 +31,10 @@
 #include "ui/gfx/native_widget_types.h"
 #include "url/origin.h"
 
+#if 0
 #if defined(OS_ANDROID)
 #error This file should only be included on desktop.
+#endif
 #endif
 
 class Browser;

@@ -21,8 +21,10 @@
 #include "chrome/browser/ui/webui/signin/signin_email_confirmation_dialog.h"
 #endif
 
+#if 0
 #if defined(OS_ANDROID)
 #error This file should only be included on desktop.
+#endif
 #endif
 
 class Browser;

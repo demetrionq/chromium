@@ -442,7 +442,7 @@ void PasswordManagerPresenter::OnMovePasswordToAccountCompleted(
   move_to_account_helpers_.erase(done_helper_it);
 }
 
-#if !defined(OS_ANDROID)  // This is never called on Android.
+#if true || !defined(OS_ANDROID)  // This is never called on Android.
 void PasswordManagerPresenter::RequestPlaintextPassword(
     const std::string& sort_key,
     password_manager::PlaintextReason reason,

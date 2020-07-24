@@ -44,6 +44,16 @@
 #include "ui/views/style/platform_style.h"
 #include "ui/views/vector_icons.h"
 
+// TODO CHECK begin
+#ifndef IDR_FOLDER_CLOSED
+#define IDR_FOLDER_CLOSED 26992
+#endif
+
+#ifndef IDR_FOLDER_OPEN
+#define IDR_FOLDER_OPEN 27573
+#endif
+// TODO CHECK end
+
 using ui::TreeModel;
 using ui::TreeModelNode;
 

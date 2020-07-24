@@ -65,6 +65,12 @@
 #include "storage/browser/blob/blob_data_handle.h"
 #include "ui/base/l10n/l10n_util.h"
 
+// TODO CHECK begin
+#ifndef IDS_MEDIA_GALLERIES_DIALOG_ADD_GALLERY_TITLE
+#define IDS_MEDIA_GALLERIES_DIALOG_ADD_GALLERY_TITLE 7819
+#endif
+// TODO CHECK end
+
 using content::WebContents;
 using storage_monitor::MediaStorageUtil;
 using storage_monitor::StorageInfo;

@@ -190,17 +190,25 @@ class BubbleDialogDelegate::AnchorWidgetObserver : public WidgetObserver,
   AnchorWidgetObserver(BubbleDialogDelegate* owner, Widget* widget)
       : owner_(owner) {
     widget_observer_.Add(widget);
+// TODO CHECK begin
+/*
 #if !defined(OS_MACOSX)
     window_observer_.Add(widget->GetNativeWindow());
 #endif
+*/
+// TODO CHECK end
   }
   ~AnchorWidgetObserver() override = default;
 
   // WidgetObserver:
   void OnWidgetDestroying(Widget* widget) override {
+// TODO CHECK begin
+/*
 #if !defined(OS_MACOSX)
     window_observer_.Remove(widget->GetNativeWindow());
 #endif
+*/
+// TODO CHECK end
     widget_observer_.Remove(widget);
     owner_->OnAnchorWidgetDestroying();
     // |this| may be destroyed here!
@@ -549,6 +557,8 @@ gfx::Rect BubbleDialogDelegate::GetAnchorRect() const {
   anchor_rect_ = GetAnchorView()->GetAnchorBoundsInScreen();
   anchor_rect_->Inset(anchor_view_insets_);
 
+// TODO CHECK begin
+/*
 #if !defined(OS_MACOSX)
   // GetAnchorBoundsInScreen returns values that take anchor widget's
   // translation into account, so undo that here. Without this, features which
@@ -562,6 +572,8 @@ gfx::Rect BubbleDialogDelegate::GetAnchorRect() const {
   if (!transform.IsIdentity())
     anchor_rect_->Offset(-gfx::ToRoundedVector2d(transform.To2dTranslation()));
 #endif
+*/
+// TODO CHECK end
 
   return anchor_rect_.value();
 }

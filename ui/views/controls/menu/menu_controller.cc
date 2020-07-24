@@ -875,8 +875,10 @@ void MenuController::OnGestureEvent(SubmenuView* source,
 #if defined(OS_MACOSX)
     NOTIMPLEMENTED();
 #else   // !defined(OS_MACOSX)
+/*
     event->ConvertLocationToTarget(source->GetWidget()->GetNativeWindow(),
                                    owner()->GetNativeWindow());
+*/
 #endif  // defined(OS_MACOSX)
     owner()->OnGestureEvent(event);
     // Reset |send_gesture_events_to_owner_| when the first gesture ends.

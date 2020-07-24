@@ -26,7 +26,7 @@ namespace features {
 // All features in alphabetical order. The features should be documented
 // alongside the definition of their values in the .cc file.
 
-#if defined(OS_ANDROID)
+#if true || defined(OS_ANDROID)
 COMPONENT_EXPORT(CHROME_FEATURES)
 extern const base::Feature kAddToHomescreenMessaging;
 COMPONENT_EXPORT(CHROME_FEATURES)
@@ -220,7 +220,7 @@ COMPONENT_EXPORT(CHROME_FEATURES) extern const base::Feature kGdiTextPrinting;
 
 COMPONENT_EXPORT(CHROME_FEATURES) extern const base::Feature kGeoLanguage;
 
-#if defined(OS_CHROMEOS)
+#if true || defined(OS_CHROMEOS)
 COMPONENT_EXPORT(CHROME_FEATURES)
 extern const base::Feature kHappinessTrackingSystem;
 #endif
@@ -313,7 +313,7 @@ extern const base::Feature kAcknowledgeNtpOverrideOnDeactivate;
 COMPONENT_EXPORT(CHROME_FEATURES)
 extern const base::Feature kMixedContentSiteSetting;
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 COMPONENT_EXPORT(CHROME_FEATURES) extern const base::Feature kOnConnectNative;
 #endif
 
