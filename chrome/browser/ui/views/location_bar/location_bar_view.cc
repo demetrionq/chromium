@@ -373,6 +373,7 @@ void LocationBarView::SelectAll() {
 }
 
 void LocationBarView::FocusLocation(bool is_user_initiated) {
+#if 0
   const bool omnibox_already_focused = omnibox_view_->HasFocus();
 
   omnibox_view_->SetFocus(is_user_initiated);
@@ -385,10 +386,13 @@ void LocationBarView::FocusLocation(bool is_user_initiated) {
 
   omnibox_view_->SelectAll(true);
   omnibox_view()->model()->Unelide();
+#endif
 }
 
 void LocationBarView::Revert() {
+#if 0
   omnibox_view_->RevertAll();
+#endif
 }
 
 OmniboxView* LocationBarView::GetOmniboxView() {
@@ -396,7 +400,7 @@ OmniboxView* LocationBarView::GetOmniboxView() {
 }
 
 bool LocationBarView::HasFocus() const {
-  return omnibox_view_ && omnibox_view_->model()->has_focus();
+  return false;
 }
 
 void LocationBarView::GetAccessibleNodeData(ui::AXNodeData* node_data) {
@@ -405,9 +409,12 @@ void LocationBarView::GetAccessibleNodeData(ui::AXNodeData* node_data) {
 
 gfx::Size LocationBarView::GetMinimumSize() const {
   const int height = GetLayoutConstant(LOCATION_BAR_HEIGHT);
+#if 0
   if (!IsInitialized())
+#endif
     return gfx::Size(0, height);
 
+#if 0
   const int inset_width = GetInsets().width();
   const int padding = GetLayoutConstant(LOCATION_BAR_ELEMENT_PADDING);
   const int leading_width = GetMinimumLeadingWidth();
@@ -454,14 +461,18 @@ gfx::Size LocationBarView::CalculatePreferredSize() const {
     width += trailing_width + padding;
 
   return gfx::Size(width, height);
+#endif
 }
 
 void LocationBarView::OnKeywordFaviconFetched(const gfx::Image& icon) {
+#if 0
   DCHECK(!icon.IsEmpty());
   selected_keyword_view_->SetCustomImage(icon);
+#endif
 }
 
 void LocationBarView::Layout() {
+#if 0
   if (!IsInitialized())
     return;
 
@@ -679,10 +690,12 @@ void LocationBarView::Layout() {
   }
 
   View::Layout();
+#endif
 }
 
 void LocationBarView::OnThemeChanged() {
   views::View::OnThemeChanged();
+#if 0
   // ToolbarView::Init() adds |this| to the view hierarchy before initializing,
   // which will trigger an early theme change.
   if (!IsInitialized())
@@ -695,14 +708,18 @@ void LocationBarView::OnThemeChanged() {
 
   RefreshBackground();
   RefreshClearAllButtonIcon();
+#endif
 }
 
 void LocationBarView::ChildPreferredSizeChanged(views::View* child) {
+#if 0
   Layout();
   SchedulePaint();
+#endif
 }
 
 void LocationBarView::SetOmniboxAdditionalText(const base::string16& text) {
+#if 0
   DCHECK(OmniboxFieldTrial::IsRichAutocompletionEnabled() || text.empty());
   if (!OmniboxFieldTrial::IsRichAutocompletionEnabled())
     return;
@@ -736,15 +753,17 @@ void LocationBarView::Update(WebContents* contents) {
     qr_generator_icon->SetVisible(false);
 
   OnChanged();  // NOTE: Calls Layout().
+#endif
 }
 
 void LocationBarView::ResetTabState(WebContents* contents) {
+#if 0
   omnibox_view_->ResetTabState(contents);
+#endif
 }
 
 bool LocationBarView::ActivateFirstInactiveBubbleForAccessibility() {
-  return page_action_icon_controller_
-      ->ActivateFirstInactiveBubbleForAccessibility();
+  return false;
 }
 
 void LocationBarView::UpdateWithoutTabRestore() {

@@ -95,7 +95,7 @@ declare_args() {
   # For unofficial (e.g. development) builds and non-Chrome branded (e.g. Cronet
   # which doesn't use Crashpad, crbug.com/479283) builds it's useful to be able
   # to unwind at runtime.
-  exclude_unwind_tables = is_official_build
+  exclude_unwind_tables = false
 
   # Where to redirect clang crash diagnoses
   clang_diagnostic_dir =

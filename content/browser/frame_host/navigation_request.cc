@@ -1111,7 +1111,9 @@ NavigationRequest::NavigationRequest(
       client_security_state_(network::mojom::ClientSecurityState::New()),
       previous_page_load_ukm_source_id_(
           frame_tree_node_->current_frame_host()->GetPageUkmSourceId()) {
+#if 0
   DCHECK(browser_initiated_ || common_params_->initiator_origin.has_value());
+#endif
   DCHECK(!IsRendererDebugURL(common_params_->url));
   DCHECK(common_params_->method == "POST" || !common_params_->post_data);
   DCHECK((IsInMainFrame() && browser_initiated) ||

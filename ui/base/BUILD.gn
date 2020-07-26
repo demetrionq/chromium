@@ -456,6 +456,11 @@ jumbo_component("base") {
     deps += [ "//third_party/re2" ]
   }
 
+  sources += [
+    "dragdrop/os_exchange_data_provider_android.cc",
+    "dragdrop/os_exchange_data_provider_android.h",
+  ]
+
   if (!is_ios) {
     # iOS does not use Chromium-specific code for event handling.
     public_deps += [
@@ -562,7 +567,7 @@ jumbo_component("base") {
     ]
   }
 
-  if (!toolkit_views && !use_aura) {
+  if (false && !toolkit_views && !use_aura) {
     sources -= [
       "dragdrop/drag_drop_types.h",
       "dragdrop/drop_target_event.cc",
@@ -579,14 +584,6 @@ jumbo_component("base") {
   if (is_android) {
     deps += [ ":ui_base_jni_headers" ]
     libs += [ "jnigraphics" ]
-
-    sources -= [
-      "l10n/l10n_font_util.cc",
-      "models/button_menu_item_model.cc",
-      "pointer/touch_editing_controller.cc",
-      "theme_provider.cc",
-      "ui_base_types.cc",
-    ]
   }
 
   if (is_android || is_ios) {

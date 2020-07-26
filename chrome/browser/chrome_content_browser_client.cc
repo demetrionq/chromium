@@ -448,7 +448,7 @@
 #include "ui/accessibility/accessibility_features.h"
 #endif  // !defined(OS_CHROMEOS)
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 #include "chrome/browser/badging/badge_manager.h"
 #include "chrome/browser/devtools/chrome_devtools_manager_delegate.h"
 #include "chrome/browser/devtools/devtools_window.h"
@@ -1317,6 +1317,7 @@ void ChromeContentBrowserClient::SetApplicationLocale(
 std::unique_ptr<content::BrowserMainParts>
 ChromeContentBrowserClient::CreateBrowserMainParts(
     const content::MainFunctionParams& parameters) {
+  LOG(ERROR) << "[Kiwi] ChromeContentBrowserClient::CreateBrowserMainParts - Step 1";
   std::unique_ptr<ChromeBrowserMainParts> main_parts;
   // Construct the Main browser parts based on the OS type.
 #if defined(OS_WIN)
@@ -1342,12 +1343,14 @@ ChromeContentBrowserClient::CreateBrowserMainParts(
   main_parts =
       std::make_unique<ChromeBrowserMainParts>(parameters, startup_data_);
 #endif
+  LOG(ERROR) << "[Kiwi] ChromeContentBrowserClient::CreateBrowserMainParts - Step 2";
 
   bool add_profiles_extra_parts = true;
 #if defined(OS_ANDROID)
   if (startup_data_->HasBuiltProfilePrefService())
     add_profiles_extra_parts = false;
 #endif
+  LOG(ERROR) << "[Kiwi] ChromeContentBrowserClient::CreateBrowserMainParts - Step 3";
   if (add_profiles_extra_parts)
     chrome::AddProfilesExtraParts(main_parts.get());
 
@@ -1362,6 +1365,7 @@ ChromeContentBrowserClient::CreateBrowserMainParts(
 #endif
 #endif
 
+  LOG(ERROR) << "[Kiwi] ChromeContentBrowserClient::CreateBrowserMainParts - Step 4";
 #if defined(OS_CHROMEOS)
   // TODO(jamescook): Combine with ChromeBrowserMainPartsChromeos.
   main_parts->AddParts(std::make_unique<ChromeBrowserMainExtraPartsAsh>());
@@ -1383,6 +1387,7 @@ ChromeContentBrowserClient::CreateBrowserMainParts(
 
   main_parts->AddParts(std::make_unique<ChromeBrowserMainExtraPartsMemory>());
 
+  LOG(ERROR) << "[Kiwi] ChromeContentBrowserClient::CreateBrowserMainParts - Step 6";
   chrome::AddMetricsExtraParts(main_parts.get());
 
   // Always add ChromeBrowserMainExtraPartsGpu last to make sure

@@ -213,6 +213,7 @@ static_library("extensions") {
     "api/image_writer_private/operation_manager.h",
     "api/image_writer_private/removable_storage_provider.cc",
     "api/image_writer_private/removable_storage_provider.h",
+    "api/image_writer_private/removable_storage_provider_android.cc",
     "api/image_writer_private/unzip_helper.cc",
     "api/image_writer_private/unzip_helper.h",
     "api/image_writer_private/write_from_file_operation.cc",
@@ -600,6 +601,7 @@ static_library("extensions") {
     "forced_extensions/install_stage_tracker_factory.h",
     "global_shortcut_listener.cc",
     "global_shortcut_listener.h",
+    "global_shortcut_listener_android.cc",
     "install_gate.h",
     "install_observer.cc",
     "install_observer.h",
@@ -668,6 +670,8 @@ static_library("extensions") {
     "sync_bundle.cc",
     "sync_bundle.h",
     "system_display/display_info_provider.h",
+    "system_display/display_info_provider_android.cc",
+    "system_display/display_info_provider_android.h",
     "tab_helper.cc",
     "tab_helper.h",
     "theme_installed_infobar_delegate.cc",
@@ -764,7 +768,6 @@ static_library("extensions") {
     "//chrome/browser/engagement:mojo_bindings",
     "//chrome/browser/image_decoder",
     "//chrome/browser/media/router",
-    "//chrome/browser/media/router/discovery",
     "//chrome/browser/nearby_sharing/common",
     "//chrome/browser/resource_coordinator:intervention_policy_database_proto",
     "//chrome/browser/resource_coordinator:mojo_bindings",
@@ -1126,6 +1129,13 @@ static_library("extensions") {
         "//ui/events/platform/x11",
       ]
     }
+  }
+
+  if (true || !is_android) {
+    sources += [
+      "api/processes/processes_api.cc",
+      "api/processes/processes_api.h",
+    ]
   }
 
   if (is_win || is_mac) {

@@ -333,7 +333,7 @@ ContentSettingsContentSettingGetResourceIdentifiersFunction::Run() {
     return RespondNow(NoArguments());
   }
 
-#if BUILDFLAG(ENABLE_PLUGINS)
+#if 0
   content::PluginService::GetInstance()->GetPlugins(base::BindOnce(
       &ContentSettingsContentSettingGetResourceIdentifiersFunction::
           OnGotPlugins,
@@ -346,6 +346,7 @@ ContentSettingsContentSettingGetResourceIdentifiersFunction::Run() {
 #if BUILDFLAG(ENABLE_PLUGINS)
 void ContentSettingsContentSettingGetResourceIdentifiersFunction::OnGotPlugins(
     const std::vector<content::WebPluginInfo>& plugins) {
+#if 0
   DCHECK_CURRENTLY_ON(BrowserThread::UI);
   PluginFinder* finder = PluginFinder::GetInstance();
   std::set<std::string> group_identifiers;
@@ -365,6 +366,7 @@ void ContentSettingsContentSettingGetResourceIdentifiersFunction::OnGotPlugins(
     list->Append(std::move(dict));
   }
   Respond(OneArgument(std::move(list)));
+#endif
 }
 #endif  // BUILDFLAG(ENABLE_PLUGINS)
 

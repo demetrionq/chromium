@@ -222,7 +222,8 @@ void XmlDownloader::Refresh() {
 BrowserSwitcherService::BrowserSwitcherService(Profile* profile)
     : profile_(profile),
       prefs_(profile),
-      driver_(new AlternativeBrowserDriverImpl(&prefs_)),
+//      driver_(new AlternativeBrowserDriverImpl(&prefs_)),
+      driver_(nullptr),
       sitelist_(new BrowserSwitcherSitelistImpl(&prefs_)) {
   prefs_subscription_ =
       prefs().RegisterPrefsChangedCallback(base::BindRepeating(

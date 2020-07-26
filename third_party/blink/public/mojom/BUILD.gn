@@ -187,6 +187,7 @@ mojom("mojom_platform") {
     "worker/worker_options.mojom",
   ]
 
+  sources += [ "serial/serial.mojom" ]
   if (is_win) {
     sources += [ "dwrite_font_proxy/dwrite_font_proxy.mojom" ]
   }

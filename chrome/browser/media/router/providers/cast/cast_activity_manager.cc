@@ -54,6 +54,7 @@ CastActivityManager::CastActivityManager(
   DCHECK(media_router_);
   DCHECK(logger_);
   message_handler_->AddObserver(this);
+#if 0
   for (const auto& sink_id_session : session_tracker_->GetSessions()) {
     const MediaSinkInternal* sink =
         media_sink_service_->GetSinkById(sink_id_session.first);
@@ -61,6 +62,7 @@ CastActivityManager::CastActivityManager(
       break;
     AddNonLocalActivity(*sink, *sink_id_session.second);
   }
+#endif
   session_tracker_->AddObserver(this);
 }
 
@@ -184,6 +186,7 @@ void CastActivityManager::DoLaunchSession(DoLaunchSessionParams params) {
       cast_source.supported_app_types());
   std::string app_id = ChooseAppId(cast_source, params.sink);
 
+#if 0
   mojom::RoutePresentationConnectionPtr presentation_connection;
 
   CastActivity* activity_ptr =
@@ -228,9 +231,11 @@ void CastActivityManager::DoLaunchSession(DoLaunchSessionParams params) {
   std::move(params.callback)
       .Run(route, std::move(presentation_connection),
            /* error_text */ base::nullopt, RouteRequestResult::ResultCode::OK);
+#endif
 }
 
 AppActivity* CastActivityManager::FindActivityForSessionJoin(
+    return false;
     const CastMediaSource& cast_source,
     const std::string& presentation_id) {
   // We only allow joining by session ID. The Cast SDK uses
@@ -274,9 +279,11 @@ AppActivity* CastActivityManager::FindActivityForAutoJoin(
                      const AppActivity* activity = pair.second;
                      if (!activity->route().is_local())
                        return false;
-                     if (!cast_source.ContainsApp(activity->app_id()))
+//                     if (!cast_source.ContainsApp(record->app_id()))
                        return false;
+#if 0
                      return activity->HasJoinableClient(policy, origin, tab_id);
+#endif
                    });
   return it == app_activities_.end() ? nullptr : it->second;
 }
@@ -316,20 +323,19 @@ void CastActivityManager::JoinSession(
   // RouteRequestResult::ResultCode.  The check is currently performed inside
   // CanJoinSession(), and the behavior is consistent with the old
   // implementation, which never reports an INCOGNITO_MISMATCH error.
-
+#if 0
   const MediaSinkInternal* sink =
       media_sink_service_->GetSinkById(activity->route().media_sink_id());
   if (!sink) {
-    logger_->LogError(mojom::LogCategory::kRoute, kLoggerComponent,
-                      "Cannot find the sink to join with sind_id.",
-                      activity->route().media_sink_id(),
-                      cast_source.source_id(), presentation_id);
+#else
+  {
+#endif
     std::move(callback).Run(base::nullopt, nullptr,
                             std::string("Sink not found"),
                             RouteRequestResult::ResultCode::SINK_NOT_FOUND);
     return;
   }
-
+#if 0
   mojom::RoutePresentationConnectionPtr presentation_connection =
       activity->AddClient(cast_source, origin, tab_id);
 
@@ -347,9 +353,7 @@ void CastActivityManager::JoinSession(
   NotifyAllOnRoutesUpdated();
   std::move(callback).Run(activity->route(), std::move(presentation_connection),
                           base::nullopt, RouteRequestResult::ResultCode::OK);
-  logger_->LogInfo(mojom::LogCategory::kRoute, kLoggerComponent,
-                   "Successfully joined session", sink->id(),
-                   cast_source.source_id(), presentation_id);
+#endif
 }
 
 void CastActivityManager::OnActivityStopped(const std::string& route_id) {
@@ -423,7 +427,7 @@ void CastActivityManager::TerminateSession(
     return;
   }
 
-  const MediaSinkInternal* sink = media_sink_service_->GetSinkByRoute(route);
+  const MediaSinkInternal* sink = nullptr; //media_sink_service_->GetSinkByRoute(route);
   CHECK(sink);
 
   // TODO(jrw): Get the real client ID.
@@ -452,8 +456,8 @@ CastActivityManager::FindActivityByChannelId(int channel_id) {
   return std::find_if(
       activities_.begin(), activities_.end(), [channel_id, this](auto& entry) {
         const MediaRoute& route = entry.second->route();
-        const MediaSinkInternal* sink =
-            media_sink_service_->GetSinkByRoute(route);
+        const MediaSinkInternal* sink = nullptr;
+//            media_sink_service_->GetSinkByRoute(route);
         return sink && sink->cast_data().cast_channel_id == channel_id;
       });
 }
@@ -668,6 +672,7 @@ void CastActivityManager::SendRouteJsonMessage(
 
 void CastActivityManager::AddNonLocalActivity(const MediaSinkInternal& sink,
                                               const CastSession& session) {
+#if 0
   const MediaSink::Id& sink_id = sink.sink().id();
 
   // We derive the MediaSource from a session using the app ID.
@@ -697,6 +702,7 @@ void CastActivityManager::AddNonLocalActivity(const MediaSinkInternal& sink,
     activity_ptr = AddAppActivity(route, app_id);
   }
   activity_ptr->SetOrUpdateSession(session, sink, hash_token_);
+#endif
 }
 
 const MediaRoute* CastActivityManager::GetRoute(

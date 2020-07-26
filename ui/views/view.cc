@@ -2414,6 +2414,7 @@ void View::PropagateRemoveNotifications(View* old_parent,
 
 void View::PropagateAddNotifications(const ViewHierarchyChangedDetails& details,
                                      bool is_added_to_widget) {
+#if 0
   // When a view is added to a Widget hierarchy, RegisterPendingAccelerators()
   // will be called for the added view and all its descendants in pre-order.
   // This means that descendant views will register their accelerators after
@@ -2435,6 +2436,7 @@ void View::PropagateAddNotifications(const ViewHierarchyChangedDetails& details,
     for (ViewObserver& observer : observers_)
       observer.OnViewAddedToWidget(this);
   }
+#endif
 }
 
 void View::PropagateNativeViewHierarchyChanged() {

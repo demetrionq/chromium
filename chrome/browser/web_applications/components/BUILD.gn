@@ -102,6 +102,14 @@ source_set("components") {
     ]
   }
 
+  if (is_android) {
+    sources += [
+      "web_app_shortcut_android.h",
+      "web_app_shortcut_android.cc",
+    ]
+  }
+
+
   if (is_win) {
     sources += [
       "web_app_file_handler_registration_win.cc",
@@ -194,7 +202,6 @@ source_set("unit_tests") {
     "//chrome/browser/web_applications:web_applications",
     "//chrome/browser/web_applications:web_applications_test_support",
     "//chrome/browser/web_applications/extensions:extensions",
-    "//chrome/test:test_support",
     "//content/public/browser",
     "//skia",
     "//testing/gmock",
@@ -224,8 +231,6 @@ source_set("browser_tests") {
   deps = [
     ":components",
     "//chrome/browser/web_applications:web_applications_test_support",
-    "//chrome/test:test_support",
-    "//chrome/test:test_support_ui",
     "//net:test_support",
   ]
 }

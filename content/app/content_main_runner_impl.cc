@@ -427,6 +427,7 @@ class ContentClientInitializer {
   static void Set(const std::string& process_type,
                   ContentMainDelegate* delegate) {
     ContentClient* content_client = GetContentClient();
+    LOG(ERROR) << "[Kiwi] ContentClientInitializer - Step 1";
     if (process_type.empty())
       content_client->browser_ = delegate->CreateContentBrowserClient();
 
@@ -467,6 +468,7 @@ int RunZygote(ContentMainDelegate* delegate) {
     {switches::kPpapiPluginProcess, PpapiPluginMain},
 #endif
   };
+  LOG(ERROR) << "[Kiwi] ContentClientInitializer - RunZygote";
 
   std::vector<std::unique_ptr<ZygoteForkDelegate>> zygote_fork_delegates;
   delegate->ZygoteStarting(&zygote_fork_delegates);
@@ -518,9 +520,11 @@ static void RegisterMainThreadFactories() {
 // Returns the exit code for this process.
 int RunBrowserProcessMain(const MainFunctionParams& main_function_params,
                           ContentMainDelegate* delegate) {
+  LOG(ERROR) << "[Kiwi] RunBrowserProcessMain - Step 1";
   int exit_code = delegate->RunProcess("", main_function_params);
   if (exit_code >= 0)
     return exit_code;
+  LOG(ERROR) << "[Kiwi] RunBrowserProcessMain - Step 2";
   return BrowserMain(main_function_params);
 }
 
@@ -580,6 +584,7 @@ int ContentMainRunnerImpl::TerminateForFatalInitializationError() {
 }
 
 int ContentMainRunnerImpl::Initialize(const ContentMainParams& params) {
+  LOG(ERROR) << "[Kiwi] ContentMainRunnerImpl::Initialize - Step 1";
   ui_task_ = params.ui_task;
   created_main_parts_closure_ = params.created_main_parts_closure;
 
@@ -876,6 +881,8 @@ int ContentMainRunnerImpl::Run(bool start_service_manager_only) {
 
   RegisterMainThreadFactories();
 
+  LOG(ERROR) << "[Kiwi] ContentClientInitializer - Pre RunServiceManager";
+
   if (process_type.empty())
     return RunServiceManager(main_params, start_service_manager_only);
 
@@ -889,24 +896,32 @@ int ContentMainRunnerImpl::RunServiceManager(MainFunctionParams& main_params,
                        TRACE_EVENT_SCOPE_THREAD);
   if (is_browser_main_loop_started_)
     return -1;
+  LOG(ERROR) << "[Kiwi] ContentClientInitializer - Pre RunServiceManager - Step 2";
 
   bool should_start_service_manager_only = start_service_manager_only;
   if (!service_manager_environment_) {
+    LOG(ERROR) << "[Kiwi] ContentClientInitializer - Pre RunServiceManager - Step 3";
     if (delegate_->ShouldCreateFeatureList()) {
+      LOG(ERROR) << "[Kiwi] ContentClientInitializer - Pre RunServiceManager - Step 3-1";
       // This is intentionally leaked since it needs to live for the duration
       // of the process and there's no benefit in cleaning it up at exit.
+      LOG(ERROR) << "[Kiwi] ContentClientInitializer - Pre RunServiceManager - Step 3-2";
       base::FieldTrialList* leaked_field_trial_list =
           SetUpFieldTrialsAndFeatureList().release();
+      LOG(ERROR) << "[Kiwi] ContentClientInitializer - Pre RunServiceManager - Step 3-3";
       ANNOTATE_LEAKING_OBJECT_PTR(leaked_field_trial_list);
       ignore_result(leaked_field_trial_list);
+      LOG(ERROR) << "[Kiwi] ContentClientInitializer - Pre RunServiceManager - Step 3-4";
       delegate_->PostFieldTrialInitialization();
     }
+    LOG(ERROR) << "[Kiwi] ContentClientInitializer - Pre RunServiceManager - Step 3a";
 
     if (GetContentClient()->browser()->ShouldCreateThreadPool()) {
       // Create and start the ThreadPool early to allow upcoming code to use
       // the post_task.h API.
       base::ThreadPoolInstance::Create("Browser");
     }
+    LOG(ERROR) << "[Kiwi] ContentClientInitializer - Pre RunServiceManager - Step 3b";
 
     delegate_->PreCreateMainMessageLoop();
 #if defined(OS_WIN)
@@ -922,8 +937,10 @@ int ContentMainRunnerImpl::RunServiceManager(MainFunctionParams& main_params,
     // incorrect to post to a BrowserThread before this point. This instantiates
     // and binds the MessageLoopForUI on the main thread (but it's only labeled
     // as BrowserThread::UI in BrowserMainLoop::MainMessageLoopStart).
+    LOG(ERROR) << "[Kiwi] ContentClientInitializer - Pre RunServiceManager - Step 3c";
     BrowserTaskExecutor::Create();
 
+    LOG(ERROR) << "[Kiwi] ContentClientInitializer - Pre RunServiceManager - Step 3d";
     delegate_->PostEarlyInitialization(main_params.ui_task != nullptr);
 
     // The hang watcher needs to be started once the feature list is available
@@ -935,12 +952,16 @@ int ContentMainRunnerImpl::RunServiceManager(MainFunctionParams& main_params,
     }
 
     if (GetContentClient()->browser()->ShouldCreateThreadPool()) {
+      LOG(ERROR) << "[Kiwi] ContentClientInitializer - Pre RunServiceManager - Step 3e-1";
       // The FeatureList needs to create before starting the ThreadPool.
       StartBrowserThreadPool();
+      LOG(ERROR) << "[Kiwi] ContentClientInitializer - Pre RunServiceManager - Step 3e-2";
     }
+    LOG(ERROR) << "[Kiwi] ContentClientInitializer - Pre RunServiceManager - Step 3f";
 
     BrowserTaskExecutor::PostFeatureListSetup();
 
+    LOG(ERROR) << "[Kiwi] ContentClientInitializer - Pre RunServiceManager - Step 3g";
     tracing::InitTracingPostThreadPoolStartAndFeatureList();
 
 #if defined(OS_ANDROID)
@@ -950,13 +971,16 @@ int ContentMainRunnerImpl::RunServiceManager(MainFunctionParams& main_params,
     if (should_start_service_manager_only)
       ForceInProcessNetworkService(true);
 
+    LOG(ERROR) << "[Kiwi] ContentClientInitializer - Pre RunServiceManager - Step 3h";
     discardable_shared_memory_manager_ =
         std::make_unique<discardable_memory::DiscardableSharedMemoryManager>();
 
+    LOG(ERROR) << "[Kiwi] ContentClientInitializer - Pre RunServiceManager - Step 3i";
     // PowerMonitor is needed in reduced mode. BrowserMainLoop will safely skip
     // initializing it again if it has already been initialized.
     base::PowerMonitor::Initialize(
         std::make_unique<base::PowerMonitorDeviceSource>());
+    LOG(ERROR) << "[Kiwi] ContentClientInitializer - Pre RunServiceManager - Step 3j";
 
     service_manager_environment_ = std::make_unique<ServiceManagerEnvironment>(
         BrowserTaskExecutor::CreateIOThread());
@@ -973,6 +997,7 @@ int ContentMainRunnerImpl::RunServiceManager(MainFunctionParams& main_params,
 
     download::SetIOTaskRunner(
         service_manager_environment_->io_thread()->task_runner());
+    LOG(ERROR) << "[Kiwi] ContentClientInitializer - Pre RunServiceManager - Step 3l";
 
     InitializeBrowserMemoryInstrumentationClient();
 
@@ -984,15 +1009,19 @@ int ContentMainRunnerImpl::RunServiceManager(MainFunctionParams& main_params,
 #endif
   }
 
+  LOG(ERROR) << "[Kiwi] ContentClientInitializer - Pre RunServiceManager - Step 5";
   if (should_start_service_manager_only) {
     DVLOG(0) << "Chrome is running in ServiceManager only mode.";
     return -1;
   }
 
+  LOG(ERROR) << "[Kiwi] ContentClientInitializer - Pre RunServiceManager - Step 6";
+
   DVLOG(0) << "Chrome is running in full browser mode.";
   is_browser_main_loop_started_ = true;
   startup_data_ = service_manager_environment_->CreateBrowserStartupData();
   main_params.startup_data = startup_data_.get();
+  LOG(ERROR) << "[Kiwi] ContentClientInitializer - Pre RunServiceManager - Step 7";
   return RunBrowserProcessMain(main_params, delegate_);
 }
 

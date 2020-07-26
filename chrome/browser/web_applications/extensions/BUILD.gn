@@ -70,7 +70,6 @@ source_set("unit_tests") {
     "//chrome/browser/web_applications:web_applications_test_support",
     "//chrome/browser/web_applications/components",
     "//chrome/common",
-    "//chrome/test:test_support",
     "//components/crx_file:crx_file",
     "//content/public/browser",
     "//content/test:test_support",

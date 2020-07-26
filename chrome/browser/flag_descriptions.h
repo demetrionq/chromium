@@ -1742,8 +1742,6 @@ extern const char kAndroidNightModeTabReparentingDescription[];
 
 // Non-Android ----------------------------------------------------------------
 
-#else  // !defined(OS_ANDROID)
-
 extern const char kEditPasswordsInDesktopSettingsName[];
 extern const char kEditPasswordsInDesktopSettingsDescription[];
 

@@ -24,8 +24,6 @@ BrowserWindow* BrowserWindow::CreateBrowserWindow(
     std::unique_ptr<Browser> browser,
     bool user_gesture,
     bool in_tab_dragging) {
-  // Create the view and the frame. The frame will attach itself via the view
-  // so we don't need to do anything with the pointer.
   BrowserView* view = new BrowserView(std::move(browser));
   BrowserFrame* browser_frame = nullptr;
 #if defined(OS_CHROMEOS)
@@ -38,14 +36,6 @@ BrowserWindow* BrowserWindow::CreateBrowserWindow(
     browser_frame->SetTabDragKind(TabDragKind::kAllTabs);
   browser_frame->InitBrowserFrame();
 
-  view->GetWidget()->non_client_view()->SetAccessibleName(
-      l10n_util::GetStringUTF16(IDS_PRODUCT_NAME));
 
-#if defined(USE_AURA)
-  // For now, all browser windows are true. This only works when USE_AURA
-  // because it requires gfx::NativeWindow to be an aura::Window*.
-  view->GetWidget()->GetNativeWindow()->SetProperty(
-      aura::client::kCreatedByUserGesture, user_gesture);
-#endif
   return view;
 }

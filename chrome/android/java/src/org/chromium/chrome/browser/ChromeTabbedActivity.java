@@ -1124,6 +1124,8 @@ public class ChromeTabbedActivity extends ChromeActivity<ChromeActivityComponent
         return mInactivityTracker;
     }
 
+	if (true)
+             return false;
     @Override
     public void initializeState() {
         // This method goes through 3 steps:

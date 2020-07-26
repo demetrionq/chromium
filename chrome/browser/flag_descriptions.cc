@@ -3040,8 +3040,6 @@ const char kAndroidNightModeTabReparentingDescription[] =
     "instead of reloaded.";
 // Non-Android -----------------------------------------------------------------
 
-#else  // !defined(OS_ANDROID)
-
 const char kEditPasswordsInDesktopSettingsName[] = "Edit passwords in settings";
 const char kEditPasswordsInDesktopSettingsDescription[] =
     "Enables password editing in settings.";

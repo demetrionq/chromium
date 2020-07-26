@@ -1012,11 +1012,15 @@ void TabStripModel::CloseSelectedTabs() {
 }
 
 void TabStripModel::SelectNextTab(UserGestureDetails detail) {
+#if 0
   SelectRelativeTab(true, detail);
+#endif
 }
 
 void TabStripModel::SelectPreviousTab(UserGestureDetails detail) {
+#if 0
   SelectRelativeTab(false, detail);
+#endif
 }
 
 void TabStripModel::SelectLastTab(UserGestureDetails detail) {
@@ -1605,6 +1609,7 @@ int TabStripModel::InsertWebContentsAtImpl(
     std::unique_ptr<content::WebContents> contents,
     int add_types,
     base::Optional<tab_groups::TabGroupId> group) {
+  LOG(ERROR) << "[Kiwi] TabStripModel::InsertWebContentsAtImpl - Step 1";
   delegate()->WillAddWebContents(contents.get());
 
   bool active = (add_types & ADD_ACTIVE) != 0;
@@ -1628,6 +1633,7 @@ int TabStripModel::InsertWebContentsAtImpl(
     data->set_opener(active_contents);
   }
 
+  LOG(ERROR) << "[Kiwi] TabStripModel::InsertWebContentsAtImpl - Step A";
   // TODO(gbillock): Ask the modal dialog manager whether the WebContents should
   // be blocked, or just let the modal dialog manager make the blocking call
   // directly and not use this at all.
@@ -1650,14 +1656,23 @@ int TabStripModel::InsertWebContentsAtImpl(
                              /*triggered_by_other_operation=*/true);
   }
 
+  LOG(ERROR) << "[Kiwi] TabStripModel::InsertWebContentsAtImpl - Step B1";
   TabStripModelChange::Insert insert;
+  LOG(ERROR) << "[Kiwi] TabStripModel::InsertWebContentsAtImpl - Step B2";
   insert.contents.push_back({raw_contents, index});
+  LOG(ERROR) << "[Kiwi] TabStripModel::InsertWebContentsAtImpl - Step B3";
   TabStripModelChange change(std::move(insert));
+  LOG(ERROR) << "[Kiwi] TabStripModel::InsertWebContentsAtImpl - Step B4";
+#if 0
   for (auto& observer : observers_)
     observer.OnTabStripModelChanged(this, change, selection);
-  if (group.has_value())
+#endif
+  LOG(ERROR) << "[Kiwi] TabStripModel::InsertWebContentsAtImpl - Step B5";
+  if (group.has_value()) {
+  LOG(ERROR) << "[Kiwi] TabStripModel::InsertWebContentsAtImpl - Step B6";
     GroupTab(index, group.value());
-
+  }
+  LOG(ERROR) << "[Kiwi] TabStripModel::InsertWebContentsAtImpl - Step C";
   return index;
 }
 

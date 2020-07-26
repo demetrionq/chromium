@@ -24,7 +24,7 @@ static_library("renderer") {
     "//content/public/renderer",
     "//gin",
     "//ipc",
-    "//pdf:features",
+#    "//pdf:features",
     "//ppapi/host",
     "//ppapi/proxy",
     "//ppapi/proxy:ipc",

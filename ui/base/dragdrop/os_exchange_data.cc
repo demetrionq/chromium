@@ -105,7 +105,7 @@ bool OSExchangeData::HasAnyFormat(
   if ((formats & FILE_CONTENTS) != 0 && provider_->HasFileContents())
     return true;
 #endif
-#if defined(USE_AURA)
+#if true || defined(USE_AURA)
   if ((formats & HTML) != 0 && provider_->HasHtml())
     return true;
 #endif
@@ -150,7 +150,7 @@ void OSExchangeData::SetDownloadFileInfo(DownloadFileInfo* download) {
 }
 #endif
 
-#if defined(USE_AURA)
+#if true || defined(USE_AURA)
 bool OSExchangeData::HasHtml() const {
   return provider_->HasHtml();
 }

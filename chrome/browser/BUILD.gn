@@ -1122,6 +1122,8 @@ static_library("browser") {
     "plugins/pdf_iframe_navigation_throttle.h",
     "plugins/pdf_plugin_placeholder_observer.cc",
     "plugins/pdf_plugin_placeholder_observer.h",
+    "policy/browser_dm_token_storage_android.cc",
+    "policy/browser_dm_token_storage_android.h",
     "policy/browsing_history_policy_handler.cc",
     "policy/browsing_history_policy_handler.h",
     "policy/chrome_browser_policy_connector.cc",
@@ -2169,6 +2171,7 @@ static_library("browser") {
       "android/accessibility/font_size_prefs_android.cc",
       "android/accessibility/font_size_prefs_android.h",
       "android/android_theme_resources.h",
+      "android/appmenu/app_menu.cc",
       "android/autofill_assistant/assistant_collect_user_data_delegate.cc",
       "android/autofill_assistant/assistant_collect_user_data_delegate.h",
       "android/autofill_assistant/assistant_form_delegate.cc",
@@ -2980,7 +2983,8 @@ static_library("browser") {
       ]
       deps += [ "//chrome/android/modules/dev_ui/provider:native" ]
     }
-  } else {  #!is_android
+  }
+  if (true) {  # !is_android
     sources += [
       "accessibility/caption_controller.cc",
       "accessibility/caption_controller.h",
@@ -3042,8 +3046,6 @@ static_library("browser") {
       "badging/badge_manager_delegate.h",
       "badging/badge_manager_factory.cc",
       "badging/badge_manager_factory.h",
-      "banners/app_banner_manager_desktop.cc",
-      "banners/app_banner_manager_desktop.h",
       "bookmarks/bookmark_html_writer.cc",
       "bookmarks/bookmark_html_writer.h",
       "browsing_data/access_context_audit_database.cc",
@@ -3055,8 +3057,8 @@ static_library("browser") {
       "certificate_viewer.h",
       "chrome_browser_field_trials_desktop.cc",
       "chrome_browser_field_trials_desktop.h",
-      "chrome_process_singleton.cc",
-      "chrome_process_singleton.h",
+#      "chrome_process_singleton.cc",
+#      "chrome_process_singleton.h",
       "component_updater/intervention_policy_database_component_installer.cc",
       "component_updater/intervention_policy_database_component_installer.h",
       "component_updater/soda_component_installer.cc",
@@ -3165,6 +3167,7 @@ static_library("browser") {
       "first_run/first_run.h",
       "first_run/first_run_dialog.h",
       "first_run/first_run_internal.h",
+      "first_run/first_run_internal_android.cc",
       "font_family_cache.cc",
       "font_family_cache.h",
       "hid/chrome_hid_delegate.cc",
@@ -3291,7 +3294,6 @@ static_library("browser") {
       "metrics/desktop_session_duration/touch_mode_stats_tracker.h",
       "metrics/first_web_contents_profiler.cc",
       "metrics/first_web_contents_profiler.h",
-      "metrics/incognito_observer_desktop.cc",
       "metrics/tab_stats_data_store.cc",
       "metrics/tab_stats_data_store.h",
       "metrics/tab_stats_tracker.cc",
@@ -3349,6 +3351,7 @@ static_library("browser") {
       "notifications/profile_notification.cc",
       "notifications/profile_notification.h",
       "obsolete_system/obsolete_system.h",
+      "obsolete_system/obsolete_system_android.cc",
       "page_load_metrics/observers/session_restore_page_load_metrics_observer.cc",
       "page_load_metrics/observers/session_restore_page_load_metrics_observer.h",
       "performance_manager/mechanisms/page_discarder.cc",
@@ -3794,7 +3797,7 @@ static_library("browser") {
         "chrome_browser_main_posix.h",
         "first_run/first_run_internal_posix.cc",
         "importer/firefox_profile_lock_posix.cc",
-        "process_singleton_posix.cc",
+#        "process_singleton_posix.cc",
         "task_manager/sampling/shared_sampler_posix.cc",
       ]
     }
@@ -4486,7 +4489,7 @@ static_library("browser") {
     ]
   }
 
-  if (is_win || is_mac || is_desktop_linux) {
+  if (true || is_win || is_mac || is_desktop_linux) {
     sources += [
       "browser_switcher/alternative_browser_driver.h",
       "browser_switcher/browser_switcher_navigation_throttle.cc",
@@ -4531,7 +4534,7 @@ static_library("browser") {
     ]
   }
 
-  if (!is_android && !is_chromeos) {
+  if (true || (!is_android && !is_chromeos)) {
     sources += [
       "device_identity/device_oauth2_token_store_desktop.cc",
       "device_identity/device_oauth2_token_store_desktop.h",
@@ -4552,12 +4555,6 @@ static_library("browser") {
       "notifications/screen_lock_notification_blocker.cc",
       "notifications/screen_lock_notification_blocker.h",
       "platform_util.cc",
-      "policy/chrome_browser_cloud_management_controller.cc",
-      "policy/chrome_browser_cloud_management_controller.h",
-      "policy/chrome_browser_cloud_management_register_watcher.cc",
-      "policy/chrome_browser_cloud_management_register_watcher.h",
-      "policy/cloud/user_policy_signin_service.cc",
-      "policy/cloud/user_policy_signin_service.h",
       "policy/cloud/user_policy_signin_service_internal.h",
       "profiles/avatar_menu.cc",
       "profiles/avatar_menu.h",
@@ -4591,7 +4588,8 @@ static_library("browser") {
       "upgrade_detector/upgrade_detector_impl.cc",
       "upgrade_detector/upgrade_detector_impl.h",
     ]
-  } else {  # is_android || is_chromeos
+  }
+  if (true) {
     sources += [
       "installable/digital_asset_links/digital_asset_links_handler.cc",
       "installable/digital_asset_links/digital_asset_links_handler.h",
@@ -4656,6 +4654,10 @@ static_library("browser") {
     deps += [ "//ui/views" ]
   }
 
+  sources += [
+    "download/drag_download_item_android.cc",
+  ]
+
   if (use_aura) {
     # Cross - platform Aura files.
     sources += [
@@ -4693,6 +4695,7 @@ static_library("browser") {
       "background/background_application_list_model.h",
       "background/background_mode_manager.cc",
       "background/background_mode_manager.h",
+      "background/background_mode_manager_android.cc",
       "background/background_mode_optimizer.cc",
       "background/background_mode_optimizer.h",
     ]
@@ -5481,7 +5484,7 @@ static_library("browser") {
     }
   }
 
-  if (enable_session_service) {
+  if (true || enable_session_service) {
     sources += [
       "sessions/session_restore.cc",
       "sessions/session_restore.h",
@@ -5519,6 +5522,7 @@ static_library("browser") {
       "spellchecker/spellcheck_language_policy_handler.h",
       "spellchecker/spellcheck_service.cc",
       "spellchecker/spellcheck_service.h",
+      "spellchecker/spelling_service_client.cc",
     ]
 
     if (use_browser_spellchecker && enable_spelling_service) {
@@ -5843,7 +5847,7 @@ grit("resources") {
     }
   }
 
-  if (is_win || is_mac || is_desktop_linux || is_chromeos) {
+  if (true || is_win || is_mac || is_desktop_linux || is_chromeos) {
     deps += [
       "//chrome/browser/resources/discards:discards_resources_gen",
       "//chrome/browser/resources/gaia_auth_host:modulize",
@@ -5877,7 +5881,7 @@ grit("resources") {
     ]
   }
 
-  if (is_chromeos && optimize_webui) {
+  if (false && optimize_webui) {
     deps += [
       "//chrome/browser/resources/chromeos/internet_config_dialog:build",
       "//chrome/browser/resources/chromeos/internet_detail_dialog:build",

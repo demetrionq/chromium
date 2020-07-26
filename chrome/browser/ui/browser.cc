@@ -1419,7 +1419,8 @@ bool Browser::ShouldAllowRunningInsecureContent(
   if (allowed_per_prefs)
     return true;
 
-  if (base::FeatureList::IsEnabled(features::kMixedContentSiteSetting)) {
+//  if (base::FeatureList::IsEnabled(features::kMixedContentSiteSetting)) {
+  if (0) {
     Profile* profile =
         Profile::FromBrowserContext(web_contents->GetBrowserContext());
     HostContentSettingsMap* content_settings =
@@ -2126,6 +2127,7 @@ void Browser::RequestPpapiBrokerPermission(
     return;
   }
 
+#if 0
   content_settings::TabSpecificContentSettings* tab_content_settings =
       content_settings::TabSpecificContentSettings::FromWebContents(
           web_contents);
@@ -2158,6 +2160,7 @@ void Browser::RequestPpapiBrokerPermission(
                          ? base::UserMetricsAction("PPAPI.BrokerSettingAllow")
                          : base::UserMetricsAction("PPAPI.BrokerSettingDeny"));
   tab_content_settings->SetPepperBrokerAllowed(allowed);
+#endif
   std::move(callback).Run(allowed);
 #endif
 }
@@ -2782,6 +2785,7 @@ void Browser::SetAsDelegate(WebContents* web_contents, bool set_delegate) {
   web_contents->SetDelegate(delegate);
 
   // ...and all the helpers.
+#if 0
   WebContentsModalDialogManager::FromWebContents(web_contents)
       ->SetDelegate(delegate);
   translate::ContentTranslateDriver* content_translate_driver =
@@ -2795,6 +2799,7 @@ void Browser::SetAsDelegate(WebContents* web_contents, bool set_delegate) {
     content_translate_driver->RemoveObserver(this);
     BookmarkTabHelper::FromWebContents(web_contents)->RemoveObserver(this);
   }
+#endif
 }
 
 void Browser::CloseFrame() {

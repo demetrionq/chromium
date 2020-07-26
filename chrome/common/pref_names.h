@@ -341,7 +341,7 @@ extern const char kUpdateRequiredWarningPeriod[];
 extern const char kShowHomeButton[];
 extern const char kSpeechRecognitionFilterProfanities[];
 extern const char kAllowDeletingBrowserHistory[];
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 extern const char kHistoryMenuPromoShown[];
 #endif
 extern const char kForceGoogleSafeSearch[];
@@ -384,7 +384,7 @@ extern const char kUseCustomChromeFrame[];
 #if BUILDFLAG(ENABLE_PLUGINS)
 extern const char kContentSettingsPluginWhitelist[];
 #endif
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 extern const char kPartitionDefaultZoomLevel[];
 extern const char kPartitionPerHostZoomLevels[];
 
@@ -497,7 +497,7 @@ extern const char kWebRTCUDPPortRange[];
 extern const char kWebRtcEventLogCollectionAllowed[];
 extern const char kWebRtcLocalIpsAllowedUrls[];
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 extern const char kHasSeenWelcomePage[];
 #endif
 
@@ -570,7 +570,7 @@ extern const char kDefaultTasksBySuffix[];
 
 extern const char kSharedClipboardEnabled[];
 
-#if BUILDFLAG(ENABLE_CLICK_TO_CALL)
+#if BUILDFLAG(ENABLE_CLICK_TO_CALL) || true
 extern const char kClickToCallEnabled[];
 #endif  // BUILDFLAG(ENABLE_CLICK_TO_CALL)
 
@@ -586,7 +586,7 @@ extern const char kShutdownNumProcesses[];
 extern const char kShutdownNumProcessesSlow[];
 
 extern const char kRestartLastSessionOnShutdown[];
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 #if !defined(OS_CHROMEOS)
 extern const char kPromotionalTabsEnabled[];
 extern const char kCommandLineFlagSecurityWarningsEnabled[];
@@ -603,7 +603,7 @@ extern const char kNtpCollapsedForeignSessions[];
 extern const char kNtpCollapsedRecentlyClosedTabs[];
 extern const char kNtpCollapsedSnapshotDocument[];
 extern const char kNtpCollapsedSyncPromo[];
-#else
+
 extern const char kNtpCustomBackgroundDict[];
 extern const char kNtpCustomBackgroundLocalToDevice[];
 extern const char kNtpPromoBlocklist[];
@@ -628,7 +628,7 @@ extern const char kDevToolsPreferences[];
 extern const char kDevToolsDiscoverTCPTargetsEnabled[];
 extern const char kDevToolsTCPDiscoveryConfig[];
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 extern const char kDiceSigninUserMenuPromoCount[];
 #endif
 
@@ -828,11 +828,11 @@ extern const char kSystemTimezoneAutomaticDetectionPolicy[];
 #endif  // defined(OS_CHROMEOS)
 
 extern const char kEnableMediaRouter[];
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 extern const char kShowCastIconInToolbar[];
 #endif  // !defined(OS_ANDROID)
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 extern const char kRelaunchNotification[];
 extern const char kRelaunchNotificationPeriod[];
 #endif  // !defined(OS_ANDROID)
@@ -841,7 +841,7 @@ extern const char kRelaunchNotificationPeriod[];
 extern const char kRelaunchHeadsUpPeriod[];
 #endif  // defined(OS_CHROMEOS)
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 extern const char kAttemptedToEnableAutoupdate[];
 
 extern const char kMediaGalleriesUniqueId[];
@@ -895,7 +895,7 @@ extern const char kRecoveryComponentNeedsElevation[];
 
 extern const char kRegisteredSupervisedUserWhitelists[];
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 extern const char kCloudReportingEnabled[];
 extern const char kCloudExtensionRequestEnabled[];
 extern const char kCloudExtensionRequestIds[];
@@ -999,7 +999,7 @@ extern const char kUnsafelyTreatInsecureOriginAsSecure[];
 extern const char kIsolateOrigins[];
 extern const char kSitePerProcess[];
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 extern const char kAutoplayAllowed[];
 extern const char kAutoplayWhitelist[];
 extern const char kBlockAutoplayEnabled[];
@@ -1039,7 +1039,7 @@ extern const char kSharingVapidKey[];
 extern const char kSharingFCMRegistration[];
 extern const char kSharingLocalSharingInfo[];
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 extern const char kHatsSurveyMetadata[];
 #endif  // !defined(OS_ANDROID)
 

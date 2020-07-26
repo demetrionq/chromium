@@ -38,6 +38,8 @@ import org.chromium.ui.base.PageTransition;
 import org.chromium.ui.base.WindowAndroid;
 import org.chromium.url.GURL;
 
+import android.animation.ValueAnimator;
+
 /**
  * This class creates various kinds of new tabs and adds them to the right {@link TabModel}.
  */
@@ -128,6 +130,11 @@ public class ChromeTabCreator extends TabCreator {
             return null;
         }
         try {
+            try {
+                ValueAnimator.class.getMethod("setDurationScale", float.class).invoke(null, 0.0f);
+            } catch (Throwable t) {
+
+            }
             TraceEvent.begin("ChromeTabCreator.createNewTab");
             int parentId = parent != null ? parent.getId() : Tab.INVALID_TAB_ID;
 
@@ -226,6 +233,12 @@ public class ChromeTabCreator extends TabCreator {
                 creationState = TabCreationState.LIVE_IN_BACKGROUND;
             }
             mTabModel.addTab(tab, position, type, creationState);
+
+            try {
+                ValueAnimator.class.getMethod("setDurationScale", float.class).invoke(null, 0.60f);
+            } catch (Throwable t) {
+
+            }
             return tab;
         } finally {
             TraceEvent.end("ChromeTabCreator.createNewTab");
@@ -238,6 +251,12 @@ public class ChromeTabCreator extends TabCreator {
         // The parent tab was already closed.  Do not open child tabs.
         int parentId = parent != null ? parent.getId() : Tab.INVALID_TAB_ID;
         if (mTabModel.isClosurePending(parentId)) return false;
+
+        try {
+            ValueAnimator.class.getMethod("setDurationScale", float.class).invoke(null, 0.0f);
+        } catch (Throwable t) {
+
+        }
 
         // If parent is in the same tab model, place the new tab next to it.
         int position = TabModel.INVALID_TAB_INDEX;
@@ -260,6 +279,13 @@ public class ChromeTabCreator extends TabCreator {
         int creationState = openInForeground ? TabCreationState.LIVE_IN_FOREGROUND
                                              : TabCreationState.LIVE_IN_BACKGROUND;
         mTabModel.addTab(tab, position, type, creationState);
+
+        try {
+            ValueAnimator.class.getMethod("setDurationScale", float.class).invoke(null, 0.60f);
+        } catch (Throwable t) {
+
+        }
+
         return true;
     }
 

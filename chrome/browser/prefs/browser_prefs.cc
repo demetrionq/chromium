@@ -230,7 +230,6 @@
 #if BUILDFLAG(ENABLE_FEED_IN_CHROME)
 #include "components/feed/core/common/pref_names.h"
 #endif  // BUILDFLAG(ENABLE_FEED_IN_CHROME)
-#else   // defined(OS_ANDROID)
 #include "chrome/browser/accessibility/caption_controller.h"
 #include "chrome/browser/apps/app_service/app_service_proxy.h"
 #include "chrome/browser/enterprise/reporting/prefs.h"
@@ -378,12 +377,12 @@
 #include "components/os_crypt/os_crypt.h"
 #endif
 
-#if defined(OS_WIN) || defined(OS_MACOSX) || \
+#if true || defined(OS_WIN) || defined(OS_MACOSX) || \
     (defined(OS_LINUX) && !defined(OS_CHROMEOS))
 #include "chrome/browser/browser_switcher/browser_switcher_prefs.h"
 #endif
 
-#if !defined(OS_ANDROID) && !defined(OS_CHROMEOS)
+#if true || !defined(OS_ANDROID) && !defined(OS_CHROMEOS)
 #include "chrome/browser/device_identity//device_oauth2_token_store_desktop.h"
 #include "chrome/browser/downgrade/downgrade_prefs.h"
 #include "chrome/browser/ui/startup/default_browser_prompt.h"
@@ -393,7 +392,7 @@
 #include "chrome/browser/ui/browser_view_prefs.h"
 #endif
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 #include "chrome/browser/media/feeds/media_feeds_service.h"
 #endif
 
@@ -438,7 +437,7 @@ const char kContentSuggestionsNotificationsEnabled[] =
 
 #endif  // defined(OS_ANDROID)
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 // Deprecated 5/2019
 const char kSignInPromoShowOnFirstRunAllowed[] =
     "sync_promo.show_on_first_run_allowed";
@@ -460,7 +459,7 @@ const char kHasSeenWin10PromoPage[] = "browser.has_seen_win10_promo_page";
 // Deprecated 7/2019
 const char kSignedInTime[] = "signin.signedin_time";
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 // Deprecated 7/2019
 const char kNtpActivateHideShortcutsFieldTrial[] =
     "ntp.activate_hide_shortcuts_field_trial";
@@ -603,7 +602,7 @@ void RegisterProfilePrefsForMigration(
   registry->RegisterBooleanPref(kContentSuggestionsNotificationsEnabled, true);
 #endif  // defined(OS_ANDROID)
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
   registry->RegisterBooleanPref(kSignInPromoShowOnFirstRunAllowed, true);
   registry->RegisterBooleanPref(kSignInPromoShowNTPBubble, false);
 #endif  // !defined(OS_ANDROID)
@@ -741,10 +740,10 @@ void RegisterLocalState(PrefRegistrySimple* registry) {
 
 #if defined(OS_ANDROID)
   ::android::RegisterPrefs(registry);
-#else
+
   enterprise_connectors::RegisterLocalStatePrefs(registry);
   enterprise_reporting::RegisterLocalStatePrefs(registry);
-  gcm::RegisterPrefs(registry);
+//  gcm::RegisterPrefs(registry);
   media_router::RegisterLocalStatePrefs(registry);
   metrics::TabStatsTracker::RegisterPrefs(registry);
   RegisterBrowserPrefs(registry);
@@ -863,6 +862,7 @@ void RegisterLocalState(PrefRegistrySimple* registry) {
 // Register prefs applicable to all profiles.
 void RegisterProfilePrefs(user_prefs::PrefRegistrySyncable* registry,
                           const std::string& locale) {
+  LOG(ERROR) << "[Kiwi] prefs/browser_prefs.cc::RegisterProfilePrefs - Step 1";
   TRACE_EVENT0("browser", "chrome::RegisterProfilePrefs");
   // User prefs. Please keep this list alphabetized.
   AccessibilityLabelsService::RegisterProfilePrefs(registry);
@@ -1001,7 +1001,6 @@ void RegisterProfilePrefs(user_prefs::PrefRegistrySyncable* registry,
 #if BUILDFLAG(ENABLE_FEED_IN_CHROME)
   feed::RegisterProfilePrefs(registry);
 #endif  // BUILDFLAG(ENABLE_FEED_IN_CHROME)
-#else   // defined(OS_ANDROID)
   apps::AppServiceProxy::RegisterProfilePrefs(registry);
   AppShortcutManager::RegisterProfilePrefs(registry);
   browser_sync::ForeignSessionHandler::RegisterProfilePrefs(registry);
@@ -1011,6 +1010,8 @@ void RegisterProfilePrefs(user_prefs::PrefRegistrySyncable* registry,
   enterprise_reporting::RegisterProfilePrefs(registry);
   extensions::CommandService::RegisterProfilePrefs(registry);
   extensions::TabsCaptureVisibleTabFunction::RegisterProfilePrefs(registry);
+#if 0
+#endif
   first_run::RegisterProfilePrefs(registry);
   gcm::RegisterProfilePrefs(registry);
   HatsService::RegisterProfilePrefs(registry);
@@ -1103,11 +1104,11 @@ void RegisterProfilePrefs(user_prefs::PrefRegistrySyncable* registry,
   browser_switcher::BrowserSwitcherPrefs::RegisterProfilePrefs(registry);
 #endif
 
-#if !defined(OS_ANDROID) && !defined(OS_CHROMEOS)
+#if true || !defined(OS_ANDROID) && !defined(OS_CHROMEOS)
   default_apps::RegisterProfilePrefs(registry);
 #endif
 
-#if !defined(OS_CHROMEOS) && BUILDFLAG(ENABLE_EXTENSIONS)
+#if true || !defined(OS_CHROMEOS) && BUILDFLAG(ENABLE_EXTENSIONS)
   extensions::enterprise_reporting::RegisterProfilePrefs(registry);
 #endif
 
@@ -1121,6 +1122,7 @@ void RegisterProfilePrefs(user_prefs::PrefRegistrySyncable* registry,
 #endif
 
   RegisterProfilePrefsForMigration(registry);
+  LOG(ERROR) << "[Kiwi] prefs/browser_prefs.cc::RegisterProfilePrefs - Step 2";
 }
 
 void RegisterUserProfilePrefs(user_prefs::PrefRegistrySyncable* registry) {
@@ -1158,7 +1160,7 @@ void MigrateObsoleteLocalStatePrefs(PrefService* local_state) {
   local_state->ClearPref(kHasSeenWin10PromoPage);
 #endif  // defined(OS_WIN)
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
   // Added 7/2019.
   local_state->ClearPref(kNtpActivateHideShortcutsFieldTrial);
 #endif  // !defined(OS_ANDROID)
@@ -1226,7 +1228,7 @@ void MigrateObsoleteProfilePrefs(Profile* profile) {
   profile_prefs->ClearPref(kContentSuggestionsNotificationsEnabled);
 #endif  // defined(OS_ANDROID)
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
   // Deprecated 5/2019
   profile_prefs->ClearPref(kSignInPromoShowOnFirstRunAllowed);
   profile_prefs->ClearPref(kSignInPromoShowNTPBubble);

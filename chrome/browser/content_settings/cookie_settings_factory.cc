@@ -44,6 +44,7 @@ CookieSettingsFactory::~CookieSettingsFactory() = default;
 
 void CookieSettingsFactory::RegisterProfilePrefs(
     user_prefs::PrefRegistrySyncable* registry) {
+  LOG(ERROR) << "[Kiwi] CookieSettingsFactory::RegisterProfilePrefs";
   content_settings::CookieSettings::RegisterProfilePrefs(registry);
 }
 

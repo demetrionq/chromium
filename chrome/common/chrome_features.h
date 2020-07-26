@@ -50,7 +50,7 @@ COMPONENT_EXPORT(CHROME_FEATURES)
 extern const base::Feature kShow10_9ObsoleteInfobar;
 #endif  // defined(OS_MACOSX)
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 COMPONENT_EXPORT(CHROME_FEATURES)
 extern const base::Feature kAppServiceIntentHandling;
 COMPONENT_EXPORT(CHROME_FEATURES)
@@ -225,7 +225,7 @@ COMPONENT_EXPORT(CHROME_FEATURES)
 extern const base::Feature kHappinessTrackingSystem;
 #endif
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 COMPONENT_EXPORT(CHROME_FEATURES)
 extern const base::Feature kHappinessTrackingSurveysForDesktop;
 
@@ -313,7 +313,7 @@ extern const base::Feature kAcknowledgeNtpOverrideOnDeactivate;
 COMPONENT_EXPORT(CHROME_FEATURES)
 extern const base::Feature kMixedContentSiteSetting;
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 COMPONENT_EXPORT(CHROME_FEATURES) extern const base::Feature kOnConnectNative;
 #endif
 

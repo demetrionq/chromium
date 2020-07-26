@@ -492,7 +492,9 @@ void AutofillPopupItemView::OnGestureEvent(ui::GestureEvent* event) {
 }
 
 void AutofillPopupItemView::CreateContent() {
+#if 0
   AutofillPopupController* controller = popup_view()->controller();
+#endif
 
   auto* layout_manager = SetLayoutManager(std::make_unique<views::BoxLayout>(
       views::BoxLayout::Orientation::kHorizontal,
@@ -503,7 +505,7 @@ void AutofillPopupItemView::CreateContent() {
 
   std::vector<Suggestion> suggestions = controller->GetSuggestions();
 
-  const gfx::ImageSkia icon = GetIconImage(suggestions[line_number()]);
+  const gfx::ImageSkia icon = gfx::ImageSkia();
 
   if (!icon.isNull()) {
     AddIcon(icon);
@@ -770,7 +772,9 @@ AutofillPopupFooterView* AutofillPopupFooterView::Create(
 }
 
 void AutofillPopupFooterView::CreateContent() {
+#if 0
   AutofillPopupController* controller = popup_view()->controller();
+#endif
 
   views::BoxLayout* layout_manager =
       SetLayoutManager(std::make_unique<views::BoxLayout>(
@@ -781,7 +785,7 @@ void AutofillPopupFooterView::CreateContent() {
       views::BoxLayout::CrossAxisAlignment::kCenter);
 
   const Suggestion suggestion = controller->GetSuggestions()[line_number()];
-  const gfx::ImageSkia icon = GetIconImage(suggestion);
+  const gfx::ImageSkia icon = gfx::ImageSkia();
 
   const bool use_leading_icon =
       base::Contains(kItemTypesUsingLeadingIcons, frontend_id());

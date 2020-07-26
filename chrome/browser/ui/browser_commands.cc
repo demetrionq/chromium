@@ -1288,7 +1288,6 @@ void ToggleDevToolsWindow(Browser* browser, DevToolsToggleAction action) {
     base::RecordAction(UserMetricsAction("DevTools_ToggleConsole"));
   else
     base::RecordAction(UserMetricsAction("DevTools_ToggleWindow"));
-  DevToolsWindow::ToggleDevToolsWindow(browser, action);
 }
 
 bool CanOpenTaskManager() {

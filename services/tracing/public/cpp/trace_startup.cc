@@ -95,7 +95,9 @@ void InitTracingPostThreadPoolStartAndFeatureList() {
   // TODO(nuskos): We should switch these to DCHECK once we're reasonably
   // confident we've ensured this is called properly in all processes. Probably
   // after M78 release has been cut (since we'll verify in the rollout of M78).
+  LOG(ERROR) << "[Kiwi] InitTracingPostThreadPoolStartAndFeatureList - Step 3: " << base::ThreadPoolInstance::Get();
   CHECK(base::ThreadPoolInstance::Get());
+  LOG(ERROR) << "[Kiwi] InitTracingPostThreadPoolStartAndFeatureList - Step 4: " << base::FeatureList::GetInstance();
   CHECK(base::FeatureList::GetInstance());
 
   PerfettoTracedProcess::Get()->OnThreadPoolAvailable();
@@ -117,6 +119,7 @@ void InitTracingPostThreadPoolStartAndFeatureList() {
                          ->ConnectToSystemService();
                    }));
   }
+  LOG(ERROR) << "[Kiwi] InitTracingPostThreadPoolStartAndFeatureList - Step 6";
 }
 
 void PropagateTracingFlagsToChildProcessCmdLine(base::CommandLine* cmd_line) {

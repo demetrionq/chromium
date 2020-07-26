@@ -1303,6 +1303,8 @@ bool DownloadItemView::SubmitDownloadToFeedbackService(
 #endif
 }
 
+#if 0
+#endif
 // static
 int DownloadItemView::GetWarningIconSize() {
   // TODO(drubery): Replace this method with a constexpr variable when the new

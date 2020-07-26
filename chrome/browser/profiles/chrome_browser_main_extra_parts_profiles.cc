@@ -104,7 +104,7 @@
 #include "chrome/browser/android/explore_sites/explore_sites_service_factory.h"
 #include "chrome/browser/android/search_permissions/search_permissions_service.h"
 #include "chrome/browser/media/android/cdm/media_drm_origin_id_manager_factory.h"
-#else
+
 #include "chrome/browser/apps/app_service/app_service_proxy_factory.h"
 #include "chrome/browser/feedback/feedback_uploader_factory_chrome.h"
 #include "chrome/browser/media/feeds/media_feeds_service_factory.h"
@@ -196,27 +196,45 @@ ChromeBrowserMainExtraPartsProfiles::~ChromeBrowserMainExtraPartsProfiles() {}
 // FooServiceFactory here will scale or is desirable long term.
 //
 // static
+
+// Special Android
+// When we are on Android, we need to initialize the first pass only the minimum to be able to init the profile the first time
 void ChromeBrowserMainExtraPartsProfiles::
-    EnsureBrowserContextKeyedServiceFactoriesBuilt() {
+    EnsureBrowserContextKeyedServiceFactoriesBuilt(bool full_init) {
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 1";
 #if BUILDFLAG(ENABLE_EXTENSIONS)
+  if (full_init) {
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 2";
   apps::EnsureBrowserContextKeyedServiceFactoriesBuilt();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 3";
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 4";
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 5";
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 6";
   chrome_apps::EnsureBrowserContextKeyedServiceFactoriesBuilt();
   chrome_apps::api::EnsureBrowserContextKeyedServiceFactoriesBuilt();
   chrome_extensions::EnsureBrowserContextKeyedServiceFactoriesBuilt();
   extensions::EnsureBrowserContextKeyedServiceFactoriesBuilt();
+  }
 #endif
 #if defined(OS_CHROMEOS)
   chromeos::cert_provisioning::CertProvisioningSchedulerUserServiceFactory::
       GetInstance();
   chromeos::EnsureBrowserContextKeyedServiceFactoriesBuilt();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 9";
 #endif
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 10";
 
   AboutSigninInternalsFactory::GetInstance();
 #if !defined(OS_ANDROID)
   AccessContextAuditServiceFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 11";
 #endif
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 12";
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 13";
   AccountConsistencyModeManagerFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 14";
   AccountInvestigatorFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 15";
   AccountReconcilorFactory::GetInstance();
   AdaptiveQuietNotificationPermissionUiEnabler::Factory::GetInstance();
 #if defined(OS_CHROMEOS)
@@ -225,21 +243,32 @@ void ChromeBrowserMainExtraPartsProfiles::
 #if !defined(OS_ANDROID)
   apps::AppServiceProxyFactory::GetInstance();
 #endif
+  if (full_init)
   AutocompleteClassifierFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 17";
   autofill::PersonalDataManagerFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 18";
 #if BUILDFLAG(ENABLE_BACKGROUND_CONTENTS)
   BackgroundContentsServiceFactory::GetInstance();
 #endif
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 19";
   BookmarkModelFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 20";
   BookmarkUndoServiceFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 21";
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 22";
   browser_sync::UserEventServiceFactory::GetInstance();
   BrowsingDataHistoryObserverService::Factory::GetInstance();
 #if BUILDFLAG(ENABLE_CAPTIVE_PORTAL_DETECTION)
   CaptivePortalServiceFactory::GetInstance();
 #endif
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 24";
   CertificateReportingServiceFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 25";
+  if (full_init)
   ChromeBrowsingDataRemoverDelegateFactory::GetInstance();
   ChromeSigninClientFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 28";
   ClientHintsFactory::GetInstance();
 #if BUILDFLAG(ENABLE_SERVICE_DISCOVERY)
   cloud_print::PrivetNotificationServiceFactory::GetInstance();
@@ -247,40 +276,66 @@ void ChromeBrowserMainExtraPartsProfiles::
 #if BUILDFLAG(ENABLE_PRINT_PREVIEW) && !defined(OS_CHROMEOS)
   CloudPrintProxyServiceFactory::GetInstance();
 #endif
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 30";
   ConsentAuditorFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 31";
   ContentSuggestionsServiceFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 32";
   CookieSettingsFactory::GetInstance();
   DomainDiversityReporterFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 34";
   dom_distiller::DomDistillerServiceFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 35";
   DownloadCoreServiceFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 36";
   DownloadServiceFactory::GetInstance();
 #if defined(OS_ANDROID)
   explore_sites::ExploreSitesServiceFactory::GetInstance();
 #endif
   FaviconServiceFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 41";
+  if (full_init)
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 42";
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 43";
   feature_engagement::TrackerFactory::GetInstance();
 #if !defined(OS_ANDROID)
   feedback::FeedbackUploaderFactoryChrome::GetInstance();
 #endif
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 44";
   FindBarStateFactory::GetInstance();
   GAIAInfoUpdateServiceFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 45";
 #if !defined(OS_ANDROID)
   GlobalErrorServiceFactory::GetInstance();
 #endif
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 46";
   GoogleSearchDomainMixingMetricsEmitterFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 47";
   HistoryServiceFactory::GetInstance();
   HistoryUiFaviconRequestHandlerFactory::GetInstance();
   HostContentSettingsMapFactory::GetInstance();
   HttpsEngagementServiceFactory::GetInstance();
   IdentityManagerFactory::EnsureFactoryAndDependeeFactoriesBuilt();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 47-3";
   InMemoryURLIndexFactory::GetInstance();
-#if !defined(OS_ANDROID)
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 47-4";
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 47-5";
+#if true || !defined(OS_ANDROID)
   InstantServiceFactory::GetInstance();
 #endif
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 47-6";
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 47-7";
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 48";
+  if (full_init)
   LanguageModelManagerFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 48-4";
 #if !defined(OS_ANDROID)
   LoginUIServiceFactory::GetInstance();
 #endif
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 49";
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 50";
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 51";
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 52";
 #if defined(OS_ANDROID)
   MediaDrmOriginIdManagerFactory::GetInstance();
 #endif
@@ -309,9 +364,10 @@ void ChromeBrowserMainExtraPartsProfiles::
   NTPResourceCacheFactory::GetInstance();
 #endif
   PasswordStoreFactory::GetInstance();
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
   PinnedTabServiceFactory::GetInstance();
 #endif
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 55";
 #if BUILDFLAG(ENABLE_PLUGINS)
   PluginPrefsFactory::GetInstance();
 #endif
@@ -321,30 +377,52 @@ void ChromeBrowserMainExtraPartsProfiles::
 #if !defined(OS_CHROMEOS)
   policy::UserPolicySigninServiceFactory::GetInstance();
 #endif
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 58";
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 58-1";
+  if (full_init)
   predictors::AutocompleteActionPredictorFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 58-2";
+  if (full_init)
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 58-3";
+  if (full_init)
   predictors::LoadingPredictorFactory::GetInstance();
   predictors::PredictorDatabaseFactory::GetInstance();
+  if (full_init)
   prerender::PrerenderLinkManagerFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 58-5";
+  if (full_init)
   prerender::PrerenderManagerFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 58-6";
+  if (full_init)
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 58-7";
   ProfileSyncServiceFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 58-8";
   ProtocolHandlerRegistryFactory::GetInstance();
   RendererUpdaterFactory::GetInstance();
 #if !defined(OS_ANDROID)
   resource_coordinator::LocalSiteCharacteristicsDataStoreFactory::GetInstance();
 #endif
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 59-1";
 #if BUILDFLAG(FULL_SAFE_BROWSING)
   safe_browsing::AdvancedProtectionStatusManagerFactory::GetInstance();
 #endif
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 60";
 #if defined(OS_ANDROID)
   SearchPermissionsService::Factory::GetInstance();
 #endif
   send_tab_to_self::SendTabToSelfClientServiceFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 61";
 #if BUILDFLAG(ENABLE_SESSION_SERVICE)
   SessionServiceFactory::GetInstance();
 #endif
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 62";
+  if (full_init)
   SharingServiceFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 62-1";
   ShortcutsBackendFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 62-2";
   SigninProfileAttributesUpdaterFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 62-3";
   if (SiteEngagementService::IsEnabled())
     SiteEngagementServiceFactory::GetInstance();
 #if BUILDFLAG(ENABLE_DICE_SUPPORT)
@@ -363,6 +441,7 @@ void ChromeBrowserMainExtraPartsProfiles::
   TabRestoreServiceFactory::GetInstance();
   TabStateDBFactory::GetInstance();
   TemplateURLFetcherFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 64-2";
   TemplateURLServiceFactory::GetInstance();
 #if !defined(OS_ANDROID)
   ThemeServiceFactory::GetInstance();
@@ -371,21 +450,32 @@ void ChromeBrowserMainExtraPartsProfiles::
   ToolbarActionsModelFactory::GetInstance();
 #endif
   TopSitesFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 64-4";
   translate::TranslateRankerFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 65";
 #if defined(OS_WIN)
   TriggeredProfileResetterFactory::GetInstance();
 #endif
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 65-1";
   UnifiedConsentServiceFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 65-2";
   UrlLanguageHistogramFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 66";
 #if !defined(OS_ANDROID)
   UsbChooserContextFactory::GetInstance();
 #endif
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 67";
 #if BUILDFLAG(ENABLE_EXTENSIONS)
+  if (full_init) {
   web_app::WebAppMetricsFactory::GetInstance();
   web_app::WebAppProviderFactory::GetInstance();
+  }
 #endif
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 68";
   WebDataServiceFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 69";
   webrtc_event_logging::WebRtcEventLogManagerKeyedServiceFactory::GetInstance();
+  LOG(ERROR) << "[Kiwi] ChromeBrowserMainExtraPartsProfiles::EnsureBrowserContextKeyedServiceFactoriesBuilt - Step 70";
 }
 
 void ChromeBrowserMainExtraPartsProfiles::PreProfileInit() {

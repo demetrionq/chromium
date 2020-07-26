@@ -23,7 +23,7 @@ if (enable_js_type_check) {
       "memory_internals:closure_compile",
       "reset_password:closure_compile",
     ]
-    if (is_linux || is_win || is_mac) {
+    if (true || is_linux || is_win || is_mac) {
       deps += [
         "bluetooth_internals:closure_compile",
         "bookmarks:closure_compile",
@@ -99,7 +99,7 @@ if (enable_js_type_check) {
   }
 }
 
-if (!is_android) {
+if (true || !is_android) {
   grit("bookmarks_resources") {
     grit_flags = [
       "-E",
@@ -396,7 +396,7 @@ if (is_chromeos) {
   }
 }
 
-if (!is_android && !is_chromeos) {
+if (true || (!is_android && !is_chromeos)) {
   grit("welcome_resources") {
     source = "welcome/welcome_resources.grd"
 

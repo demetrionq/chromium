@@ -21,6 +21,7 @@ namespace {
 
 bool shell_operations_allowed = true;
 
+#if 0
 void VerifyAndOpenItemOnBlockingThread(const base::FilePath& path,
                                        OpenItemType type,
                                        OpenOperationCallback callback) {
@@ -46,6 +47,7 @@ void VerifyAndOpenItemOnBlockingThread(const base::FilePath& path,
     content::GetUIThreadTaskRunner({})->PostTask(
         FROM_HERE, base::BindOnce(std::move(callback), OPEN_SUCCEEDED));
 }
+#endif
 
 }  // namespace
 
@@ -57,6 +59,7 @@ void DisableShellOperationsForTesting() {
 
 }  // namespace internal
 
+#if 0
 void OpenItem(Profile* profile,
               const base::FilePath& full_path,
               OpenItemType item_type,
@@ -74,6 +77,7 @@ void OpenItem(Profile* profile,
       base::BindOnce(&VerifyAndOpenItemOnBlockingThread, full_path, item_type,
                      std::move(callback)));
 }
+#endif
 
 bool IsBrowserLockedFullscreen(const Browser* browser) {
   return false;

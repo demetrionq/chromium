@@ -26,13 +26,13 @@
 #include "components/signin/core/browser/signin_header_helper.h"
 #include "content/public/browser/browser_thread.h"
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 #include "chrome/browser/ui/browser_finder.h"
 #endif
 
 namespace {
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 constexpr base::TimeDelta kProfileActivityThreshold =
     base::TimeDelta::FromDays(28);  // Should be integral number of weeks.
 #endif

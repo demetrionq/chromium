@@ -46,6 +46,7 @@ bool IsBrowserSigninAllowedByCommandLine() {
   return true;
 }
 #endif
+#endif
 
 }  // namespace
 
@@ -78,7 +79,7 @@ AccountConsistencyModeManager::AccountConsistencyModeManager(Profile* profile)
 
   account_consistency_ = ComputeAccountConsistencyMethod(profile_);
 
-#if BUILDFLAG(ENABLE_DICE_SUPPORT)
+#if false && BUILDFLAG(ENABLE_DICE_SUPPORT)
   // New profiles don't need Dice migration. Old profiles may need it if they
   // were created before Dice.
   if (profile_->IsNewProfile())

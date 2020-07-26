@@ -25,7 +25,7 @@
 #include "base/android/scoped_java_ref.h"
 #endif
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 class ChromeZoomLevelPrefs;
 #endif
 
@@ -293,7 +293,7 @@ class Profile : public content::BrowserContext {
   virtual PrefService* GetPrefs() = 0;
   virtual const PrefService* GetPrefs() const = 0;
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
   // Retrieves a pointer to the PrefService that manages the default zoom
   // level and the per-host zoom levels for this user profile.
   // TODO(wjmaclean): Remove this when HostZoomMap migrates to StoragePartition.
@@ -483,7 +483,7 @@ class Profile : public content::BrowserContext {
   // ProfileDestroyer, but in tests, some are not.
   void MaybeSendDestroyedNotification();
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
   // Convenience method to retrieve the default zoom level for the default
   // storage partition.
   double GetDefaultZoomLevelForProfile();

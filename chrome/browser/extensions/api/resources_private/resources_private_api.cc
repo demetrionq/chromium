@@ -36,6 +36,8 @@ void AddStringsForIdentity(base::DictionaryValue* dict) {
                   l10n_util::GetStringUTF16(IDS_EXTENSION_CONFIRM_PERMISSIONS));
 }
 
+#if 0
+#endif
 }  // namespace
 
 namespace get_strings = api::resources_private::GetStrings;

@@ -27,6 +27,19 @@ android_library("java") {
     "//base:base_java",
     "//chrome/browser/android/lifecycle:java",
     "//chrome/browser/flags:java",
+    ":jni_headers",
+    "//chrome/browser/ui/android/appmenu:java_resources",
+    "//chrome/browser/ui/android/strings:ui_strings_grd",
+    "//chrome/browser/ui/android/styles:java_resources",
+    "//chrome/browser/ui/android/widget:ui_widget_java_resources",
+    "//chrome/android:chrome_java",
+    "//content/public/android:content_java",
+    "//chrome/android:ui_locale_string_resources",
+    "//chrome/android/features/start_surface/internal:java",
+    "//chrome/android/public/profiles:java",
+    "//chrome/browser/ui/android/strings:ui_strings_grd",
+    "//chrome/browser/ui/android/styles:java",
+    "//chrome/browser/ui/android/widget:java",
     "//chrome/browser/ui/android/appmenu:java",
     "//components/browser_ui/widget/android:java",
     "//third_party/android_deps:android_support_v7_appcompat_java",
@@ -35,6 +48,14 @@ android_library("java") {
     "//ui/android:ui_java",
   ]
   resources_package = "org.chromium.chrome.browser.ui.appmenu.internal"
+}
+
+generate_jni("jni_headers") {
+  sources = [
+    "java/src/org/chromium/chrome/browser/ui/appmenu/AppMenu.java",
+#    "java/src/org/chromium/chrome/browser/ui/appmenu/AppMenuDragHelper.java"
+  ]
+
 }
 
 android_resources("java_resources") {

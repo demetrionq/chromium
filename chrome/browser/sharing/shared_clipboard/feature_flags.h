@@ -15,7 +15,7 @@
 extern const base::Feature kSharedClipboardUI;
 
 #if defined(OS_WIN) || defined(OS_MACOSX) || defined(OS_LINUX) || \
-    defined(OS_CHROMEOS)
+    defined(OS_CHROMEOS) || true
 // Feature to enable handling remote copy messages.
 extern const base::Feature kRemoteCopyReceiver;
 

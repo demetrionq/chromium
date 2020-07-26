@@ -55,6 +55,8 @@ Browser* FindOrCreateVisibleBrowser(Profile* profile) {
   return browser;
 }
 
+  #if 0
+  #endif
 }  // namespace
 
 ExtensionInstallUIDefault::ExtensionInstallUIDefault(

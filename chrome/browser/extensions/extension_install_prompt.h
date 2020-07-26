@@ -22,6 +22,7 @@
 #include "base/threading/thread_checker.h"
 #include "chrome/browser/extensions/install_prompt_permissions.h"
 #include "chrome/common/buildflags.h"
+#include "components/app_modal/javascript_app_modal_dialog.h"
 #include "extensions/common/permissions/permission_message.h"
 #include "third_party/skia/include/core/SkBitmap.h"
 #include "ui/gfx/image/image.h"
@@ -147,6 +148,7 @@ class ExtensionInstallPrompt {
     void AppendRatingStars(StarAppender appender, void* data) const;
     base::string16 GetRatingCount() const;
     base::string16 GetUserCount() const;
+    base::string16 GetPermissionsAsString() const;
     size_t GetPermissionCount() const;
     base::string16 GetPermission(size_t index) const;
     base::string16 GetPermissionsDetails(size_t index) const;
@@ -376,6 +378,8 @@ class ExtensionInstallPrompt {
 
   // The object responsible for doing the UI specific actions.
   std::unique_ptr<extensions::ExtensionInstallUI> install_ui_;
+
+  content::WebContents* contents_;
 
   // Parameters to show the confirmation UI.
   std::unique_ptr<ExtensionInstallPromptShowParams> show_params_;

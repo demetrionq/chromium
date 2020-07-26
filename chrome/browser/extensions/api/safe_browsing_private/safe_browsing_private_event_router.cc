@@ -845,10 +845,11 @@ void SafeBrowsingPrivateEventRouter::IfAuthorized(
         safe_browsing::BinaryUploadServiceFactory::GetForProfile(
             Profile::FromBrowserContext(context_));
   }
-
+#if 0
   // TODO(crbug/1069049): Use reporting URL.
   if (binary_upload_service_)
     binary_upload_service_->IsAuthorized(GURL(), std::move(cont));
+#endif
 }
 
 void SafeBrowsingPrivateEventRouter::ReportRealtimeEvent(
@@ -920,6 +921,7 @@ const user_manager::User* SafeBrowsingPrivateEventRouter::GetChromeOSUser() {
 #endif
 
 bool SafeBrowsingPrivateEventRouter::IsRealtimeReportingAvailable() {
+#if 0
 #if defined(OS_CHROMEOS)
   // The device must be managed.
   if (!g_browser_process->platform_part()
@@ -934,6 +936,8 @@ bool SafeBrowsingPrivateEventRouter::IsRealtimeReportingAvailable() {
 #else
   return policy::ChromeBrowserCloudManagementController::IsEnabled();
 #endif
+#endif
+  return false;
 }
 
 void SafeBrowsingPrivateEventRouter::OnClientError(

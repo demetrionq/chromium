@@ -55,7 +55,7 @@
 #include "storage/browser/quota/special_storage_policy.h"
 #include "third_party/blink/public/mojom/dom_storage/dom_storage.mojom.h"
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 #include "content/browser/host_zoom_level_context.h"
 #endif
 
@@ -146,7 +146,7 @@ class CONTENT_EXPORT StoragePartitionImpl
   DevToolsBackgroundServicesContextImpl* GetDevToolsBackgroundServicesContext()
       override;
   ContentIndexContextImpl* GetContentIndexContext() override;
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
   HostZoomMap* GetHostZoomMap() override;
   HostZoomLevelContext* GetHostZoomLevelContext() override;
   ZoomLevelDelegate* GetZoomLevelDelegate() override;
@@ -485,7 +485,7 @@ class CONTENT_EXPORT StoragePartitionImpl
   std::unique_ptr<SharedWorkerServiceImpl> shared_worker_service_;
   std::unique_ptr<PushMessagingContext> push_messaging_context_;
   scoped_refptr<storage::SpecialStoragePolicy> special_storage_policy_;
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
   std::unique_ptr<HostZoomLevelContext, BrowserThread::DeleteOnUIThread>
       host_zoom_level_context_;
 #endif  // !defined(OS_ANDROID)

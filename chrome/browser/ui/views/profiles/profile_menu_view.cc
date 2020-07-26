@@ -250,8 +250,10 @@ void ProfileMenuView::OnPasswordsButtonClicked() {
   RecordClick(ActionableItem::kPasswordsButton);
   if (!perform_menu_actions())
     return;
+#if 0
   NavigateToManagePasswordsPage(
       browser(), password_manager::ManagePasswordsReferrer::kProfileChooser);
+#endif
 }
 
 void ProfileMenuView::OnCreditCardsButtonClicked() {

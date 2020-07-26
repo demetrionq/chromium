@@ -1987,7 +1987,8 @@ void AddSiteSettingsStrings(content::WebUIDataSource* html_source,
 
   html_source->AddBoolean(
       "enableInsecureContentContentSetting",
-      base::FeatureList::IsEnabled(features::kMixedContentSiteSetting));
+      false);
+//      base::FeatureList::IsEnabled(features::kMixedContentSiteSetting));
 
   html_source->AddBoolean(
       "showImprovedCookieControlsForThirdParties",

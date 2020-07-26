@@ -55,7 +55,6 @@ std::unique_ptr<BrowserNonClientFrameView> CreateBrowserNonClientFrameView(
     return std::make_unique<GlassBrowserFrameView>(frame, browser_view);
 #endif
   auto view = CreateOpaqueBrowserFrameView(frame, browser_view);
-  view->InitViews();
   return view;
 }
 

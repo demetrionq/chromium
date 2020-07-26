@@ -72,7 +72,7 @@ const std::map<std::string, std::string> CreatePathPrefixAliasesMap() {
 #endif  // defined(OS_ANDROID)
   };
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
   aliases["../../../third_party/lottie/"] = "lottie/";
   aliases["../../../third_party/polymer/v1_0/components-chromium/polymer2/"] =
       "polymer/v1_0/polymer/";

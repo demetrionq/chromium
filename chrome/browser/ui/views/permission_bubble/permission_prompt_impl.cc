@@ -26,6 +26,7 @@ enum class PermissionPromptImpl::PromptStyle {
   kQuiet
 };
 
+#if 0
 std::unique_ptr<permissions::PermissionPrompt> CreatePermissionPrompt(
     content::WebContents* web_contents,
     permissions::PermissionPrompt::Delegate* delegate) {
@@ -38,6 +39,7 @@ std::unique_ptr<permissions::PermissionPrompt> CreatePermissionPrompt(
   return std::make_unique<PermissionPromptImpl>(browser, web_contents,
                                                 delegate);
 }
+#endif
 
 PermissionPromptImpl::PermissionPromptImpl(Browser* browser,
                                            content::WebContents* web_contents,

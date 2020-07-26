@@ -79,6 +79,7 @@ void HandleOnPerformDrop(
     content::WebContents* web_contents,
     const content::DropData& drop_data,
     content::WebContentsViewDelegate::DropCompletionCallback callback) {
+#if 0
   safe_browsing::DeepScanningDialogDelegate::Data data;
   Profile* profile =
       Profile::FromBrowserContext(web_contents->GetBrowserContext());
@@ -112,4 +113,5 @@ void HandleOnPerformDrop(
                        std::move(data)),
         base::BindOnce(&ScanData, web_contents, std::move(callback)));
   }
+ #endif
 }

@@ -59,7 +59,7 @@ class COMPONENT_EXPORT(UI_BASE) OSExchangeData {
 #if defined(OS_WIN)
     FILE_CONTENTS  = 1 << 4,
 #endif
-#if defined(USE_AURA)
+#if true || defined(USE_AURA)
     HTML           = 1 << 5,
 #endif
   };
@@ -181,7 +181,7 @@ class COMPONENT_EXPORT(UI_BASE) OSExchangeData {
   void SetDownloadFileInfo(DownloadFileInfo* download);
 #endif
 
-#if defined(USE_AURA)
+#if true || defined(USE_AURA)
   // Adds a snippet of HTML.  |html| is just raw html but this sets both
   // text/html and CF_HTML.
   void SetHtml(const base::string16& html, const GURL& base_url);

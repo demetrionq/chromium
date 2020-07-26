@@ -190,6 +190,7 @@ void SafetyCheckHandler::PerformSafetyCheck() {
   safety_check_.reset(new safety_check::SafetyCheck(this));
   safety_check_->CheckSafeBrowsing(Profile::FromWebUI(web_ui())->GetPrefs());
 
+#if 0
   if (!version_updater_) {
     version_updater_.reset(VersionUpdater::Create(web_ui()->GetWebContents()));
   }
@@ -202,6 +203,7 @@ void SafetyCheckHandler::PerformSafetyCheck() {
   }
   DCHECK(update_helper_);
   CheckUpdates();
+#endif
 
   if (!leak_service_) {
     leak_service_ = BulkLeakCheckServiceFactory::GetForProfile(

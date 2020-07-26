@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <grit-part>
-  <if expr="enable_plugins">
+  <if expr="is_android or enable_plugins">
     <message name="IDS_PDF_DOWNLOAD_ORIGINAL" desc="The label for the menu option to download the original, unedited PDF document.">
       Original
     </message>

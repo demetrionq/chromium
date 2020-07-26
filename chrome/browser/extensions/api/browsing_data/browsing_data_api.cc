@@ -358,23 +358,7 @@ ExtensionFunction::ResponseAction BrowsingDataRemoverFunction::Run() {
   }
 
 #if BUILDFLAG(ENABLE_PLUGINS)
-  if (removal_mask_ &
-      ChromeBrowsingDataRemoverDelegate::DATA_TYPE_PLUGIN_DATA) {
-    // If we're being asked to remove plugin data, check whether it's actually
-    // supported.
-    base::ThreadPool::PostTask(
-        FROM_HERE,
-        {base::MayBlock(), base::TaskShutdownBehavior::SKIP_ON_SHUTDOWN,
-         base::TaskPriority::USER_VISIBLE},
-        base::BindOnce(
-            &BrowsingDataRemoverFunction::CheckRemovingPluginDataSupported,
-            this, PluginPrefs::GetForProfile(profile)));
-  } else {
-    StartRemoving();
-  }
-#else
   StartRemoving();
-#endif
 
   return did_respond() ? AlreadyResponded() : RespondLater();
 }
