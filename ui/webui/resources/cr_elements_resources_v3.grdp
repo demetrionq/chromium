@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <grit-part>
   <!-- Polymer 3.0 Elements -->
-  <include name="IDR_CR_ELEMENTS_ACTION_LINK_CSS_M_JS"
+  <!-- <include name="IDR_CR_ELEMENTS_ACTION_LINK_CSS_M_JS"
          file="${root_gen_dir}/ui/webui/resources/cr_elements/action_link_css.m.js"
          use_base_dir="false"
          type="BINDATA" />
@@ -12,7 +12,7 @@
   <include name="IDR_CR_ELEMENTS_CR_BUTTON_M_JS"
          file="${root_gen_dir}/ui/webui/resources/cr_elements/cr_button/cr_button.m.js"
          use_base_dir="false"
-         type="BINDATA" />
+         type="BINDATA" /> -->
   <include name="IDR_CR_ELEMENTS_CR_CHECKBOX_M_JS"
          file="${root_gen_dir}/ui/webui/resources/cr_elements/cr_checkbox/cr_checkbox.m.js"
          use_base_dir="false"

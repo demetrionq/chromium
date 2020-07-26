@@ -14,7 +14,7 @@ import org.chromium.components.embedder_support.util.UrlConstants;
 import org.chromium.content_public.browser.LoadUrlParams;
 import org.chromium.content_public.browser.WebContents;
 
-import org.chromium.chrome.browser.partnercustomizations.HomepageManager;
+//import org.chromium.chrome.browser.partnercustomizations.HomepageManager;
 
 
 /**

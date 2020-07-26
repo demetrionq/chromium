@@ -895,7 +895,7 @@ public class TabModelImpl extends TabModelJniBridge {
 //        Log.i("EXTENSIONS", "TabModelImpl - (secondary) getLastNonExtensionActiveIndex - " + mIndex);
         Tab currentTab = getTabAt(mIndex);
         // We get the adjacent tab in case we are currently on a chrome-extension page
-        if (currentTab != null && currentTab.getUrl() != null && (currentTab.getUrl().contains("chrome-extension://")))
+        if (currentTab != null && currentTab.getUrl() != null && (currentTab.getUrl().toString().contains("chrome-extension://")))
           result = mIndex - 1;
         if (result < 0)
           return 0;
