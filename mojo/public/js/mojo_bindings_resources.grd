@@ -14,7 +14,7 @@
   <release seq="1">
     <includes>
       <!-- All resources included on Android should use the lite bindings. -->
-      <if expr="not is_android">
+      <if expr="is_android or not is_android">
         <include name="IDR_MOJO_MOJO_BINDINGS_JS"
             file="${root_gen_dir}/mojo/public/js/mojo_bindings.js"
             use_base_dir="false"
@@ -59,7 +59,7 @@
           file="${root_gen_dir}/mojo/public/mojom/base/text_direction.mojom-lite.js"
           use_base_dir="false"
           type="BINDATA" />
-      <if expr="is_win or is_macosx or is_linux or is_android">
+      <if expr="is_android or is_win or is_macosx or is_linux or is_android">
         <include name="IDR_MOJO_TIME_MOJOM_HTML"
             file="${root_gen_dir}/mojo/public/mojom/base/time.mojom.html"
             use_base_dir="false"

@@ -2,9 +2,9 @@
 <!-- Bookmarks specific strings (included from generated_resources.grd). -->
 <grit-part>
   <!-- Begin of Bookmarks Bar strings-->
-  <if expr="not is_android">
+  <if expr="is_android or not is_android">
     <!-- The special folders created when importing from other other browsers. -->
-    <if expr="is_win">
+    <if expr="is_android or is_win">
       <message name="IDS_BOOKMARK_GROUP_FROM_IE" desc="The group name of bookmarks from Internet Explorer">
         Imported From IE
       </message>
@@ -103,7 +103,7 @@
     <message name="IDS_BOOKMARK_BAR_NEW_FOLDER" desc="Menu title for adding a new folder">
       Add &amp;folder...
     </message>
-    <if expr="not is_android">
+    <if expr="is_android or not is_android">
       <message name="IDS_SHOW_BOOKMARK_BAR" desc="The toggle to show the bookmark bar">
         &amp;Show bookmarks bar
       </message>
@@ -155,7 +155,7 @@
     <message name="IDS_BOOKMARK_BAR_NEW_FOLDER" desc="In Title Case: Menu title for adding a new folder">
       Add &amp;Folder...
     </message>
-    <if expr="not is_android">
+    <if expr="is_android or not is_android">
       <message name="IDS_SHOW_BOOKMARK_BAR" desc="In Title Case: The toggle to show the bookmark bar">
         &amp;Show Bookmarks Bar
       </message>
@@ -210,7 +210,7 @@
   <!-- End of Bookmarks Sync Promo strings for Desktop Identity Consistency. -->
 
   <!-- Begin of Desktop to iOS Promo strings. -->
-  <if expr="is_win">
+  <if expr="is_android or is_win">
     <message name="IDS_BOOKMARK_BUBBLE_DESKTOP_TO_IOS_PROMO_TITLE" desc="Title for Chrome iOS promotion appearing in the bookmark bubble after a bookmark is saved.">
       Sync this bookmark to your iPhone
     </message>

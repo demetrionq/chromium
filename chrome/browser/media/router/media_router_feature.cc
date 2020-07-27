@@ -66,7 +66,7 @@ bool MediaRouterEnabled(content::BrowserContext* context) {
 #endif  // defined(OS_ANDROID) || BUILDFLAG(ENABLE_EXTENSIONS)
 }
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 void RegisterLocalStatePrefs(PrefRegistrySimple* registry) {
   registry->RegisterBooleanPref(prefs::kMediaRouterCastAllowAllIPs, false,
                                 PrefRegistry::PUBLIC);

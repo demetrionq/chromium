@@ -22,7 +22,7 @@ without changes to the corresponding grd file. -->
       <!-- Roboto Font. Roboto-Regular and Roboto-Light is already available on
            Android, and Roboto-Medium is not used on Android. All 6 weights of
            Roboto are available on Chrome OS.-->
-      <if expr="not is_android and not chromeos">
+      <if expr="is_android or not is_android and not chromeos">
         <include name="IDR_WEBUI_ROBOTO_ROBOTO_REGULAR_WOFF2" file="roboto/roboto-regular.woff2" type="BINDATA" />
         <include name="IDR_WEBUI_ROBOTO_ROBOTO_MEDIUM_WOFF2" file="roboto/roboto-medium.woff2" type="BINDATA" />
         <include name="IDR_WEBUI_ROBOTO_ROBOTO_BOLD_WOFF2" file="roboto/roboto-bold.woff2" type="BINDATA" />
@@ -135,12 +135,12 @@ without changes to the corresponding grd file. -->
                use_base_dir="false" type="BINDATA"
                preprocess="true" />
 
-      <if expr="not is_android">
+      <if expr="is_android or not is_android">
         <part file="cr_components/cr_components_images.grdp" />
         <part file="cr_elements_images.grdp" />
       </if>
 
-      <if expr="not is_android and not is_ios">
+      <if expr="is_android or not is_android and not is_ios">
         <part file="cr_components/cr_components_resources_v3.grdp" />
         <part file="cr_elements_resources_v3.grdp" />
         <part file="cr_polymer_resources_v3.grdp" />
@@ -398,13 +398,13 @@ without changes to the corresponding grd file. -->
                    file="js/ios/mojo_api.js" type="chrome_html" />
       </if>
 
-      <if expr="not is_android and not is_ios">
+      <if expr="is_android or not is_android and not is_ios">
         <structure name="IDR_LOTTIE_LOTTIE_WORKER_MIN_JS"
                    file="../../../third_party/lottie/lottie_worker.min.js"
                    type="chrome_html" />
       </if>
 
-      <if expr="not is_android and not is_ios">
+      <if expr="is_android or not is_android and not is_ios">
         <part file="cr_components/cr_components_resources.grdp" />
         <part file="cr_elements_resources.grdp" />
         <part file="cr_polymer_resources.grdp" />

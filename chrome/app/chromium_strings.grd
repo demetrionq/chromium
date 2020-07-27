@@ -180,7 +180,7 @@ If you update this file, be sure also to update google_chrome_strings.grd. -->
   <release seq="1" allow_pseudo="false">
     <messages fallback_to_english="true">
       <!-- Settings specific strings -->
-      <if expr="not is_android">
+      <if expr="is_android or not is_android">
         <part file="settings_chromium_strings.grdp" />
       </if>
 
@@ -190,7 +190,7 @@ If you update this file, be sure also to update google_chrome_strings.grd. -->
       <message name="IDS_SHORT_PRODUCT_NAME" desc="The Chrome application short name.">
         Chromium
       </message>
-      <if expr="is_win">
+      <if expr="is_android or is_win">
         <message name="IDS_SXS_SHORTCUT_NAME" desc="Unused in Chromium builds" translateable="false">
         </message>
         <message name="IDS_SHORTCUT_NAME_BETA" desc="Unused in Chromium builds" translateable="false">
@@ -211,7 +211,7 @@ If you update this file, be sure also to update google_chrome_strings.grd. -->
       </if>
       <!-- Chrome enterprise logo won't be used in Chromium -->
       <message name="IDS_PRODUCT_LOGO_ENTERPRISE_ALT_TEXT" desc="Alt text for the Chromium Enterprise logo image."/>
-      <if expr="is_win">
+      <if expr="is_android or is_win">
         <message name="IDS_SHORTCUT_NEW_WINDOW" desc="The text label of the New window shortcut context menu entry as of Windows 8">
           New window
         </message>
@@ -298,7 +298,7 @@ If you update this file, be sure also to update google_chrome_strings.grd. -->
           Chromium may not function correctly because it is no longer supported on Mac OS X 10.9.
         </message>
       </if>
-      <if expr="is_win">
+      <if expr="is_android or is_win">
         <message name="IDS_WIN_XP_VISTA_OBSOLETE" desc="A message displayed on an at-launch infobar and about:help warning the user that the computer they are using is no longer supported.">
           Chromium may not function correctly because it is no longer supported on Windows XP or Windows Vista
         </message>
@@ -307,13 +307,13 @@ If you update this file, be sure also to update google_chrome_strings.grd. -->
         Chromium
       </message>
       <!-- Hung Browser Detector -->
-      <if expr="is_win">
+      <if expr="is_android or is_win">
         <message name="IDS_BROWSER_HUNGBROWSER_MESSAGE" desc="Content of the dialog box shown when the browser is hung">
           Chromium is unresponsive. Relaunch now?
         </message>
       </if>
       <!-- Uninstall messages -->
-      <if expr="is_win">
+      <if expr="is_android or is_win">
         <message name="IDS_UNINSTALL_CLOSE_APP" desc="Message to user when uninstall detects other app instance running">
           Please close all Chromium windows and try again.
         </message>
@@ -371,7 +371,7 @@ Chromium is unable to recover your settings.
       <message name="IDS_CRASH_RECOVERY_TITLE" desc="Title of dialog shown when the browser crashes.">
         Chromium
       </message>
-      <if expr="is_win">
+      <if expr="is_android or is_win">
         <message name="IDS_CRASH_RECOVERY_CONTENT" desc="Text content telling the user the browser has crashed.">
           Whoa! Chromium has crashed. Relaunch now?
         </message>
@@ -401,7 +401,7 @@ Chromium is unable to recover your settings.
           Chromium wants to export your passwords.
         </message>
       </if>
-      <if expr="is_win">
+      <if expr="is_android or is_win">
         <message name="IDS_PASSWORDS_PAGE_AUTHENTICATION_PROMPT" desc="Text for the dialog box that prompts the user for their OS account password before revealing plaintext passwords on the password page.">
           Chromium is trying to show passwords. Type your Windows password to allow this.
         </message>
@@ -452,7 +452,7 @@ Chromium is unable to recover your settings.
         </message>
       </if>
       <!-- Options Dialog -->
-      <if expr="is_win">
+      <if expr="is_android or is_win">
         <message name="IDS_SHORTCUT_TOOLTIP" desc="Text for the hover-on tooltip for the Chromium shortcuts.">
           Access the Internet
         </message>
@@ -469,7 +469,7 @@ Chromium is unable to recover your settings.
       <message name="IDS_DEFAULT_BROWSER_INFOBAR_TEXT" desc="Text to show in an infobar when Chromium is not the current default browser.">
         Chromium isn't your default browser
       </message>
-      <if expr="is_win">
+      <if expr="is_android or is_win">
         <!-- Try Chrome Toast Dialog -->
         <message name="IDS_TRY_TOAST_HEADING" desc="Top line of the try-chrome-again dialog">
           There is a new version of Chromium available.
@@ -702,7 +702,7 @@ Chromium is unable to recover your settings.
       </if>
 
       <!-- Dice Web Signin Interception Bubble-->
-      <if expr="not chromeos and not is_android">
+      <if expr="is_android or not chromeos and not is_android">
         <message name="IDS_SIGNIN_DICE_WEB_INTERCEPT_ENTERPRISE_BUBBLE_DESC" desc="Body of the web signin interception bubble">
           You signed in with a work account. Would you like to create a new Chromium Profile for Work to keep your data separate?
         </message>
@@ -711,7 +711,7 @@ Chromium is unable to recover your settings.
       <!-- Chrome Cleanup prompt.
            Note: these strings should only be used by Google Chrome, but
                  omitting them brings up a hash collision error. -->
-      <if expr="is_win">
+      <if expr="is_android or is_win">
         <message name="IDS_CHROME_CLEANUP_PROMPT_EXPLANATION" desc="Description in the Chrome Cleanup dialog that Chromium browser shows when unwanted software, like ad injectors or software that changes the user's settings without their knowledge, is found on the user's computer. Appears under the title asking 'Remove harmful software?' Actor is Chromium; we are asking, Do you want Chromium to remove harmful software? 'it' is harmful software. User has the option of clicking 'Remove' to proceed with a cleanup, or 'Details' to see more details. The description is also shown on the Chrome Cleanup section of the Settings page, under 'Remove harmful software' title. Preferrably, the translation for this string should parallel IDS_SETTINGS_RESET_CLEANUP_EXPLANATION_CURRENTLY_REMOVING.">
           There's harmful software on your computer. Chromium can remove it, restore your settings, and disable extensions to make your browser work normally again.
         </message>
@@ -767,7 +767,7 @@ Chromium is unable to recover your settings.
       <message name="IDS_APP_SHORTCUTS_SUBDIR_NAME_CANARY" desc="Name for the Chrome Apps Start Menu folder name.">
         Chromium Apps
       </message>
-      <if expr="is_win">
+      <if expr="is_android or is_win">
         <message name="IDS_APP_SHORTCUTS_SUBDIR_NAME_BETA" desc="Unused in Chromium builds" translateable="false">
         </message>
         <message name="IDS_APP_SHORTCUTS_SUBDIR_NAME_DEV" desc="Unused in Chromium builds" translateable="false">
@@ -863,7 +863,7 @@ Chromium is unable to recover your settings.
       </message>
 
       <!-- Windows firewall rule strings. -->
-      <if expr="is_win">
+      <if expr="is_android or is_win">
         <message name="IDS_INBOUND_MDNS_RULE_NAME" desc="The name of the firewall rule allowing inbound mDNS traffic.">
           Chromium (mDNS-In)
         </message>
@@ -884,7 +884,7 @@ Chromium is unable to recover your settings.
         </message>
       </if>
 
-      <if expr="not is_android">
+      <if expr="is_android or not is_android">
         <message name="IDS_CONTENT_CONTEXT_ACCESSIBILITY_LABELS_BUBBLE_TEXT" desc="The text of a bubble that confirms users allows integrating the accessibility labels service of Google to Chromium.">
           If an image doesn’t have a useful description, Chromium will try to provide one for you. To create descriptions, images are sent to Google. You can turn this off in settings at any time.
         </message>
@@ -966,7 +966,7 @@ Chromium is unable to recover your settings.
       </message>
 
       <!-- Sync errors. Android uses native UI to handle Sync settings -->
-      <if expr="not is_android">
+      <if expr="is_android or not is_android">
         <message name="IDS_SYNC_UPGRADE_CLIENT" desc="Message indicating client needs to be upgraded to the latest version.">
           Update Chromium to start sync
         </message>
@@ -1057,20 +1057,20 @@ Chromium is unable to recover your settings.
       </if>
 
       <!-- Welcome page (chrome://welcome) strings -->
-      <if expr="not chromeos and not is_android">
+      <if expr="is_android or not chromeos and not is_android">
         <message name="IDS_WELCOME_HEADER" desc="A message which will appear as the header on the Welcome UI if the user has never run Chromium before.">
           Welcome to Chromium
         </message>
       </if>
 
       <!-- Native notifications for Windows 10 -->
-      <if expr="is_win">
+      <if expr="is_android or is_win">
         <message name="IDS_WIN_NOTIFICATION_SETTINGS_CONTEXT_MENU_ITEM_NAME" desc="The name of the button in Windows Notification Center which leads to Chrome notification settings.">
           Go to Chromium notification settings
         </message>
       </if>
       <!-- Relaunch notification bubble and dialog. -->
-      <if expr="not is_android">
+      <if expr="is_android or not is_android">
         <if expr="not chromeos">
           <message name="IDS_RELAUNCH_RECOMMENDED_TITLE" desc="The title of a dialog that tells users that a browser relaunch is recommended for an update available for some number of days.">
             {0, plural,
@@ -1129,7 +1129,7 @@ Chromium is unable to recover your settings.
         Share a Chromium tab
       </message>
       <!-- User happiness tracking survey UI -->
-      <if expr="not is_android">
+      <if expr="is_android or not is_android">
         <message name="IDS_HATS_BUBBLE_TITLE" translateable="false" desc="The title of Happiness Tracking Survey's invitation banner, it invites users to take a survey">
           Help us improve Chromium
         </message>
@@ -1146,7 +1146,7 @@ Chromium is unable to recover your settings.
       </if>
 
       <!-- Profile Picker -->
-      <if expr="not chromeos and not is_android">
+      <if expr="is_android or not chromeos and not is_android">
         <message name="IDS_PROFILE_PICKER_MAIN_VIEW_TITLE" desc="Profile picker main view title">
           Pick your Chromium Space
         </message>

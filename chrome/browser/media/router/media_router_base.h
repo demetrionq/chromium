@@ -42,7 +42,7 @@ class MediaRouterBase : public MediaRouter {
   std::vector<MediaRoute> GetCurrentRoutes() const override;
   std::unique_ptr<media::FlingingController> GetFlingingController(
       const MediaRoute::Id& route_id) override;
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
   void GetMediaController(
       const MediaRoute::Id& route_id,
       mojo::PendingReceiver<mojom::MediaController> controller,

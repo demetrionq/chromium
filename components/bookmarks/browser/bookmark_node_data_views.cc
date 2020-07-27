@@ -12,6 +12,7 @@
 #include "ui/base/clipboard/clipboard_format_type.h"
 #include "ui/base/dragdrop/os_exchange_data.h"
 #include "url/url_constants.h"
+#include "components/bookmarks/browser/bookmark_node_data.h"
 
 namespace bookmarks {
 
