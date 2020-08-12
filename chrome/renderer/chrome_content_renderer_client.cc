@@ -493,7 +493,7 @@ void ChromeContentRendererClient::RenderFrameCreated(
 #endif
 
 #if BUILDFLAG(ENABLE_PLUGINS)
-  new PepperHelper(render_frame);
+  // new PepperHelper(render_frame);
 #endif
 
 #if BUILDFLAG(ENABLE_NACL)
@@ -634,7 +634,7 @@ bool ChromeContentRendererClient::IsPluginHandledExternally(
     const blink::WebElement& plugin_element,
     const GURL& original_url,
     const std::string& mime_type) {
-#if BUILDFLAG(ENABLE_EXTENSIONS) && BUILDFLAG(ENABLE_PLUGINS)
+#if false && BUILDFLAG(ENABLE_EXTENSIONS) && BUILDFLAG(ENABLE_PLUGINS)
   DCHECK(plugin_element.HasHTMLTagName("object") ||
          plugin_element.HasHTMLTagName("embed"));
   // Blink will next try to load a WebPlugin which would end up in
