@@ -25,5 +25,5 @@ So chromium full sources are prepared, now you can build. Currently you are in "
 
 Additional information:
 Current source version has chrome extensions support - it was added by patch
-https://raw.githubusercontent.com/dvalter/chromium_extension_patches/master/0001-Kiwi-Introduce-extensions-support-R80.patch
+https://github.com/dvalter/chromium_extension_patches/blob/master/0001-Kiwi-Introduce-extensions-support-R80.patch
 
