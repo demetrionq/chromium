@@ -1,0 +1,20 @@
+target_os = "android"
+target_cpu = "arm" # <---- can be arm, arm64, x86 or x64
+is_debug = false
+is_java_debug = false
+
+android_channel = "stable"
+is_official_build = true
+is_component_build = false
+is_chrome_branded = false
+is_clang = true
+symbol_level = 1
+use_unofficial_version_number = false
+android_default_version_code = "101"
+android_default_version_name = "Flow"
+fieldtrial_testing_like_official_build = true
+icu_use_data_file = false
+enable_iterator_debugging = false
+
+enable_extensions = true
+enable_plugins = true

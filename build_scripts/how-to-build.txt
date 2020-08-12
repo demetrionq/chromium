@@ -1,0 +1,29 @@
+Requirements:
+* python version>=2.7
+* jdk version>=8 , install with command - sudo apt-get install default-jdk
+* depot_tools, installation instructions can be found at https://chromium.googlesource.com/chromium/src/+/master/docs/android_build_instructions.md#install-depot_tools
+  after extend PATH variable with depot_tools path(make it in the file ~/.bashrc or ~/.zshrc) restart command terminal.
+
+Prepare chromium full source:
+* create empty folder <Folder_For_Chromium>;
+* goto the folder and run the command
+    git clone --depth 100 --branch dev-80.0.3987.58 https://github.com/demetrionq/chromium.git src
+* after cloning finished stay in the directory and run the script
+    python src/build_scripts/tools/download_dependencies.py
+  the script download full source of chromium 80.0.3987.58 (with dependencies etc.), full source size ~24GB
+* after the script finishing go to src folder and run
+    git reset --hard
+    build/install-build-deps-android.sh
+
+So chromium full sources are prepared, now you can build. Currently you are in "<Folder_For_Chromium>/src" directory: 
+* create folder out/<platform_name>
+* copy to the directory file build_scripts/args.gn (edit if needed);
+* run commands
+    gn gen out/<platform_name>
+    autoninja -C out/<platform_name> chrome_public_apk
+
+
+Additional information:
+Current source version has chrome extensions support - it was added by patch
+https://raw.githubusercontent.com/dvalter/chromium_extension_patches/master/0001-Kiwi-Introduce-extensions-support-R80.patch
+
