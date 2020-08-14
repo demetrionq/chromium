@@ -154,11 +154,12 @@ public class FirstRunActivity extends FirstRunActivityBase implements FirstRunPa
         }
 
         // An optional sign-in page.
-        if (mFreProperties.getBoolean(SHOW_SIGNIN_PAGE)) {
+        // uncomment to enable
+        /*if (mFreProperties.getBoolean(SHOW_SIGNIN_PAGE)) {
             mPages.add(SigninFirstRunFragment::new);
             mFreProgressStates.add(FRE_PROGRESS_SIGNIN_SHOWN);
             notifyAdapter = true;
-        }
+        } */
 
         if (notifyAdapter && mPagerAdapter != null) {
             mPagerAdapter.notifyDataSetChanged();

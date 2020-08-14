@@ -226,6 +226,10 @@ public class MainPreferences extends PreferenceFragmentCompat
         ChromeBasePreference dataReduction =
                 (ChromeBasePreference) findPreference(PREF_DATA_REDUCTION);
         dataReduction.setSummary(DataReductionPreferenceFragment.generateSummary(getResources()));
+        //remove folowing to enable google accounts
+        removePreferenceIfPresent(PREF_ACCOUNT_SECTION);
+        removePreferenceIfPresent(PREF_SYNC_AND_SERVICES);
+        //remove end
     }
 
     private Preference addPreferenceIfAbsent(String key) {
