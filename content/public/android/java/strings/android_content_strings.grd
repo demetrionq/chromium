@@ -203,6 +203,11 @@
       <message name="IDS_ACCESSIBILITY_TIME_PICKER_SECOND" desc="Content description for the time picker second component. [CHAR-LIMIT=32]">
         Second
       </message>
+
+       <message name="IDS_MAIN_MENU_EXTENSIONS" desc="Extensions in main menu. [CHAR-LIMIT=32]">
+        Extensions
+      </message>
+
       <message name="IDS_ACCESSIBILITY_TIME_PICKER_MILLI" desc="Content description for the time picker milli component. [CHAR-LIMIT=32]">
         Millisecond
       </message>
