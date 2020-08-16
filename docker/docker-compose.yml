@@ -1,7 +1,7 @@
 version: '3.7'
 
 services:
-  builder:
+  chromium_builder:
     build:
       context: .
       dockerfile: Dockerfile
