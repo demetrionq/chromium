@@ -12,6 +12,8 @@ services:
       TARGET_CPU: $TARGET_CPU
     command: >
         bash -c "
+        cd /chromium &&
+        python src/build_scripts/tools/download_dependencies.py &&
         cd /chromium/src/ &&
         gn gen out/android_$$TARGET_CPU &&
         cd /chromium/src/ &&
