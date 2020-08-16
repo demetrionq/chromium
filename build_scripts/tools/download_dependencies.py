@@ -35,6 +35,7 @@ import requests
 import zipfile
 import stat
 import errno
+import sys
 
 
 def download_file_from_google_drive(id, destination):
@@ -80,6 +81,8 @@ def mkdir_p(path):
 
 
 if __name__ == "__main__":
+    print (len(sys.argv) == 1 or (len(sys.argv) == 2 and sys.argv[1] == '--download-only'))
+    exit(0)
     symlink_list = [  # [real_path, symlink_path]
         ['src/native_client/toolchain/linux_x86/nacl_x86_glibc/bin/x86_64-nacl-gccbug', 'src/native_client/toolchain/linux_x86/nacl_x86_glibc/bin/i686-nacl-gccbug'],
         ['src/native_client/toolchain/linux_x86/nacl_x86_glibc/bin/x86_64-nacl-readelf', 'src/native_client/toolchain/linux_x86/nacl_x86_glibc/bin/i686-nacl-readelf'],
@@ -13380,45 +13383,54 @@ if __name__ == "__main__":
         '1IHI3gNBhUfzSZWqFn8idTIUE7ViUj_jp',
     ]
 
-    successful_downloaded_marker = 'src/download_dependencies_ok'  # also should be added to gitignore
+    if len(sys.argv) == 1 or (len(sys.argv) == 2 and sys.argv[1] == '--download-only'):
+        successful_downloaded_marker = 'src/download_dependencies_ok'  # also should be added to gitignore
+        
+        if os.path.exists(successful_downloaded_marker):
+            print('Skip Download Dependencies - ALREADY DOWNLOADED!')
+        else:
+            archive = 'file_tmp.zip'
+            n = 0
+            for file_id in file_id_list:
+                n += 1
+                print('Downloading archive {}/{}, id - {}'.format(n, len(file_id_list), file_id))
+                download_file_from_google_drive(file_id, archive)
+                print('Extracting...')
+                with zipfile.ZipFile(archive, 'r') as zip_ref:
+                    zip_ref.extractall('.')
+            print('!!! All archives downloaded and unpacked !!!')
+            os.remove(archive)
 
-    if os.path.exists(successful_downloaded_marker):
-        print('Skip Download Dependencies - ALREADY DOWNLOADED!')
-    else:
-        archive = 'file_tmp.zip'
-        n = 0
-        for file_id in file_id_list:
-            n += 1
-            print('Downloading archive {}/{}, id - {}'.format(n, len(file_id_list), file_id))
-            download_file_from_google_drive(file_id, archive)
-            print('Extracting...')
-            with zipfile.ZipFile(archive, 'r') as zip_ref:
-                zip_ref.extractall('.')
-        print('!!! All archives downloaded and unpacked !!!')
-        os.remove(archive)
+            with open(successful_downloaded_marker, 'w') as f:
+                f.write('ok')
+        
+        if len(sys.argv) == 2 and sys.argv[1] == '--download-only':
+            exit(0)
     
-    permission_777 = \
-        stat.S_IREAD | stat.S_IEXEC | stat.S_IRWXU | stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR | stat.S_IRWXG \
-        | stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP | stat.S_IRWXO | stat.S_IROTH | stat.S_IWOTH | stat.S_IXOTH
+    if len(sys.argv) == 1 or (len(sys.argv) == 2 and sys.argv[1] == '--change-file-permissions'):
+        permission_777 = \
+            stat.S_IREAD | stat.S_IEXEC | stat.S_IRWXU | stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR | stat.S_IRWXG \
+            | stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP | stat.S_IRWXO | stat.S_IROTH | stat.S_IWOTH | stat.S_IXOTH
 
-    print('Change files permissions...')
-    for file_name in exec_files_list:
-        os.chmod(file_name, permission_777)
+        print('Change files permissions...')
+        for file_name in exec_files_list:
+            os.chmod(file_name, permission_777)
 
-    print('Create symbol links...')
-    for link_info in symlink_list:
-        try:
-            if not os.path.exists(link_info[1]):
-                i = link_info[1].rfind('/')
-                if i >= 0:
-                    dir_name = link_info[1][:i]
-                    mkdir_p(dir_name)
-                os.symlink(os.path.abspath(link_info[0]), os.path.abspath(link_info[1]))
-        except Exception as ex:
-            print('Exception on create symlink {} for {} - {}'.format(link_info[1], link_info[0], ex))
+        if len(sys.argv) == 2 and sys.argv[1] == '--change-file-permissions':
+            exit(0)
 
-    with open(successful_downloaded_marker, 'w') as f:
-        f.write('ok')
+    if len(sys.argv) == 1 or (len(sys.argv) == 2 and sys.argv[1] == '--create-symlinks'):
+        print('Create symbol links...')
+        for link_info in symlink_list:
+            try:
+                if not os.path.exists(link_info[1]):
+                    i = link_info[1].rfind('/')
+                    if i >= 0:
+                        dir_name = link_info[1][:i]
+                        mkdir_p(dir_name)
+                    os.symlink(os.path.abspath(link_info[0]), os.path.abspath(link_info[1]))
+            except Exception as ex:
+                print('Exception on create symlink {} for {} - {}'.format(link_info[1], link_info[0], ex))
 
     print('!!! SUCCESSFULLY COMPLETED !!!')
 
