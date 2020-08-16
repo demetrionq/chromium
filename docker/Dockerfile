@@ -7,4 +7,6 @@ RUN git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
 ENV PATH="/depot_tools:${PATH}"
 
 COPY install-build-deps-android.sh /tmp/install-build-deps-android.sh	
-RUN bash /tmp/install-build-deps-android.sh
+COPY install-build-deps.sh /tmp/install-build-deps.sh
+	
+RUN bash -c /tmp/install-build-deps-android.sh
