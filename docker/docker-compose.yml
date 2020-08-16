@@ -15,6 +15,7 @@ services:
         cd /chromium &&
         python src/build_scripts/tools/download_dependencies.py &&
         cd /chromium/src/ &&
+        git reset --hard &&
         gn gen out/android_$$TARGET_CPU &&
         cd /chromium/src/ &&
         autoninja -C out/android_$$TARGET_CPU chrome_public_apk"

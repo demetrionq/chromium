@@ -10,3 +10,4 @@ COPY install-build-deps-android.sh /tmp/install-build-deps-android.sh
 COPY install-build-deps.sh /tmp/install-build-deps.sh
 	
 RUN bash -c /tmp/install-build-deps-android.sh
+RUN pip install requests
