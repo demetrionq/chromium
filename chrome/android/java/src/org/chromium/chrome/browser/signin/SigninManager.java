@@ -298,8 +298,10 @@ public class SigninManager
      *         Google Play Services installed.
      */
     public boolean isSigninSupported() {
-        return !ApiCompatibilityUtils.isDemoUser() && isGooglePlayServicesPresent()
-                && !SigninManagerJni.get().isMobileIdentityConsistencyEnabled();
+          return false;
+        // uncomment to enable
+        /*return !ApiCompatibilityUtils.isDemoUser() && isGooglePlayServicesPresent()
+                && !SigninManagerJni.get().isMobileIdentityConsistencyEnabled(); */
     }
 
     /**
