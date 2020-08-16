@@ -13384,19 +13384,18 @@ if __name__ == "__main__":
 
     if os.path.exists(successful_downloaded_marker):
         print('Skip Download Dependencies - ALREADY DOWNLOADED!')
-        exit(0)
-    
-    archive = 'file_tmp.zip'
-    n = 0
-    for file_id in file_id_list:
-        n += 1
-        print('Downloading archive {}/{}, id - {}'.format(n, len(file_id_list), file_id))
-        download_file_from_google_drive(file_id, archive)
-        print('Extracting...')
-        with zipfile.ZipFile(archive, 'r') as zip_ref:
-            zip_ref.extractall('.')
-    print('!!! All archives downloaded and unpacked !!!')
-    os.remove(archive)
+    else:
+        archive = 'file_tmp.zip'
+        n = 0
+        for file_id in file_id_list:
+            n += 1
+            print('Downloading archive {}/{}, id - {}'.format(n, len(file_id_list), file_id))
+            download_file_from_google_drive(file_id, archive)
+            print('Extracting...')
+            with zipfile.ZipFile(archive, 'r') as zip_ref:
+                zip_ref.extractall('.')
+        print('!!! All archives downloaded and unpacked !!!')
+        os.remove(archive)
     
     permission_777 = \
         stat.S_IREAD | stat.S_IEXEC | stat.S_IRWXU | stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR | stat.S_IRWXG \
