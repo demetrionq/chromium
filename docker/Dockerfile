@@ -1,7 +1,6 @@
 FROM ubuntu:18.04
 
-RUN apt-get update
-RUN apt-get -y install git python openjdk-11-jdk-headless libncurses5 lsb-release sudo python-pip
+RUN apt-get update && apt-get -y install git python openjdk-11-jdk-headless libncurses5 lsb-release sudo python-pip
 RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install tzdata
 
 RUN git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
