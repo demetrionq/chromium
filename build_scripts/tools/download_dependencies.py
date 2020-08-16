@@ -81,8 +81,6 @@ def mkdir_p(path):
 
 
 if __name__ == "__main__":
-    print (len(sys.argv) == 1 or (len(sys.argv) == 2 and sys.argv[1] == '--download-only'))
-    exit(0)
     symlink_list = [  # [real_path, symlink_path]
         ['src/native_client/toolchain/linux_x86/nacl_x86_glibc/bin/x86_64-nacl-gccbug', 'src/native_client/toolchain/linux_x86/nacl_x86_glibc/bin/i686-nacl-gccbug'],
         ['src/native_client/toolchain/linux_x86/nacl_x86_glibc/bin/x86_64-nacl-readelf', 'src/native_client/toolchain/linux_x86/nacl_x86_glibc/bin/i686-nacl-readelf'],
