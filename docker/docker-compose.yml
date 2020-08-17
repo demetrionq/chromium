@@ -11,9 +11,9 @@ services:
       - $WORKSPACE/chromium:$WORKSPACE/chromium
     environment:
       TARGET_CPU: $TARGET_CPU
+      WORKSPACE: $WORKSPACE
     command: >
         bash -c "
-        cd /chromium/src/ &&
+        cd $$WORKSPACE/chromium/src/ &&
         gn gen out/android_$$TARGET_CPU &&
-        cd /chromium/src/ &&
         autoninja -C out/android_$$TARGET_CPU chrome_public_apk"
