@@ -48,6 +48,48 @@
 #include "url/gurl.h"
 #include "url/url_constants.h"
 
+#include "components/prefs/pref_service.h"
+#include "components/prefs/scoped_user_pref_update.h"
+#include "chrome/browser/extensions/tab_helper.h"
+#include "content/public/browser/navigation_controller.h"
+#include "content/public/browser/web_contents.h"
+#include "content/public/browser/web_ui.h"
+#include "content/public/common/bindings_policy.h"
+#include "extensions/browser/extension_icon_placeholder.h"
+#include "extensions/browser/extension_registry.h"
+#include "extensions/browser/extension_util.h"
+#include "extensions/browser/image_loader.h"
+#include "extensions/common/extension.h"
+#include "extensions/common/extension_icon_set.h"
+#include "extensions/common/extension_resource.h"
+#include "extensions/common/manifest_handlers/icons_handler.h"
+#include "extensions/common/manifest_handlers/incognito_info.h"
+#include "net/base/file_stream.h"
+#include "third_party/skia/include/core/SkBitmap.h"
+#include "ui/base/page_transition_types.h"
+#include "chrome/browser/sessions/session_tab_helper.h"
+#include "ui/gfx/codec/png_codec.h"
+#include "ui/gfx/favicon_size.h"
+#include "ui/gfx/image/image_skia.h"
+#include "chrome/browser/profiles/profile.h"
+#include "chrome/browser/extensions/extension_action_runner.h"
+#include "chrome/browser/ui/extensions/icon_with_badge_image_source.h"
+#include "chrome/browser/ui/extensions/extension_action_view_controller.h"
+#include "ui/gfx/font_list.h"
+#include "ui/gfx/geometry/rect.h"
+#include "ui/gfx/geometry/rect_f.h"
+#include "ui/gfx/geometry/size.h"
+#include "ui/gfx/canvas.h"
+#include "ui/gfx/geometry/insets.h"
+#include "ui/gfx/image/canvas_image_source.h"
+#include "ui/gfx/skia_util.h"
+#include "ui/base/webui/web_ui_util.h"
+#include "chrome/browser/extensions/api/extension_action/extension_action_api.h"
+#include "chrome/browser/extensions/extension_action_manager.h"
+#include "chrome/browser/extensions/extension_action_runner.h"
+#include "chrome/browser/extensions/extension_action_icon_factory.h"
+#include "chrome/browser/extensions/extension_context_menu_model.h"
+
 using content::BrowserThread;
 
 namespace keys = extension_management_api_constants;
@@ -545,7 +587,7 @@ ExtensionFunction::ResponseAction ManagementUninstallFunctionBase::Uninstall(
   if (show_confirm_dialog && !user_gesture())
     return RespondNow(Error(keys::kGestureNeededForUninstallError));
 
-  if (show_confirm_dialog) {
+  if (false && show_confirm_dialog) {
     // We show the programmatic uninstall ui for extensions uninstalling
     // other extensions.
     bool show_programmatic_uninstall_ui =
@@ -991,6 +1033,82 @@ ManagementEventRouter::ManagementEventRouter(content::BrowserContext* context)
 
 ManagementEventRouter::~ManagementEventRouter() {}
 
+bool PageActionWantsToRun(
+    content::WebContents* web_contents, ExtensionAction* extension_action_) {
+  return extension_action_->action_type() ==
+             extensions::ActionInfo::TYPE_PAGE &&
+         extension_action_->GetIsVisible(
+             SessionTabHelper::IdForTab(web_contents).id());
+}
+
+bool HasBeenBlocked(
+    content::WebContents* web_contents, const extensions::Extension* extension) {
+  extensions::ExtensionActionRunner* action_runner =
+    extensions::ExtensionActionRunner::GetForWebContents(web_contents);
+  return action_runner && action_runner->WantsToRun(extension);
+}
+
+bool IsEnabled(
+    content::WebContents* web_contents, const extensions::Extension* extension, ExtensionAction* extension_action_) {
+  return extension_action_->GetIsVisible(
+             SessionTabHelper::IdForTab(web_contents).id()) ||
+         HasBeenBlocked(web_contents, extension);
+}
+
+gfx::Image GetIcon(int tab_id, ExtensionAction* extension_action_) {
+  gfx::Image icon = extension_action_->GetExplicitlySetIcon(tab_id);
+  if (!icon.IsEmpty())
+    return icon;
+
+  icon = extension_action_->GetDeclarativeIcon(tab_id);
+
+  if (!icon.IsEmpty())
+    return icon;
+  return extension_action_->GetDefaultIconImage();
+}
+
+std::unique_ptr<IconWithBadgeImageSource> GetIconImageSource(
+    const extensions::Extension* extension,
+    ExtensionAction* extension_action_,
+    content::WebContents* web_contents,
+    const gfx::Size& size) {
+  int tab_id = SessionTabHelper::IdForTab(web_contents).id();
+  std::unique_ptr<IconWithBadgeImageSource> image_source(
+      new IconWithBadgeImageSource(size));
+
+  GetIcon(tab_id, extension_action_);
+  image_source->SetIcon(GetIcon(tab_id, extension_action_));
+
+  std::unique_ptr<IconWithBadgeImageSource::Badge> badge;
+  std::string badge_text = extension_action_->GetExplicitlySetBadgeText(tab_id);
+  if (!badge_text.empty()) {
+    badge.reset(new IconWithBadgeImageSource::Badge(
+            badge_text,
+            extension_action_->GetBadgeTextColor(tab_id),
+            extension_action_->GetBadgeBackgroundColor(tab_id)));
+  }
+  image_source->SetBadge(std::move(badge));
+
+  // If the extension doesn't want to run on the active web contents, we
+  // grayscale it to indicate that.
+  image_source->set_grayscale(!IsEnabled(web_contents, extension, extension_action_));
+
+  // If the action *does* want to run on the active web contents and is also
+  // overflowed, we add a decoration so that the user can see which overflowed
+  // action wants to run (since they wouldn't be able to see the change from
+  // grayscale to color).
+  bool is_overflow = false;
+
+  bool has_blocked_actions = HasBeenBlocked(web_contents, extension);
+//  image_source->set_state(state);
+  image_source->set_paint_blocked_actions_decoration(has_blocked_actions);
+  image_source->set_paint_page_action_decoration(
+      !has_blocked_actions && is_overflow &&
+      PageActionWantsToRun(web_contents, extension_action_));
+
+  return image_source;
+}
+
 void ManagementEventRouter::OnExtensionLoaded(
     content::BrowserContext* browser_context,
     const Extension* extension) {
@@ -1010,8 +1128,24 @@ void ManagementEventRouter::OnExtensionInstalled(
     content::BrowserContext* browser_context,
     const Extension* extension,
     bool is_update) {
+  LOG(INFO) << "[EXTENSIONS] OnExtensionInstalled - Step 1";
+
   BroadcastEvent(extension, events::MANAGEMENT_ON_INSTALLED,
                  management::OnInstalled::kEventName);
+
+  ExtensionAction* extension_action_;
+  extensions::ExtensionActionManager* manager =
+       extensions::ExtensionActionManager::Get(Profile::FromBrowserContext(browser_context));
+  if (extension) {
+    extension_action_ = manager->GetExtensionAction(*extension);
+    if (extension_action_) {
+      LOG(INFO) << "[EXTENSIONS] ManagementEventRouter::OnExtensionInstalled - Preloading icon";
+      std::unique_ptr<IconWithBadgeImageSource> icon_badge = GetIconImageSource(extension, extension_action_, nullptr, gfx::Size(48, 48));
+      gfx::Canvas canvas(gfx::Size(48, 48), 1.0f, false);
+      icon_badge->Draw(&canvas);
+    }
+  }
+  LOG(INFO) << "[EXTENSIONS] OnExtensionInstalled - Step 2";
 }
 
 void ManagementEventRouter::OnExtensionUninstalled(

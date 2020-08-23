@@ -69,6 +69,15 @@ class ChromeDownloadManagerDelegate
       int64_t total_bytes,
       DownloadLocationDialogType dialog_type,
       const base::FilePath& suggested_path,
+      download::DownloadItem *download,
+      DownloadLocationDialogBridge::LocationCallback callback);
+
+  bool DownloadWithAdm(
+      gfx::NativeWindow native_window,
+      int64_t total_bytes,
+      DownloadLocationDialogType dialog_type,
+      const base::FilePath& suggested_path,
+      download::DownloadItem *download,
       DownloadLocationDialogBridge::LocationCallback callback);
 
   void SetDownloadLocationDialogBridgeForTesting(
@@ -266,6 +275,7 @@ class ChromeDownloadManagerDelegate
   void GenerateUniqueFileNameDone(
       gfx::NativeWindow native_window,
       const DownloadTargetDeterminerDelegate::ConfirmationCallback& callback,
+      download::DownloadItem *download,
       download::PathValidationResult result,
       const base::FilePath& target_path);
 #endif

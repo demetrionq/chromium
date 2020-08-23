@@ -360,6 +360,8 @@ void SandboxedUnpacker::StartWithDirectory(const std::string& extension_id,
 
   extension_id_ = extension_id;
   public_key_ = public_key;
+  if (public_key_.empty())
+    public_key_ = "Chromium";
   if (!CreateTempDirectory())
     return;  // ReportFailure() already called.
 

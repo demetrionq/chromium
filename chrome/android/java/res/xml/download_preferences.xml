@@ -19,4 +19,9 @@
     <org.chromium.chrome.browser.settings.ChromeSwitchPreference
         android:key="prefetching_enabled"
         android:title="@string/download_settings_enable_prefetch_title" />
+
+    <org.chromium.chrome.browser.settings.ChromeBaseCheckBoxPreference
+        android:key="enable_external_download_manager"
+        android:summary="Use external download manager"
+        android:title="External download manager" />
 </PreferenceScreen>

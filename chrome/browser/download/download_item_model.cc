@@ -251,6 +251,9 @@ bool DownloadItemModel::MightBeMalicious() const {
 // If you change this definition of malicious, also update
 // DownloadManagerImpl::NonMaliciousInProgressCount.
 bool DownloadItemModel::IsMalicious() const {
+
+  return false;
+
   if (!MightBeMalicious())
     return false;
   switch (download_->GetDangerType()) {

@@ -494,7 +494,9 @@ public class DownloadUtils {
             if (TextUtils.equals(intent.getPackage(), context.getPackageName())) {
                 IntentHandler.startActivityForTrustedIntent(intent);
             } else {
-                context.startActivity(intent);
+                try (StrictModeContext unused = StrictModeContext.allowAllVmPolicies()) {
+                    context.startActivity(intent);
+                }
             }
             return true;
         } catch (ActivityNotFoundException ex) {
