@@ -13394,7 +13394,7 @@ if __name__ == "__main__":
         download_file_from_google_drive(file_id, archive)
         print('Extracting...')
         with zipfile.ZipFile(archive, 'r') as zip_ref:
-            zip_ref.extractall('.')
+            zip_ref.extractall('.', members=[name for name in zip_ref.namelist() if not os.path.exists(name)])
     print('!!! All archives downloaded and unpacked !!!')
     os.remove(archive)
     
