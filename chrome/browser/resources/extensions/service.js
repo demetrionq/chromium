@@ -191,13 +191,15 @@ export class Service {
       return;
     }
     this.isDeleting_ = true;
-    chrome.management.uninstall(id, {showConfirmDialog: true}, () => {
-      // The "last error" was almost certainly the user canceling the dialog.
-      // Do nothing. We only check it so we don't get noisy logs.
-      /** @suppress {suspiciousCode} */
-      chrome.runtime.lastError;
-      this.isDeleting_ = false;
-    });
+    if (window.confirm("Really uninstall extension " + id + " ?")) {
+      chrome.management.uninstall(id, {showConfirmDialog: true}, () => {
+        // The "last error" was almost certainly the user canceling the dialog.
+        // Do nothing. We only check it so we don't get noisy logs.
+        /** @suppress {suspiciousCode} */
+        chrome.runtime.lastError;
+        this.isDeleting_ = false;
+      });
+    }
   }
 
   /** @override */

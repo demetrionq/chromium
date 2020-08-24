@@ -98,6 +98,7 @@ bool FlashDownloadInterception::ShouldStopFlashDownloadAction(
     const GURL& source_url,
     const GURL& target_url,
     bool has_user_gesture) {
+#if 0
   if (!has_user_gesture)
     return false;
 
@@ -134,7 +135,7 @@ bool FlashDownloadInterception::ShouldStopFlashDownloadAction(
     return flash_setting == CONTENT_SETTING_DETECT_IMPORTANT_CONTENT ||
            flash_setting == CONTENT_SETTING_BLOCK;
   }
-
+#endif
   return false;
 }
 

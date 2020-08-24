@@ -124,7 +124,8 @@
     "channel": "stable",
     "contexts": ["webui"],
     "matches": [
-      "chrome://bookmarks/*"
+      "chrome://bookmarks/*",
+      "chrome-search://local-ntp/*"
     ]
   }],
   "bookmarks": [{
@@ -136,7 +137,8 @@
     "contexts": ["webui"],
     "matches": [
       "chrome://bookmarks/*",
-      "chrome://welcome/*"
+      "chrome://welcome/*",
+      "chrome-search://local-ntp/*"
     ]
   }],
   "bookmarks.export": {
@@ -144,7 +146,8 @@
     "contexts": ["webui"],
     "dependencies": [],
     "matches": [
-      "chrome://bookmarks/*"
+      "chrome://bookmarks/*",
+      "chrome-search://local-ntp/*"
     ]
   },
   "bookmarks.import": {
@@ -152,7 +155,8 @@
     "contexts": ["webui"],
     "dependencies": [],
     "matches": [
-      "chrome://bookmarks/*"
+      "chrome://bookmarks/*",
+      "chrome-search://local-ntp/*"
     ]
   },
   "brailleDisplayPrivate": {

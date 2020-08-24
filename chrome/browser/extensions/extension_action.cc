@@ -73,7 +73,7 @@ bool HasValue(const std::map<int, T>& map, int tab_id) {
 
 // static
 extension_misc::ExtensionIcons ExtensionAction::ActionIconSize() {
-  return extension_misc::EXTENSION_ICON_BITTY;
+  return extension_misc::EXTENSION_ICON_MEDIUM;
 }
 
 // static

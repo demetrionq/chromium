@@ -35,7 +35,7 @@ class AppWindowContentsImpl : public AppWindowContents,
   // AppWindowContents
   void Initialize(content::BrowserContext* context,
                   content::RenderFrameHost* creator_frame,
-                  const GURL& url) override;
+                  const GURL& url, content::WebContents* web_contents) override;
   void LoadContents(int32_t creator_process_id) override;
   void NativeWindowChanged(NativeAppWindow* native_app_window) override;
   void NativeWindowClosed(bool send_onclosed) override;
@@ -53,7 +53,7 @@ class AppWindowContentsImpl : public AppWindowContents,
 
   AppWindow* host_;  // This class is owned by |host_|
   GURL url_;
-  std::unique_ptr<content::WebContents> web_contents_;
+  content::WebContents* web_contents_;
 
   DISALLOW_COPY_AND_ASSIGN(AppWindowContentsImpl);
 };

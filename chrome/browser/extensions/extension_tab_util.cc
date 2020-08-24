@@ -22,7 +22,7 @@
 #include "chrome/browser/extensions/tab_helper.h"
 #include "chrome/browser/platform_util.h"
 #include "chrome/browser/profiles/profile.h"
-#include "chrome/browser/resource_coordinator/tab_lifecycle_unit_external.h"
+//#include "chrome/browser/resource_coordinator/tab_lifecycle_unit_external.h"
 #include "chrome/browser/sessions/session_tab_helper.h"
 #include "chrome/browser/ui/browser.h"
 #include "chrome/browser/ui/browser_finder.h"
@@ -50,6 +50,12 @@
 #include "extensions/common/permissions/api_permission.h"
 #include "extensions/common/permissions/permissions_data.h"
 #include "url/gurl.h"
+
+#include "chrome/browser/android/tab_android.h"
+#include "chrome/browser/ui/android/tab_model/tab_model.h"
+#include "chrome/browser/ui/android/tab_model/tab_model_list.h"
+#include "chrome/browser/android/devtools_manager_delegate_android.h"
+#include "chrome/browser/extensions/api/tabs/tabs_constants.h"
 
 using content::NavigationEntry;
 using content::WebContents;
@@ -172,6 +178,41 @@ base::DictionaryValue* ExtensionTabUtil::OpenTab(ExtensionFunction* function,
                                                  const OpenTabParams& params,
                                                  bool user_gesture,
                                                  std::string* error) {
+
+  LOG(INFO) << "[EXTENSIONS] ExtensionTabUtil::OpenTab - Step 1 - 0";
+  if (true) {
+    if (TabModelList::empty())
+      return nullptr;
+
+    TabModel* tab_model = TabModelList::get(0);
+    if (!tab_model)
+      return nullptr;
+
+    GURL url = GURL("about:blank");
+    if (params.url.get()) {
+      std::string url_string = *params.url;
+      url = ExtensionTabUtil::ResolvePossiblyRelativeURL(url_string,
+                                                       function->extension());
+      if (!url.is_valid()) {
+        *error =
+            ErrorUtils::FormatErrorMessage(extensions::tabs_constants::kInvalidUrlError, url_string);
+        return nullptr;
+      }
+    }
+    WebContents* web_contents = tab_model->CreateNewTabForDevTools(url);
+    if (!web_contents)
+      return nullptr;
+
+    ExtensionTabUtil::ScrubTabBehavior scrub_tab_behavior =
+          ExtensionTabUtil::GetScrubTabBehavior(function->extension(), function->source_context_type(), web_contents);
+
+    return ExtensionTabUtil::CreateTabObject(
+               web_contents, scrub_tab_behavior,
+               function->extension(), NULL, tab_model->GetActiveIndex())
+        ->ToValue()
+        .release();
+  }
+
   ChromeExtensionFunctionDetails chrome_details(function);
   Profile* profile = chrome_details.GetProfile();
   // windowId defaults to "current" window.
@@ -400,8 +441,12 @@ std::unique_ptr<api::tabs::Tab> ExtensionTabUtil::CreateTabObject(
     const Extension* extension,
     TabStripModel* tab_strip,
     int tab_index) {
+#if 0
   if (!tab_strip)
     ExtensionTabUtil::GetTabStripModel(contents, &tab_strip, &tab_index);
+#else
+  tab_strip = nullptr;
+#endif
   bool is_loading = contents->IsLoading();
   auto tab_object = std::make_unique<api::tabs::Tab>();
   tab_object->id = std::make_unique<int>(GetTabIdForExtensions(contents));
@@ -409,8 +454,36 @@ std::unique_ptr<api::tabs::Tab> ExtensionTabUtil::CreateTabObject(
   tab_object->window_id = GetWindowIdOfTab(contents);
   tab_object->status =
       std::make_unique<std::string>(GetTabStatusText(is_loading));
+#if 0
   tab_object->active = tab_strip && tab_index == tab_strip->active_index();
   tab_object->selected = tab_strip && tab_index == tab_strip->active_index();
+#else
+  tab_object->active = false;
+  TabModel *tab_strip_android = nullptr;
+  if (!TabModelList::empty())
+    tab_strip_android = *(TabModelList::begin());
+  if (tab_strip_android) {
+    int openingTab = (tab_strip_android->GetLastNonExtensionActiveIndex());
+    if (openingTab == -1)
+      openingTab = 0;
+    if (tab_index == openingTab) {
+      tab_object->active = true;
+    }
+    for (int i = 0; i < tab_strip_android->GetTabCount(); ++i) {
+      int openingTab = (tab_strip_android->GetLastNonExtensionActiveIndex());
+      if (openingTab == -1)
+        openingTab = 0;
+
+      if (i != openingTab)
+        continue;
+
+      if (tab_strip_android->GetWebContentsAt(i) == contents) {
+        tab_object->active = true;
+      }
+    }
+  }
+  tab_object->selected = tab_object->active;
+#endif
   tab_object->highlighted = tab_strip && tab_strip->IsTabSelected(tab_index);
   tab_object->pinned = tab_strip && tab_strip->IsTabPinned(tab_index);
   auto* audible_helper = RecentlyAudibleHelper::FromWebContents(contents);
@@ -425,6 +498,7 @@ std::unique_ptr<api::tabs::Tab> ExtensionTabUtil::CreateTabObject(
     audible = contents->IsCurrentlyAudible();
   }
   tab_object->audible = std::make_unique<bool>(audible);
+#if 0
   auto* tab_lifeycle_unit_external =
       resource_coordinator::TabLifecycleUnitExternal::FromWebContents(contents);
   tab_object->discarded =
@@ -432,6 +506,7 @@ std::unique_ptr<api::tabs::Tab> ExtensionTabUtil::CreateTabObject(
   tab_object->auto_discardable =
       !tab_lifeycle_unit_external ||
       tab_lifeycle_unit_external->IsAutoDiscardable();
+#endif
   tab_object->muted_info = CreateMutedInfo(contents);
   tab_object->incognito = contents->GetBrowserContext()->IsOffTheRecord();
   gfx::Size contents_size = contents->GetContainerBounds().size();
@@ -440,6 +515,13 @@ std::unique_ptr<api::tabs::Tab> ExtensionTabUtil::CreateTabObject(
 
   tab_object->url =
       std::make_unique<std::string>(contents->GetLastCommittedURL().spec());
+
+  size_t pos = (tab_object->url)->find("chrome-search://");
+  if (pos != std::string::npos && pos == 0) {
+    std::string src = "chrome-search://";
+    tab_object->url = std::make_unique<std::string>((tab_object->url)->replace(pos, src.size(), "https://local.ntp/"));
+  }
+
   NavigationEntry* pending_entry = contents->GetController().GetPendingEntry();
   if (pending_entry) {
     tab_object->pending_url =
@@ -454,6 +536,7 @@ std::unique_ptr<api::tabs::Tab> ExtensionTabUtil::CreateTabObject(
     tab_object->fav_icon_url =
         std::make_unique<std::string>(visible_entry->GetFavicon().url.spec());
   }
+#if 0
   if (tab_strip) {
     WebContents* opener = tab_strip->GetOpenerOfWebContentsAt(tab_index);
     if (opener) {
@@ -461,7 +544,7 @@ std::unique_ptr<api::tabs::Tab> ExtensionTabUtil::CreateTabObject(
           std::make_unique<int>(GetTabIdForExtensions(opener));
     }
   }
-
+#endif
   ScrubTabForExtension(extension, contents, tab_object.get(),
                        scrub_tab_behavior);
   return tab_object;
@@ -473,6 +556,7 @@ std::unique_ptr<base::ListValue> ExtensionTabUtil::CreateTabList(
     Feature::Context context) {
   std::unique_ptr<base::ListValue> tab_list(new base::ListValue());
   TabStripModel* tab_strip = browser->tab_strip_model();
+#if 0
   for (int i = 0; i < tab_strip->count(); ++i) {
     WebContents* web_contents = tab_strip->GetWebContentsAt(i);
     ExtensionTabUtil::ScrubTabBehavior scrub_tab_behavior =
@@ -481,7 +565,21 @@ std::unique_ptr<base::ListValue> ExtensionTabUtil::CreateTabList(
                                      extension, tab_strip, i)
                          ->ToValue());
   }
-
+#else
+  TabModel *my_tab_strip = nullptr;
+  if (!TabModelList::empty())
+    my_tab_strip = *(TabModelList::begin());
+  if (my_tab_strip) {
+    for (int i = 0; i < my_tab_strip->GetTabCount(); ++i) {
+      WebContents* web_contents = my_tab_strip->GetWebContentsAt(i);
+      ExtensionTabUtil::ScrubTabBehavior scrub_tab_behavior =
+          ExtensionTabUtil::GetScrubTabBehavior(extension, context, web_contents);
+      tab_list->Append(CreateTabObject(web_contents, scrub_tab_behavior,
+                                     extension, tab_strip, i)
+                           ->ToValue());
+    }
+  }
+#endif
   return tab_list;
 }
 
@@ -519,11 +617,15 @@ ExtensionTabUtil::CreateWindowValueForExtension(
   }
   result->SetString(tabs_constants::kShowStateKey, window_state);
 
+#if 0
   gfx::Rect bounds;
   if (window->IsMinimized())
     bounds = window->GetRestoredBounds();
   else
     bounds = window->GetBounds();
+#else
+  gfx::Rect bounds = gfx::Rect();
+#endif
   result->SetInteger(tabs_constants::kLeftKey, bounds.x());
   result->SetInteger(tabs_constants::kTopKey, bounds.y());
   result->SetInteger(tabs_constants::kWidthKey, bounds.width());

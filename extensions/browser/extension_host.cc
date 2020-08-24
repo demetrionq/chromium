@@ -40,6 +40,9 @@
 #include "ui/base/l10n/l10n_util.h"
 #include "ui/base/window_open_disposition.h"
 
+#include "content/browser/frame_host/render_frame_host_impl.h"
+#include "content/browser/renderer_host/render_widget_host_impl.h"
+
 using content::BrowserContext;
 using content::OpenURLParams;
 using content::RenderProcessHost;
@@ -68,6 +71,9 @@ ExtensionHost::ExtensionHost(const Extension* extension,
          host_type == VIEW_TYPE_EXTENSION_POPUP);
   host_contents_ = WebContents::Create(
       WebContents::CreateParams(browser_context_, site_instance)),
+  static_cast<content::RenderFrameHostImpl*>(host_contents_->GetMainFrame())
+          ->GetRenderWidgetHost()
+          ->SetImportance(content::ChildProcessImportance::IMPORTANT);
   content::WebContentsObserver::Observe(host_contents_.get());
   host_contents_->SetDelegate(this);
   SetViewType(host_contents_.get(), host_type);
