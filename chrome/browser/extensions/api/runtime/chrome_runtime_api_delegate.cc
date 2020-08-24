@@ -302,8 +302,7 @@ bool ChromeRuntimeAPIDelegate::GetPlatformInfo(PlatformInfo* info) {
   } else if (strcmp(os, "openbsd") == 0) {
     info->os = extensions::api::runtime::PLATFORM_OS_OPENBSD;
   } else {
-    NOTREACHED();
-    return false;
+    info->os = extensions::api::runtime::PLATFORM_OS_ANDROID;
   }
 
   const char* arch = update_client::UpdateQueryParams::GetArch();

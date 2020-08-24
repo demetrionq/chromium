@@ -167,6 +167,7 @@ developer::RuntimeError ConstructRuntimeError(const RuntimeError& error) {
 void ConstructCommands(CommandService* command_service,
                        const std::string& extension_id,
                        std::vector<developer::Command>* commands) {
+#if 0
   auto construct_command = [](const Command& command, bool active,
                               bool is_extension_action) {
     developer::Command command_value;
@@ -222,6 +223,7 @@ void ConstructCommands(CommandService* command_service,
       commands->push_back(construct_command(command_to_use, active, false));
     }
   }
+#endif
 }
 
 // Creates and returns a SpecificSiteControls object for the given
