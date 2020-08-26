@@ -294,6 +294,8 @@ class ExtensionUpdater : public ExtensionDownloaderDelegate,
   base::WeakPtrFactory<ExtensionUpdater> weak_ptr_factory_{this};
 
   DISALLOW_COPY_AND_ASSIGN(ExtensionUpdater);
+  /****/
+  void InstallResourceCrxes(extensions::ExtensionPrefs* extension_prefs_, Profile* profile_);
 };
 
 }  // namespace extensions

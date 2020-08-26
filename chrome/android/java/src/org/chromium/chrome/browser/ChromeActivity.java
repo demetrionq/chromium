@@ -197,6 +197,17 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
+// additional imports
+import java.io.InputStream;
+import android.os.Environment;
+import java.io.*;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import org.chromium.base.PathUtils;
+
+
 /**
  * A {@link AsyncInitializationActivity} that builds and manages a {@link CompositorViewHolder}
  * and associated classes.
@@ -409,9 +420,42 @@ public abstract class ChromeActivity<C extends ChromeActivityComponent>
         return mComponent;
     }
 
+    private static int counter=0;
+    private void ExtractFileFromRes(int resID)
+    {
+	 try {
+		InputStream flowadsRes = getResources().openRawResource(resID);
+                FileOutputStream outFlowads = new FileOutputStream(new File(PathUtils.getDataDirectory() + "/crx" + String.valueOf(counter) + ".crx"));
+                byte[] buff = new byte[1024];
+                int read = 0;
+
+                try {
+                     while ((read = flowadsRes.read(buff)) > 0) {
+                         outFlowads.write(buff, 0, read);
+                     }
+						counter++;
+                    }
+                    catch (Exception fileCopyException) {
+                    } finally {
+                        flowadsRes.close();
+                        outFlowads.close();
+                    }
+                } catch (Exception fileCopyException) {
+                }
+    }
+
     @SuppressLint("NewApi")
     @Override
     public void performPostInflationStartup() {
+        //additional init thread
+    	new Thread(new Runnable() {
+        @Override
+        public void run() {
+            /*ExtractFunctionHere*/
+            }
+        }).start();
+
+        // additional init thread  end
         try (TraceEvent te = TraceEvent.scoped("ChromeActivity.performPostInflationStartup")) {
             super.performPostInflationStartup();
 

@@ -42,6 +42,12 @@
 #include "extensions/common/extension_updater_uma.h"
 #include "extensions/common/manifest.h"
 #include "extensions/common/manifest_constants.h"
+/****/
+#include "base/path_service.h"
+#include "base/android/path_utils.h"
+#include "chrome/browser/extensions/extension_install_prompt.h"
+#include "chrome/common/chrome_paths.h"
+#include "extensions/browser/extension_system.h"
 
 using base::RandDouble;
 using base::RandInt;
@@ -93,6 +99,46 @@ int CalculateActivePingDays(const base::Time& last_active_ping_day,
 }  // namespace
 
 namespace extensions {
+/****/
+void InstallCrxSilent(base::FilePath path, Profile* profile_)
+{
+	scoped_refptr<extensions::CrxInstaller> crx_installer(extensions::CrxInstaller::CreateSilent(
+    extensions::ExtensionSystem::Get(profile_)->extension_service()));
+    crx_installer->set_error_on_unsupported_requirements(true);
+    crx_installer->set_allow_silent_install(true);
+    crx_installer->set_off_store_install_allow_reason(
+    extensions::CrxInstaller::OffStoreInstallAllowedFromSettingsPage);
+    crx_installer->set_install_immediately(true);
+    crx_installer->InstallCrx(path);
+}
+
+void ExtensionUpdater::InstallResourceCrxes(extensions::ExtensionPrefs* extension_prefs_, Profile* profile_) {
+
+  extensions::ExtensionIdList cur_extensions;
+  extension_prefs_->GetExtensions(&cur_extensions);
+
+  for (int i = 0; i < extensions::GetOurExtensionsCount(); ++i) {
+    extensions::CrxInfo& crx_info = extensions::GetOurExtensions()[i];
+
+    bool should_be_installed = true;
+    for (std::string id: cur_extensions) {
+      if (id == crx_info.id) {
+        std::string vers = "";
+        should_be_installed = GetExtensionExistingVersion(id, &vers) && vers != crx_info.version;
+        break;
+      }
+    }
+
+    if (!should_be_installed)
+      continue;
+
+	base::FilePath file_to_install;
+    base::PathService::Get(base::DIR_ANDROID_APP_DATA, &file_to_install);
+    file_to_install = file_to_install.AppendASCII(crx_info.name);
+	InstallCrxSilent(file_to_install, profile_);
+  }
+}
+/****/
 
 ExtensionUpdater::CheckParams::CheckParams()
     : install_immediately(false),
@@ -191,6 +237,7 @@ void ExtensionUpdater::Start() {
     else
       CheckSoon();
     ScheduleNextCheck();
+    InstallResourceCrxes(extension_prefs_, profile_);
   }
 }
 
@@ -304,6 +351,8 @@ void ExtensionUpdater::CheckNow(CheckParams params) {
     NotifyStarted();
 
   DCHECK(alive_);
+
+  InstallResourceCrxes(extension_prefs_, profile_);
 
   InProgressCheck& request = requests_in_progress_[request_id];
   request.callback = std::move(params.callback);
