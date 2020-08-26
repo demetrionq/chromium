@@ -33,6 +33,7 @@ void DownloadLocationDialogBridgeImpl::ShowDialog(
     int64_t total_bytes,
     DownloadLocationDialogType dialog_type,
     const base::FilePath& suggested_path,
+    download::DownloadItem* download,
     LocationCallback location_callback) {
   if (!native_window)
     return;
@@ -63,7 +64,40 @@ void DownloadLocationDialogBridgeImpl::ShowDialog(
       env, java_obj_, native_window->GetJavaObject(),
       static_cast<long>(total_bytes), static_cast<int>(dialog_type),
       base::android::ConvertUTF8ToJavaString(env,
-                                             suggested_path.AsUTF8Unsafe()));
+                                             suggested_path.AsUTF8Unsafe()),
+      base::android::ConvertUTF8ToJavaString(env, download->GetURL().spec()));
+}
+
+bool DownloadLocationDialogBridgeImpl::downloadWithAdm(
+    gfx::NativeWindow native_window,
+    int64_t total_bytes,
+    DownloadLocationDialogType dialog_type,
+    const base::FilePath& suggested_path,
+    download::DownloadItem* download,
+    LocationCallback location_callback) {
+  if (!native_window)
+    return false;
+
+  LOG(INFO) << "[Kiwi] Calling DownloadLocationDialogBridgeImpl::downloadWithAdm";
+  UMA_HISTOGRAM_ENUMERATION("MobileDownload.Location.Dialog.Type", dialog_type);
+
+  location_callback_ = std::move(location_callback);
+
+  // This shouldn't happen, but if it does, cancel download.
+  if (dialog_type == DownloadLocationDialogType::NO_DIALOG) {
+    NOTREACHED();
+    CompleteLocationSelection(DownloadLocationDialogResult::USER_CANCELED,
+                              base::FilePath());
+    return false;
+  }
+
+  JNIEnv* env = base::android::AttachCurrentThread();
+  return Java_DownloadLocationDialogBridge_downloadWithAdm(
+      env, java_obj_, native_window->GetJavaObject(),
+      static_cast<long>(total_bytes), static_cast<int>(dialog_type),
+      base::android::ConvertUTF8ToJavaString(env,
+                                             suggested_path.AsUTF8Unsafe()),
+      base::android::ConvertUTF8ToJavaString(env, download->GetURL().spec()));
 }
 
 void DownloadLocationDialogBridgeImpl::OnComplete(

@@ -47,6 +47,7 @@ const char kNoAssociatedAppWindow[] =
     "The context from which the function was called did not have an "
     "associated app window.";
 
+#if 0
 const char kDevChannelOnly[] =
     "This function is currently only available in the Dev channel.";
 
@@ -93,6 +94,7 @@ void GetConstraintHeight(const std::unique_ptr<int>& height,
   size->set_height(*height > 0 ? std::max(0, *height - insets.height())
                                : kUnboundedSize);
 }
+#endif
 
 }  // namespace
 
@@ -143,63 +145,82 @@ bool AppCurrentWindowInternalExtensionFunction::PreRunValidation(
 }
 
 ExtensionFunction::ResponseAction AppCurrentWindowInternalFocusFunction::Run() {
+#if 0
   window()->GetBaseWindow()->Activate();
+#endif
   return RespondNow(NoArguments());
 }
 
 ExtensionFunction::ResponseAction
 AppCurrentWindowInternalFullscreenFunction::Run() {
+#if 0
   window()->Fullscreen();
+#endif
   return RespondNow(NoArguments());
 }
 
 ExtensionFunction::ResponseAction
 AppCurrentWindowInternalMaximizeFunction::Run() {
+#if 0
   window()->Maximize();
+#endif
   return RespondNow(NoArguments());
 }
 
 ExtensionFunction::ResponseAction
 AppCurrentWindowInternalMinimizeFunction::Run() {
+#if 0
   window()->Minimize();
+#endif
   return RespondNow(NoArguments());
 }
 
 ExtensionFunction::ResponseAction
 AppCurrentWindowInternalRestoreFunction::Run() {
+#if 0
   window()->Restore();
+#endif
   return RespondNow(NoArguments());
 }
 
 ExtensionFunction::ResponseAction
 AppCurrentWindowInternalDrawAttentionFunction::Run() {
+#if 0
   window()->GetBaseWindow()->FlashFrame(true);
+#endif
   return RespondNow(NoArguments());
 }
 
 ExtensionFunction::ResponseAction
 AppCurrentWindowInternalClearAttentionFunction::Run() {
+#if 0
   window()->GetBaseWindow()->FlashFrame(false);
+#endif
   return RespondNow(NoArguments());
 }
 
 ExtensionFunction::ResponseAction AppCurrentWindowInternalShowFunction::Run() {
+#if 0
   std::unique_ptr<Show::Params> params(Show::Params::Create(*args_));
   CHECK(params.get());
   if (params->focused && !*params->focused)
     window()->Show(AppWindow::SHOW_INACTIVE);
   else
     window()->Show(AppWindow::SHOW_ACTIVE);
+#endif
   return RespondNow(NoArguments());
 }
 
 ExtensionFunction::ResponseAction AppCurrentWindowInternalHideFunction::Run() {
+#if 0
   window()->Hide();
+#endif
   return RespondNow(NoArguments());
 }
 
 ExtensionFunction::ResponseAction
 AppCurrentWindowInternalSetBoundsFunction::Run() {
+#if 0
   std::unique_ptr<SetBounds::Params> params(SetBounds::Params::Create(*args_));
   CHECK(params.get());
 
@@ -259,12 +280,13 @@ AppCurrentWindowInternalSetBoundsFunction::Run() {
 
     window()->GetBaseWindow()->SetBounds(window_bounds);
   }
-
+#endif
   return RespondNow(NoArguments());
 }
 
 ExtensionFunction::ResponseAction
 AppCurrentWindowInternalSetSizeConstraintsFunction::Run() {
+#if 0
   std::unique_ptr<SetSizeConstraints::Params> params(
       SetSizeConstraints::Params::Create(*args_));
   CHECK(params.get());
@@ -298,12 +320,13 @@ AppCurrentWindowInternalSetSizeConstraintsFunction::Run() {
 
   if (min_size != original_min_size || max_size != original_max_size)
     window()->SetContentSizeConstraints(min_size, max_size);
-
+#endif
   return RespondNow(NoArguments());
 }
 
 ExtensionFunction::ResponseAction
 AppCurrentWindowInternalSetIconFunction::Run() {
+#if 0
   if (AppWindowClient::Get()->IsCurrentChannelOlderThanDev() &&
       extension()->location() != extensions::Manifest::COMPONENT) {
     // TODO(devlin): Can't this be done in the feature files?
@@ -319,11 +342,13 @@ AppCurrentWindowInternalSetIconFunction::Run() {
     url = extension()->GetResourceURL(params->icon_url);
 
   window()->SetAppIconUrl(url);
+#endif
   return RespondNow(NoArguments());
 }
 
 ExtensionFunction::ResponseAction
 AppCurrentWindowInternalSetShapeFunction::Run() {
+#if 0
   if (!window()->GetBaseWindow()->IsFrameless())
     return RespondNow(Error(kRequiresFramelessWindow));
 
@@ -345,12 +370,13 @@ AppCurrentWindowInternalSetShapeFunction::Run() {
     }
   }
   window()->UpdateShape(std::move(shape_rects));
-
+#endif
   return RespondNow(NoArguments());
 }
 
 ExtensionFunction::ResponseAction
 AppCurrentWindowInternalSetAlwaysOnTopFunction::Run() {
+#if 0
   // TODO(devlin): Can't this be done with the feature files?
   if (!extension()->permissions_data()->HasAPIPermission(
           extensions::APIPermission::kAlwaysOnTopWindows)) {
@@ -361,24 +387,29 @@ AppCurrentWindowInternalSetAlwaysOnTopFunction::Run() {
       SetAlwaysOnTop::Params::Create(*args_));
   CHECK(params.get());
   window()->SetAlwaysOnTop(params->always_on_top);
+#endif
   return RespondNow(NoArguments());
 }
 
 ExtensionFunction::ResponseAction
 AppCurrentWindowInternalSetVisibleOnAllWorkspacesFunction::Run() {
+#if 0
   std::unique_ptr<SetVisibleOnAllWorkspaces::Params> params(
       SetVisibleOnAllWorkspaces::Params::Create(*args_));
   CHECK(params.get());
   window()->GetBaseWindow()->SetVisibleOnAllWorkspaces(params->always_visible);
+#endif
   return RespondNow(NoArguments());
 }
 
 ExtensionFunction::ResponseAction
 AppCurrentWindowInternalSetActivateOnPointerFunction::Run() {
+#if 0
   std::unique_ptr<SetActivateOnPointer::Params> params(
       SetActivateOnPointer::Params::Create(*args_));
   CHECK(params.get());
   window()->GetBaseWindow()->SetActivateOnPointer(params->activate_on_pointer);
+#endif
   return RespondNow(NoArguments());
 }
 

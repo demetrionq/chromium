@@ -336,10 +336,23 @@ void ChromeDownloadManagerDelegate::ChooseDownloadLocation(
     int64_t total_bytes,
     DownloadLocationDialogType dialog_type,
     const base::FilePath& suggested_path,
+    download::DownloadItem* download,
     DownloadLocationDialogBridge::LocationCallback callback) {
   DCHECK(location_dialog_bridge_);
   location_dialog_bridge_->ShowDialog(native_window, total_bytes, dialog_type,
-                                      suggested_path, std::move(callback));
+                                      suggested_path, download, std::move(callback));
+}
+
+bool ChromeDownloadManagerDelegate::DownloadWithAdm(
+    gfx::NativeWindow native_window,
+    int64_t total_bytes,
+    DownloadLocationDialogType dialog_type,
+    const base::FilePath& suggested_path,
+    download::DownloadItem* download,
+    DownloadLocationDialogBridge::LocationCallback callback) {
+  DCHECK(location_dialog_bridge_);
+  return location_dialog_bridge_->downloadWithAdm(native_window, total_bytes, dialog_type,
+                                        suggested_path, download, std::move(callback));
 }
 
 void ChromeDownloadManagerDelegate::SetDownloadLocationDialogBridgeForTesting(
@@ -832,9 +845,32 @@ void ChromeDownloadManagerDelegate::RequestConfirmation(
   DCHECK_CURRENTLY_ON(BrowserThread::UI);
   DCHECK(!download->IsTransient());
 
-#if defined(OS_ANDROID)
   content::WebContents* web_contents =
       content::DownloadItemUtils::GetWebContents(download);
+
+  if (web_contents == nullptr) {
+     callback.Run(DownloadConfirmationResult::CONTINUE_WITHOUT_CONFIRMATION,
+                  suggested_path);
+     return;
+  }
+  bool shownWithAdm = false;
+  if (location_dialog_bridge_) {
+      gfx::NativeWindow native_window = web_contents->GetTopLevelNativeWindow();
+          shownWithAdm = DownloadWithAdm(
+          native_window, download->GetTotalBytes(), DownloadLocationDialogType::DEFAULT, suggested_path, download,
+          base::BindOnce(&OnDownloadLocationDetermined, callback));
+      if (shownWithAdm) {
+          callback.Run(DownloadConfirmationResult::CANCELED, base::FilePath());
+          return;
+      }
+  }
+  if (reason == DownloadConfirmationReason::NONE) {
+     callback.Run(DownloadConfirmationResult::CONTINUE_WITHOUT_CONFIRMATION,
+                  suggested_path);
+     return;
+  }
+
+#if defined(OS_ANDROID)
   if (base::FeatureList::IsEnabled(features::kDownloadsLocationChange)) {
     if (reason == DownloadConfirmationReason::SAVE_AS) {
       // If this is a 'Save As' download, just run without confirmation.
@@ -871,7 +907,7 @@ void ChromeDownloadManagerDelegate::RequestConfirmation(
         return;
       }
 
-      if (!download_prefs_->PromptForDownload() && web_contents) {
+      if (!download_prefs_->PromptForDownload() && web_contents && InfoBarService::FromWebContents(web_contents)) {
         android::ChromeDuplicateDownloadInfoBarDelegate::Create(
             InfoBarService::FromWebContents(web_contents), download,
             suggested_path, callback);
@@ -885,7 +921,7 @@ void ChromeDownloadManagerDelegate::RequestConfirmation(
           DownloadPathReservationTracker::UNIQUIFY,
           base::BindRepeating(
               &ChromeDownloadManagerDelegate::GenerateUniqueFileNameDone,
-              weak_ptr_factory_.GetWeakPtr(), native_window, callback));
+              weak_ptr_factory_.GetWeakPtr(), native_window, callback, download));
       return;
     } else {
       // Figure out type of dialog and display.
@@ -911,7 +947,7 @@ void ChromeDownloadManagerDelegate::RequestConfirmation(
 
       gfx::NativeWindow native_window = web_contents->GetTopLevelNativeWindow();
       ChooseDownloadLocation(
-          native_window, download->GetTotalBytes(), dialog_type, suggested_path,
+          native_window, download->GetTotalBytes(), dialog_type, suggested_path, download,
           base::BindOnce(&OnDownloadLocationDetermined, callback));
     }
   } else {
@@ -942,7 +978,7 @@ void ChromeDownloadManagerDelegate::RequestConfirmation(
         return;
 
       case DownloadConfirmationReason::TARGET_CONFLICT:
-        if (web_contents) {
+        if (web_contents && InfoBarService::FromWebContents(web_contents)) {
           android::ChromeDuplicateDownloadInfoBarDelegate::Create(
               InfoBarService::FromWebContents(web_contents), download,
               suggested_path, callback);
@@ -1020,6 +1056,7 @@ void ChromeDownloadManagerDelegate::ShowFilePickerForDownload(
 void ChromeDownloadManagerDelegate::GenerateUniqueFileNameDone(
     gfx::NativeWindow native_window,
     const DownloadTargetDeterminerDelegate::ConfirmationCallback& callback,
+    download::DownloadItem *download,
     PathValidationResult result,
     const base::FilePath& target_path) {
   // After a new, unique filename has been generated, display the error dialog
@@ -1029,7 +1066,7 @@ void ChromeDownloadManagerDelegate::GenerateUniqueFileNameDone(
     if (download_prefs_->PromptForDownload()) {
       ChooseDownloadLocation(
           native_window, 0 /* total_bytes */,
-          DownloadLocationDialogType::NAME_CONFLICT, target_path,
+          DownloadLocationDialogType::NAME_CONFLICT, target_path, download,
           base::BindOnce(&OnDownloadLocationDetermined, callback));
       return;
     }

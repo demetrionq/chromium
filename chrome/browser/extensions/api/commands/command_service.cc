@@ -84,6 +84,7 @@ void MergeSuggestedKeyPrefs(
     const std::string& extension_id,
     ExtensionPrefs* extension_prefs,
     std::unique_ptr<base::DictionaryValue> suggested_key_prefs) {
+#if 0
   const base::DictionaryValue* current_prefs;
   if (extension_prefs->ReadPrefAsDictionary(extension_id,
                                             kCommands,
@@ -95,6 +96,7 @@ void MergeSuggestedKeyPrefs(
 
   extension_prefs->UpdateExtensionPref(extension_id, kCommands,
                                        std::move(suggested_key_prefs));
+#endif
 }
 
 }  // namespace
@@ -299,6 +301,7 @@ void CommandService::OnExtensionUninstalled(
     content::BrowserContext* browser_context,
     const Extension* extension,
     extensions::UninstallReason reason) {
+#if 0
   // Adding a component extensions will only trigger install the first time on a
   // clean profile or on a version increase (see
   // ComponentLoader::AddComponentExtension). It will, however, always trigger
@@ -308,11 +311,13 @@ void CommandService::OnExtensionUninstalled(
     return;
 
   RemoveKeybindingPrefs(extension->id(), std::string());
+#endif
 }
 
 void CommandService::UpdateKeybindingPrefs(const std::string& extension_id,
                                            const std::string& command_name,
                                            const std::string& keystroke) {
+#if 0
   Command command = FindCommandByName(extension_id, command_name);
 
   // The extension command might be assigned another shortcut. Remove that
@@ -323,11 +328,13 @@ void CommandService::UpdateKeybindingPrefs(const std::string& extension_id,
       Command::StringToAccelerator(keystroke, command_name);
   AddKeybindingPref(accelerator, extension_id, command_name,
                     true, command.global());
+#endif
 }
 
 bool CommandService::SetScope(const std::string& extension_id,
                               const std::string& command_name,
                               bool global) {
+#if 0
   Command command = FindCommandByName(extension_id, command_name);
   if (global == command.global())
     return false;
@@ -337,11 +344,13 @@ bool CommandService::SetScope(const std::string& extension_id,
   RemoveKeybindingPrefs(extension_id, command_name);
   AddKeybindingPref(command.accelerator(), extension_id,
                     command_name, true, global);
+#endif
   return true;
 }
 
 Command CommandService::FindCommandByName(const std::string& extension_id,
                                           const std::string& command) const {
+#if 0
   const base::DictionaryValue* bindings =
       profile_->GetPrefs()->GetDictionary(prefs::kExtensionCommands);
   for (base::DictionaryValue::Iterator it(*bindings); !it.IsAtEnd();
@@ -371,7 +380,7 @@ Command CommandService::FindCommandByName(const std::string& extension_id,
     return Command(command_name, base::string16(), tokens[1].as_string(),
            global);
   }
-
+#endif
   return Command();
 }
 
@@ -379,6 +388,7 @@ bool CommandService::GetSuggestedExtensionCommand(
     const std::string& extension_id,
     const ui::Accelerator& accelerator,
     Command* command) const {
+#if 0
   const Extension* extension =
       ExtensionRegistry::Get(profile_)
           ->GetExtensionById(extension_id, ExtensionRegistry::ENABLED);
@@ -416,6 +426,7 @@ bool CommandService::GetSuggestedExtensionCommand(
       }
     }
   }
+#endif
   return false;
 }
 
@@ -436,6 +447,7 @@ void CommandService::RemoveObserver(Observer* observer) {
 }
 
 void CommandService::UpdateKeybindings(const Extension* extension) {
+#if 0
   const ExtensionSet& extensions =
       ExtensionRegistry::Get(profile_)->enabled_extensions();
   // The extension is not added to the profile by this point on first install,
@@ -445,9 +457,11 @@ void CommandService::UpdateKeybindings(const Extension* extension) {
   AssignKeybindings(extension);
   UpdateExtensionSuggestedCommandPrefs(extension);
   RemoveDefunctExtensionSuggestedCommandPrefs(extension);
+#endif
 }
 
 void CommandService::RemoveRelinquishedKeybindings(const Extension* extension) {
+#if 0
   // Remove keybindings if they have been removed by the extension and the user
   // has not modified them.
   CommandMap existing_command_map;
@@ -500,9 +514,11 @@ void CommandService::RemoveRelinquishedKeybindings(const Extension* extension) {
     RemoveKeybindingPrefs(extension->id(),
                           existing_page_action_command.command_name());
   }
+#endif
 }
 
 void CommandService::AssignKeybindings(const Extension* extension) {
+#if 0
   const CommandMap* commands = CommandsInfo::GetNamedCommands(extension);
   if (!commands)
     return;
@@ -538,10 +554,12 @@ void CommandService::AssignKeybindings(const Extension* extension) {
                       false,   // Overwriting not allowed.
                       false);  // Not global.
   }
+#endif
 }
 
 bool CommandService::CanAutoAssign(const Command &command,
                                    const Extension* extension) {
+#if 0
   // Extensions are allowed to auto-assign updated keys if the user has not
   // changed from the previous value.
   if (IsCommandShortcutUserModified(extension, command.command_name()))
@@ -588,10 +606,13 @@ bool CommandService::CanAutoAssign(const Command &command,
 
     return !chrome::IsChromeAccelerator(command.accelerator(), profile_);
   }
+#endif
+  return false;
 }
 
 void CommandService::UpdateExtensionSuggestedCommandPrefs(
     const Extension* extension) {
+#if 0
   std::unique_ptr<base::DictionaryValue> suggested_key_prefs(
       new base::DictionaryValue);
 
@@ -639,10 +660,12 @@ void CommandService::UpdateExtensionSuggestedCommandPrefs(
   // Merge into current prefs, if present.
   MergeSuggestedKeyPrefs(extension->id(), ExtensionPrefs::Get(profile_),
                          std::move(suggested_key_prefs));
+#endif
 }
 
 void CommandService::RemoveDefunctExtensionSuggestedCommandPrefs(
     const Extension* extension) {
+#if 0
   ExtensionPrefs* extension_prefs = ExtensionPrefs::Get(profile_);
   const base::DictionaryValue* current_prefs = NULL;
   extension_prefs->ReadPrefAsDictionary(extension->id(),
@@ -680,11 +703,13 @@ void CommandService::RemoveDefunctExtensionSuggestedCommandPrefs(
     extension_prefs->UpdateExtensionPref(extension->id(), kCommands,
                                          std::move(suggested_key_prefs));
   }
+#endif
 }
 
 bool CommandService::IsCommandShortcutUserModified(
     const Extension* extension,
     const std::string& command_name) {
+#if 0
   // Get the previous suggested key, if any.
   ui::Accelerator suggested_key;
   bool suggested_key_was_assigned = false;
@@ -711,10 +736,13 @@ bool CommandService::IsCommandShortcutUserModified(
   return suggested_key_was_assigned ?
       active_command.accelerator() != suggested_key :
       active_command.accelerator().key_code() != ui::VKEY_UNKNOWN;
+#endif
+  return false;
 }
 
 bool CommandService::IsKeybindingChanging(const Extension* extension,
                                           const std::string& command_name) {
+#if 0
   // Get the new assigned command, if any.
   Command new_command;
   if (command_name == manifest_values::kBrowserActionCommandEvent) {
@@ -734,11 +762,14 @@ bool CommandService::IsKeybindingChanging(const Extension* extension,
   return Command::StringToAccelerator(
       GetSuggestedKeyPref(extension, command_name), command_name) !=
       new_command.accelerator();
+#endif
+  return false;
 }
 
 std::string CommandService::GetSuggestedKeyPref(
     const Extension* extension,
     const std::string& command_name) {
+#if 0
   // Get the previous suggested key, if any.
   ui::Accelerator suggested_key;
   ExtensionPrefs* extension_prefs = ExtensionPrefs::Get(profile_);
@@ -753,12 +784,13 @@ std::string CommandService::GetSuggestedKeyPref(
       return suggested_key;
     }
   }
-
+#endif
   return std::string();
 }
 
 void CommandService::RemoveKeybindingPrefs(const std::string& extension_id,
                                            const std::string& command_name) {
+#if 0
   DictionaryPrefUpdate updater(profile_->GetPrefs(),
                                prefs::kExtensionCommands);
   base::DictionaryValue* bindings = updater.Get();
@@ -809,6 +841,7 @@ void CommandService::RemoveKeybindingPrefs(const std::string& extension_id,
     for (auto& observer : observers_)
       observer.OnExtensionCommandRemoved(extension_id, removed_command);
   }
+#endif
 }
 
 bool CommandService::GetExtensionActionCommand(
@@ -817,6 +850,7 @@ bool CommandService::GetExtensionActionCommand(
     Command* command,
     bool* active,
     Command::Type action_type) const {
+#if 0
   const ExtensionSet& extensions =
       ExtensionRegistry::Get(profile_)->enabled_extensions();
   const Extension* extension = extensions.GetByID(extension_id);
@@ -864,6 +898,8 @@ bool CommandService::GetExtensionActionCommand(
     command->set_accelerator(shortcut_assigned);
 
   return true;
+#endif
+  return false;
 }
 
 template <>

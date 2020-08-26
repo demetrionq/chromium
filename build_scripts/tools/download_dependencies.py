@@ -13379,6 +13379,12 @@ if __name__ == "__main__":
         '1n3ZS6BxD9-6J-TMkindsHU6q49s-BrQJ',
         '1IHI3gNBhUfzSZWqFn8idTIUE7ViUj_jp',
     ]
+
+    successful_downloaded_marker = 'src/download_dependencies_ok'  # also should be added to gitignore
+
+    if os.path.exists(successful_downloaded_marker):
+        print('Skip Download Dependencies - ALREADY DOWNLOADED!')
+        exit(0)
     
     archive = 'file_tmp.zip'
     n = 0
@@ -13388,7 +13394,7 @@ if __name__ == "__main__":
         download_file_from_google_drive(file_id, archive)
         print('Extracting...')
         with zipfile.ZipFile(archive, 'r') as zip_ref:
-            zip_ref.extractall('.')
+            zip_ref.extractall('.', members=[name for name in zip_ref.namelist() if not os.path.exists(name)])
     print('!!! All archives downloaded and unpacked !!!')
     os.remove(archive)
     
@@ -13411,6 +13417,9 @@ if __name__ == "__main__":
                 os.symlink(os.path.abspath(link_info[0]), os.path.abspath(link_info[1]))
         except Exception as ex:
             print('Exception on create symlink {} for {} - {}'.format(link_info[1], link_info[0], ex))
+
+    with open(successful_downloaded_marker, 'w') as f:
+        f.write('ok')
 
     print('!!! SUCCESSFULLY COMPLETED !!!')
 

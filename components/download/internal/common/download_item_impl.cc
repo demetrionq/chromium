@@ -961,6 +961,7 @@ DownloadFile* DownloadItemImpl::GetDownloadFile() {
 }
 
 bool DownloadItemImpl::IsDangerous() const {
+#if 0
   return (danger_type_ == DOWNLOAD_DANGER_TYPE_DANGEROUS_FILE ||
           danger_type_ == DOWNLOAD_DANGER_TYPE_DANGEROUS_URL ||
           danger_type_ == DOWNLOAD_DANGER_TYPE_DANGEROUS_CONTENT ||
@@ -971,6 +972,9 @@ bool DownloadItemImpl::IsDangerous() const {
           danger_type_ == DOWNLOAD_DANGER_TYPE_BLOCKED_PASSWORD_PROTECTED ||
           danger_type_ == DOWNLOAD_DANGER_TYPE_SENSITIVE_CONTENT_BLOCK ||
           danger_type_ == DOWNLOAD_DANGER_TYPE_SENSITIVE_CONTENT_WARNING);
+#else
+  return false;
+#endif
 }
 
 DownloadDangerType DownloadItemImpl::GetDangerType() const {

@@ -60,6 +60,8 @@
 #include "url/url_constants.h"
 #include "v8/include/v8.h"
 
+#include "chrome/renderer/chrome_render_thread_observer.h"
+
 namespace {
 
 const char kCSSBackgroundImageFormat[] = "-webkit-image-set("
@@ -749,6 +751,8 @@ class NewTabPageBindings : public gin::Wrappable<NewTabPageBindings> {
   static bool IsInputInProgress();
   static v8::Local<v8::Value> GetMostVisited(v8::Isolate* isolate);
   static bool GetMostVisitedAvailable(v8::Isolate* isolate);
+  static bool IsIncognito(v8::Isolate* isolate);
+  static bool IsBottomToolbarEnabled(v8::Isolate* isolate);
   static v8::Local<v8::Value> GetNtpTheme(v8::Isolate* isolate);
   static bool GetIsCustomLinks();
   static bool GetIsUsingMostVisited();
@@ -829,6 +833,10 @@ gin::ObjectTemplateBuilder NewTabPageBindings::GetObjectTemplateBuilder(
       .SetProperty("mostVisited", &NewTabPageBindings::GetMostVisited)
       .SetProperty("mostVisitedAvailable",
                    &NewTabPageBindings::GetMostVisitedAvailable)
+      .SetProperty("isIncognito",
+                   &NewTabPageBindings::IsIncognito)
+      .SetProperty("isBottomToolbarEnabled",
+                   &NewTabPageBindings::IsBottomToolbarEnabled)
       .SetProperty("ntpTheme", &NewTabPageBindings::GetNtpTheme)
       // TODO(https://crbug.com/1020450): remove "themeBackgroundInfo" legacy
       // name when we're sure no third-party NTP needs it.
@@ -948,6 +956,14 @@ bool NewTabPageBindings::GetMostVisitedAvailable(v8::Isolate* isolate) {
   return search_box->AreMostVisitedItemsAvailable();
 }
 
+bool NewTabPageBindings::IsIncognito(v8::Isolate* isolate) {
+  return ChromeRenderThreadObserver::is_incognito_process();
+}
+
+bool NewTabPageBindings::IsBottomToolbarEnabled(v8::Isolate* isolate) {
+  return ChromeRenderThreadObserver::is_bottom_toolbar_enabled();
+}
+
 // static
 v8::Local<v8::Value> NewTabPageBindings::GetNtpTheme(v8::Isolate* isolate) {
   const SearchBox* search_box = GetSearchBoxForCurrentContext();
@@ -1040,9 +1056,13 @@ v8::Local<v8::Value> NewTabPageBindings::GetMostVisitedItemData(
     v8::Isolate* isolate,
     int rid) {
   const SearchBox* search_box = GetSearchBoxForCurrentContext();
+#if 0
   if (!search_box || !HasOrigin(GURL(chrome::kChromeSearchMostVisitedUrl)))
     return v8::Null(isolate);
-
+#else
+  if (!search_box || (!HasOrigin(GURL(chrome::kChromeSearchMostVisitedUrl)) && !HasOrigin(GURL(chrome::kChromeSearchLocalNtpUrl))))
+    return v8::Null(isolate);
+#endif
   InstantMostVisitedItem item;
   if (!search_box->GetMostVisitedItemWithID(rid, &item))
     return v8::Null(isolate);

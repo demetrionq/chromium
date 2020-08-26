@@ -323,7 +323,6 @@ ExtensionFunction::ResponseAction WindowsGetFunction::Run() {
   if (!windows_util::GetBrowserFromWindowID(this, params->window_id,
                                             extractor.type_filters(), &browser,
                                             &error)) {
-    return RespondNow(Error(error));
     LOG(INFO) << "[EXTENSIONS] WindowsGetFunction - Step 1a";
     if (!browser) {
       Profile* profile = Profile::FromBrowserContext(browser_context());

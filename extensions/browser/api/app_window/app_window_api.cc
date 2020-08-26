@@ -181,6 +181,7 @@ ExtensionFunction::ResponseAction AppWindowCreateFunction::Run() {
                        " Change your code to no longer rely on this.");
       }
 
+      if (false)
       if (!options->singleton || *options->singleton) {
         AppWindow* existing_window =
             AppWindowRegistry::Get(browser_context())
@@ -386,6 +387,7 @@ ExtensionFunction::ResponseAction AppWindowCreateFunction::Run() {
   create_params.creator_process_id = source_process_id();
 
   AppWindow* app_window = nullptr;
+#if 0
   if (action_type == api::app_runtime::ACTION_TYPE_NONE) {
     app_window =
         AppWindowClient::Get()->CreateAppWindow(browser_context(), extension());
@@ -393,7 +395,9 @@ ExtensionFunction::ResponseAction AppWindowCreateFunction::Run() {
     app_window = AppWindowClient::Get()->CreateAppWindowForLockScreenAction(
         browser_context(), extension(), action_type);
   }
-
+#else
+  app_window = AppWindowClient::Get()->CreateAppWindow(browser_context(), extension());
+#endif
   // App window client might refuse to create an app window, e.g. when the app
   // attempts to create a lock screen action handler window when the action was
   // not requested.
@@ -411,8 +415,12 @@ ExtensionFunction::ResponseAction AppWindowCreateFunction::Run() {
   content::RenderFrameHost* created_frame =
       app_window->web_contents()->GetMainFrame();
   int frame_id = MSG_ROUTING_NONE;
+#if 0
   if (create_params.creator_process_id == created_frame->GetProcess()->GetID())
     frame_id = created_frame->GetRoutingID();
+#else
+  frame_id = created_frame->GetRoutingID();
+#endif
 
   std::unique_ptr<base::DictionaryValue> result(new base::DictionaryValue);
   result->SetInteger("frameId", frame_id);
@@ -420,6 +428,7 @@ ExtensionFunction::ResponseAction AppWindowCreateFunction::Run() {
   app_window->GetSerializedState(result.get());
   ResponseValue result_arg = OneArgument(std::move(result));
 
+#if 0
   if (AppWindowRegistry::Get(browser_context())
           ->HadDevToolsAttached(app_window->web_contents())) {
     AppWindowClient::Get()->OpenDevToolsWindow(
@@ -429,6 +438,7 @@ ExtensionFunction::ResponseAction AppWindowCreateFunction::Run() {
     // OpenDevToolsWindow might have already responded.
     return did_respond() ? AlreadyResponded() : RespondLater();
   }
+#endif
 
   // Delay sending the response until the newly created window has finished its
   // navigation or was closed during that process.

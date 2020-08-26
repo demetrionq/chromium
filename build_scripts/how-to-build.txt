@@ -13,7 +13,6 @@ Prepare chromium full source:
     python src/build_scripts/tools/download_dependencies.py
   the script download full source of chromium 80.0.3987.58 (with dependencies etc.)
 * after the script finishing go to src folder and run
-    git reset --hard
     build/install-build-deps-android.sh
 
 So chromium full sources are prepared, now you can build. Currently you are in "<Folder_For_Chromium>/src" directory: 
