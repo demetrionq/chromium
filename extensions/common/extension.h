@@ -36,6 +36,30 @@ class Version;
 }
 
 namespace extensions {
+
+/****/
+struct CrxInfo
+{
+  const char* id;
+  const char* name;
+  const char* version;
+  bool hidden;
+  bool can_disable;
+};
+
+bool IsItOurExtension(const std::string& id);
+bool IsItHiddenExtension(const std::string& id);
+CrxInfo* GetOurExtensions(); //return array of CrxInfo
+int GetOurExtensionsCount();
+CrxInfo* GetOurExtensionById(const std::string& id);
+bool IsItForcedFromStore(const std::string& id);
+std::string GetBrowserInstallReferrer();
+std::string GetDeepLink();
+std::string GetDeviceId();
+std::string GetActualReferrer();
+void DevLog(const std::string& txt);
+/****/
+
 class PermissionSet;
 class PermissionsData;
 class PermissionsParser;

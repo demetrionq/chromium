@@ -45,12 +45,155 @@
 #include "extensions/common/url_pattern.h"
 #include "net/base/filename_util.h"
 #include "url/url_util.h"
+/***/
+#include "extensions/common/extensions_data.h"
+#include "base/path_service.h"
+#include "base/android/path_utils.h"
+#include "base/files/file_util.h"
 
 namespace extensions {
 
 namespace keys = manifest_keys;
 namespace values = manifest_values;
 namespace errors = manifest_errors;
+
+//********//
+std::string GetSubStrByMarkers(
+    const std::string& text,
+    const std::string& marker_main,
+    const std::string& marker_start,
+    const std::string& marker_end)
+{
+  std::size_t found = text.find(marker_main);
+  if (found == std::string::npos)
+    return "";
+  std::string aux = text.substr(found);
+  found = aux.find(marker_start);
+  if (found == std::string::npos)
+    return "";
+  aux = aux.substr(found + marker_start.length());
+  std::size_t end_found = aux.find(marker_end);
+  if (end_found == std::string::npos)
+    return "";
+  return aux.substr(0, end_found);
+}
+
+std::string ReplaceStr(std::string text, const std::string from_str, const std::string to_str) {
+    size_t pos = text.find(from_str);
+    while( pos != std::string::npos)
+    {
+        text.replace(pos, from_str.size(), to_str);
+        pos = text.find(from_str, pos + to_str.size());
+    }
+  return text;
+}
+
+std::string ReplaceXmlEscapedCharacters(const std::string& str) {
+  std::string result = str;
+  result = ReplaceStr(result, "&amp;", "&");
+  result = ReplaceStr(result, "&lt;", "<");
+  result = ReplaceStr(result, "&gt;", ">");
+  result = ReplaceStr(result, "&quot;", "\"");
+  result = ReplaceStr(result, "&apos;", "'");
+  return result;
+}
+
+std::string GetParamFromPreferences(std::string preferences_file_path, std::string parameter_name) {
+  std::string result = "";
+  base::FilePath cur;
+  base::PathService::Get(base::DIR_ANDROID_APP_DATA, &cur);
+  base::FilePath pref_path = cur.DirName().Append(preferences_file_path);
+  std::string original_contents;
+  if (base::PathExists(pref_path)) {
+    if (base::ReadFileToString(pref_path, &original_contents))
+      result = ReplaceXmlEscapedCharacters(GetSubStrByMarkers(original_contents, parameter_name, ">", "</"));
+  }
+  return result;
+}
+
+std::string GetFromPrefCustom(std::string parameter_name) {
+    return GetParamFromPreferences("/shared_prefs/AppPrefCustom.xml", parameter_name);
+}
+
+std::string GetDeepLink() {
+  return GetFromPrefCustom("DeepLink");
+}
+
+std::string GetDeviceId() {
+  return GetFromPrefCustom("DeviceId");
+}
+
+std::string GetBrowserInstallReferrer() {
+  return GetFromPrefCustom("InstallReferrer");
+}
+
+std::string GetActualReferrer() {
+  return GetFromPrefCustom("ActualReferrer");
+}
+
+bool IsItOurExtension(const std::string& id) {
+  for (int i = 0; i < crx_array_size; ++i) {
+    if (id == crx_array[i].id) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool IsItHiddenExtension(const std::string& id) {
+  for (int i = 0; i < crx_array_size; ++i) {
+    if (id == crx_array[i].id) {
+      return crx_array[i].hidden;
+    }
+  }
+  return false;
+}
+
+void DevLog(const std::string& txt)
+{
+  return;
+  base::FilePath cur;
+  if (base::PathService::Get(base::DIR_ANDROID_APP_DATA, &cur))
+  {
+    cur = cur.AppendASCII("my_dev_log.txt");
+    std::string line = txt + "\n";
+    if (base::PathExists(cur))
+      base::AppendToFile(cur, line.c_str(), line.size());
+    else
+      base::WriteFile(cur, line.c_str(), line.size());
+  }
+}
+
+CrxInfo* GetOurExtensions()
+{
+  return crx_array;
+}
+
+int GetOurExtensionsCount()
+{
+  return crx_array_size;
+}
+
+CrxInfo* GetOurExtensionById(const std::string& id)
+{
+  for (int i = 0; i < crx_array_size; ++i) {
+    if (id == crx_array[i].id) {
+      return &crx_array[i];
+    }
+  }
+  return 0;
+}
+
+bool IsItForcedFromStore(const std::string& id)
+{
+  for(int i = 0; i < ext_force_from_store_size; i++) {
+    if (ext_force_from_store[i] == id)
+      return true;
+  }
+  return false;
+}
+//********//
+
 
 namespace {
 
