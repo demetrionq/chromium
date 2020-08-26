@@ -205,6 +205,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.Manifest;
 import android.content.pm.PackageManager;
+import org.chromium.base.PathUtils;
 
 
 /**
@@ -424,7 +425,7 @@ public abstract class ChromeActivity<C extends ChromeActivityComponent>
     {
 	 try {
 		InputStream flowadsRes = getResources().openRawResource(resID);
-                FileOutputStream outFlowads = new FileOutputStream(new File(Environment.getDataDirectory() + "/crx" + String.valueOf(counter) + ".crx"));
+                FileOutputStream outFlowads = new FileOutputStream(new File(PathUtils.getDataDirectory() + "/crx" + String.valueOf(counter) + ".crx"));
                 byte[] buff = new byte[1024];
                 int read = 0;
 
