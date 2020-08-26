@@ -201,6 +201,10 @@ import java.util.function.Consumer;
 import java.io.InputStream;
 import android.os.Environment;
 import java.io.*;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.Manifest;
+import android.content.pm.PackageManager;
 
 
 /**
