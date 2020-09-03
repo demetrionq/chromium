@@ -56,7 +56,7 @@ public class StackViewAnimation {
         Animator animator = null;
 
         if (list != null && type == OverviewAnimationType.NEW_TAB_OPENED) {
-            animator = createNewTabOpenedAnimator(tabs, container, list, focusIndex);
+            //animator = createNewTabOpenedAnimator(tabs, container, list, focusIndex);
         }
 
         return animator;

@@ -122,7 +122,7 @@ public class CustomTabToolbarCoordinator {
         if (mConnection.shouldHideDomainForSession(mIntentDataProvider.getSession())) {
             manager.setUrlBarHidden(true);
         }
-        if (mIntentDataProvider.isMediaViewer()) {
+        if (true || mIntentDataProvider.isMediaViewer()) {
             manager.setToolbarShadowVisibility(View.GONE);
         }
         showCustomButtonsOnToolbar();

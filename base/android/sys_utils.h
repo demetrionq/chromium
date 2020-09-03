@@ -16,6 +16,10 @@ class BASE_EXPORT SysUtils {
   static bool IsLowEndDeviceFromJni();
   // Returns true if system has low available memory.
   static bool IsCurrentlyLowMemory();
+
+  static bool IsBottomToolbarEnabledFromJni();
+  static long FirstInstallDateFromJni();
+  static std::string ReferrerStringFromJni();
 };
 
 }  // namespace android

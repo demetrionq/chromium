@@ -15,6 +15,7 @@ chrome_java_sources = [
   "java/src/org/chromium/chrome/browser/ChromeActionModeCallback.java",
   "java/src/org/chromium/chrome/browser/ChromeActivity.java",
   "java/src/org/chromium/chrome/browser/Extensions.java",
+  "java/src/org/chromium/chrome/browser/PersonalizeResults.java",
   "java/src/org/chromium/chrome/browser/ChromeActivitySessionTracker.java",
   "java/src/org/chromium/chrome/browser/BackgroundExtensions.java",
   "java/src/org/chromium/chrome/browser/ChromeApplication.java",

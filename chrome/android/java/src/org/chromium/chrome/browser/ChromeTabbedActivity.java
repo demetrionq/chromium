@@ -168,6 +168,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 import java.util.Locale;
 
+//import org.chromium.chrome.browser.ui.appmenu.internal.*;
+import org.chromium.chrome.browser.appmenu.AppMenuIconRowFooter;
+import android.animation.ValueAnimator;
+
 /**
  * This is the main activity for ChromeMobile when not running in document mode.  All the tabs
  * are accessible via a chrome specific tab switching UI.
@@ -210,7 +214,7 @@ public class ChromeTabbedActivity extends ChromeActivity implements ScreenshotMo
     // Maximum delay for initial tab creation. This is for homepage and NTP, not previous tabs
     // restore. This is needed because we do not know when reading PartnerBrowserCustomizations
     // provider will be finished.
-    private static final int INITIAL_TAB_CREATION_TIMEOUT_MS = 500;
+    private static final int INITIAL_TAB_CREATION_TIMEOUT_MS = 100;
 
     /**
      * Sending an intent with this extra sets the app into single process mode.
@@ -591,7 +595,7 @@ public class ChromeTabbedActivity extends ChromeActivity implements ScreenshotMo
                 private void closeIfNoTabsAndHomepageEnabled(boolean isPendingClosure) {
                     if (getTabModelSelector().getTotalTabCount() == 0) {
                         // If the last tab is closed, and homepage is enabled, then exit Chrome.
-                        if (HomepageManager.shouldCloseAppWithZeroTabs()) {
+                        if (mShouldExitApp == true || HomepageManager.shouldCloseAppWithZeroTabs()) {
                             finish();
                         } else if (isPendingClosure) {
                             NewTabPageUma.recordNTPImpression(
@@ -1145,8 +1149,11 @@ public class ChromeTabbedActivity extends ChromeActivity implements ScreenshotMo
             boolean hadCipherData =
                     CipherFactory.getInstance().restoreFromBundle(getSavedInstanceState());
 
+            String PREF_CLOSE_TABS_ON_EXIT = "close_tabs_on_exit";
+
             boolean noRestoreState =
-                    CommandLine.getInstance().hasSwitch(ChromeSwitches.NO_RESTORE_STATE);
+                    CommandLine.getInstance().hasSwitch(ChromeSwitches.NO_RESTORE_STATE) ||
+                    ContextUtils.getAppSharedPreferences().getBoolean(PREF_CLOSE_TABS_ON_EXIT, false);
             if (noRestoreState) {
                 // Clear the state files because they are inconsistent and useless from now on.
                 mTabModelSelectorImpl.clearState();
@@ -1238,7 +1245,7 @@ public class ChromeTabbedActivity extends ChromeActivity implements ScreenshotMo
 
         String url = HomepageManager.getHomepageUri();
         if (TextUtils.isEmpty(url)) {
-            url = UrlConstants.NTP_URL;
+            url = UrlConstants.LOCAL_NTP_URL;
         } else {
             boolean startupHomepageIsNtp = false;
             // Migrate legacy NTP URLs (chrome://newtab) to the newer format
@@ -1432,12 +1439,12 @@ public class ChromeTabbedActivity extends ChromeActivity implements ScreenshotMo
 
                     if (url == null || url.equals(UrlConstants.NTP_URL)) {
                         if (fromLauncherShortcut) {
-                            getTabCreator(true).launchUrl(UrlConstants.NTP_URL,
+                            getTabCreator(true).launchUrl(UrlConstants.LOCAL_NTP_URL,
                                     TabLaunchType.FROM_LAUNCHER_SHORTCUT);
                             recordLauncherShortcutAction(true);
                             reportNewTabShortcutUsed(true);
                         } else if (IncognitoTabLauncher.didCreateIntent(intent)) {
-                            Tab tab = getTabCreator(true).launchUrl(UrlConstants.NTP_URL,
+                            Tab tab = getTabCreator(true).launchUrl(UrlConstants.LOCAL_NTP_URL,
                                     TabLaunchType.FROM_LAUNCH_NEW_INCOGNITO_TAB);
                             if (IncognitoTabLauncher.shouldFocusOmnibox()) {
                                 // Since the Tab is created in the foreground, its View will gain

@@ -414,8 +414,11 @@ public abstract class Stack {
         mIsDying = false;
 
         finishAnimation(time);
+
+        /*
         startAnimation(time, OverviewAnimationType.NEW_TAB_OPENED,
                 TabModelUtils.getTabIndexById(mTabList, id), TabList.INVALID_TAB_INDEX, false);
+        */
     }
 
     /**
@@ -1550,7 +1553,7 @@ public abstract class Stack {
      * @param stackRect The frame of the stack.
      */
     private void fullRollHelper(long time, RectF stackRect) {
-        if (mOverviewAnimationType != OverviewAnimationType.FULL_ROLL
+        if (false && mOverviewAnimationType != OverviewAnimationType.FULL_ROLL
                 && computeOverscrollPercent() < 0
                 && mOverScrollCounter >= OVERSCROLL_FULL_ROLL_TRIGGER) {
             startAnimation(time, OverviewAnimationType.FULL_ROLL);
