@@ -87,8 +87,12 @@
             android:title="@string/menu_help" android:visibility="gone" />
         <item android:id="@+id/enter_vr_id"
             android:title="@string/enter_vr" />
+<!--
         <item android:id="@+id/clear_data_menu_id"
-            android:title="_clear_data" />
+            android:title="@string/main_menu_clear_data" />
+        <item android:id="@+id/exit_id"
+            android:title="@string/main_menu_exit" />
+-->
         <item android:id="@+id/exit_id"
             android:title="_exit" />
     </group>
