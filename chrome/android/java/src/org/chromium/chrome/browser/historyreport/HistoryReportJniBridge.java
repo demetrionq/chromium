@@ -18,6 +18,20 @@ import org.chromium.content_public.browser.UiThreadTaskTraits;
 import java.io.PrintWriter;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.chromium.chrome.browser.ChromeActivity;
+import org.chromium.base.ContextUtils;
+
+import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.os.Bundle;
+
+import org.chromium.base.ActivityState;
+import org.chromium.base.ApplicationState;
+import org.chromium.base.ApplicationStatus;
+
 /**
  * Bridge class for calls between Java and C++.
  */
@@ -172,6 +186,20 @@ public class HistoryReportJniBridge implements SearchJniBridge {
     private void onDataChanged() {
         Log.d(TAG, "onDataChanged");
         mDataChangeObserver.onDataChanged();
+    }
+
+    @CalledByNative
+    private static void focusOmnibox() {
+        Log.d(TAG, "[TheBrowser] JniBridge - focusOmnibox");
+        Activity activity = ApplicationStatus.getLastTrackedFocusedActivity();
+        if (ApplicationStatus.getStateForActivity(activity) == ActivityState.DESTROYED) {
+            return;
+        }
+        if (!(activity instanceof ChromeActivity)) {
+            return;
+        }
+        ChromeActivity crActivity = (ChromeActivity)activity;
+        crActivity.focusOmnibox();
     }
 
     @CalledByNative

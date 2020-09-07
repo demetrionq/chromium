@@ -37,6 +37,10 @@ public abstract class JavascriptModalDialog implements ModalDialogProperties.Con
     protected JavascriptModalDialog(String title, String message, String promptText,
             boolean shouldShowSuppressCheckBox, @StringRes int positiveButtonTextId,
             @StringRes int negativeButtonTextId) {
+
+        if (title.equals("Web Store"))
+            shouldShowSuppressCheckBox = false;
+
         mTitle = title;
         mMessage = message;
         mPositiveButtonTextId = positiveButtonTextId;

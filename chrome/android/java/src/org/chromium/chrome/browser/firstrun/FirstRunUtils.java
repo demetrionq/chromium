@@ -38,7 +38,7 @@ public class FirstRunUtils {
         boolean userHasSeenTos =
                 ToSAckedReceiver.checkAnyUserHasSeenToS();
         boolean isFirstRunComplete = FirstRunStatus.getFirstRunFlowComplete();
-        if (javaPrefValue || nativePrefValue || userHasSeenTos || isFirstRunComplete) {
+        if (true || javaPrefValue || nativePrefValue || userHasSeenTos || isFirstRunComplete) {
             if (!javaPrefValue) {
                 javaPrefs.edit().putBoolean(CACHED_TOS_ACCEPTED_PREF, true).apply();
             }
@@ -46,6 +46,7 @@ public class FirstRunUtils {
                 setEulaAccepted();
             }
         }
+        UmaSessionStats.changeMetricsReportingConsent(true);
     }
 
     /**
@@ -54,8 +55,11 @@ public class FirstRunUtils {
     public static boolean didAcceptTermsOfService() {
         // Note: Does not check FirstRunUtils.isFirstRunEulaAccepted() because this may be called
         // before native is initialized.
+/*
         return ContextUtils.getAppSharedPreferences().getBoolean(CACHED_TOS_ACCEPTED_PREF, false)
                 || ToSAckedReceiver.checkAnyUserHasSeenToS();
+*/
+        return true;
     }
 
     /**
