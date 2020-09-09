@@ -35,6 +35,8 @@ import org.chromium.chrome.browser.flags.FeatureUtilities;
 
 import java.util.Locale;
 
+import org.chromium.base.StrictModeContext;
+
 /**
  * A class containing some utility static methods.
  */
@@ -78,9 +80,11 @@ public class MediaViewerUtils {
             Intent chooserIntent = Intent.createChooser(viewIntent, null);
             chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             String openWithStr = context.getString(R.string.download_manager_open_with);
-            PendingIntent pendingViewIntent = PendingIntent.getActivity(
-                    context, 0, chooserIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-            builder.addMenuItem(openWithStr, pendingViewIntent);
+            try (StrictModeContext unused = StrictModeContext.allowAllVmPolicies()) {
+                PendingIntent pendingViewIntent = PendingIntent.getActivity(
+                        context, 0, chooserIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                builder.addMenuItem(openWithStr, pendingViewIntent);
+            }
         }
 
         // Create a PendingIntent that shares the file with external apps.

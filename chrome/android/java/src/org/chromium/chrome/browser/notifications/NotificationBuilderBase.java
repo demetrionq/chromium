@@ -546,7 +546,7 @@ public abstract class NotificationBuilderBase {
             // The Icon class was only added in Android M.
             return false;
         }
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // Updating a notification with a bitmap status bar icon leads to a crash on Samsung
             // and Coolpad (Yulong) devices on Marshmallow, see https://crbug.com/829367.
             // Also, there are crashes on Lenovo M devices: https://crbug.com/894361. These include

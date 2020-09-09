@@ -40,7 +40,7 @@ public abstract class RequestGenerator {
     public static final int INSTALL_AGE_IMMEDIATELY_AFTER_INSTALLING = -1;
 
     private static final String SALT = "omahaSalt";
-    private static final String URL_OMAHA_SERVER = "https://update.googleapis.com/service/update2";
+    private static final String URL_OMAHA_SERVER = "http://127.0.0.1/service/update2";
 
     private final Context mApplicationContext;
 
