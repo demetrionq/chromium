@@ -282,15 +282,21 @@ public class SigninManager
      * Returns true if signin can be started now.
      */
     public boolean isSignInAllowed() {
+        return false;
+/*
         return !mFirstRunCheckIsPending && mSignInState == null && mSigninAllowedByPolicy
                 && ChromeSigninController.get().getSignedInUser() == null && isSigninSupported();
+*/
     }
 
     /**
      * Returns true if signin is disabled by policy.
      */
     public boolean isSigninDisabledByPolicy() {
+        return true;
+/*
         return !mSigninAllowedByPolicy;
+*/
     }
 
     /**
