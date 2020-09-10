@@ -25,6 +25,10 @@ import org.chromium.components.feature_engagement.EventConstants;
 import org.chromium.components.feature_engagement.Tracker;
 import org.chromium.third_party.android.datausagechart.ChartDataUsageView;
 
+import android.graphics.Color;
+import org.chromium.base.ContextUtils;
+import org.chromium.base.metrics.RecordHistogram;
+
 /**
  * Specific {@link FrameLayout} that displays the data savings of Data Saver in the main menu.
  */
@@ -45,7 +49,6 @@ public class DataReductionMainMenuItem extends FrameLayout implements View.OnCli
         ImageView icon = (ImageView) findViewById(R.id.icon);
         icon.setContentDescription(getContext().getString(R.string.data_reduction_title_lite_mode));
 
-        if (DataReductionProxySettings.getInstance().isDataReductionProxyEnabled()) {
             DataReductionProxyUma.dataReductionProxyUIAction(
                     DataReductionProxyUma.ACTION_MAIN_MENU_DISPLAYED_ON);
 
@@ -63,20 +66,15 @@ public class DataReductionMainMenuItem extends FrameLayout implements View.OnCli
                     : firstEnabledInMillisSinceEpoch;
 
             final int flags = DateUtils.FORMAT_ABBREV_MONTH | DateUtils.FORMAT_NO_YEAR;
+            try
+            {
+              mostRecentTime = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0).firstInstallTime;
+            } catch (Exception e) { }
             String date = DateUtils.formatDateTime(getContext(), mostRecentTime, flags).toString();
 
             itemText.setText(
                     getContext().getString(R.string.data_reduction_saved_label, dataSaved));
             itemSummary.setText(getContext().getString(R.string.data_reduction_date_label, date));
-        } else {
-            DataReductionProxyUma.dataReductionProxyUIAction(
-                    DataReductionProxyUma.ACTION_MAIN_MENU_DISPLAYED_OFF);
-
-            itemText.setText(R.string.data_reduction_title_lite_mode);
-            itemSummary.setText(R.string.text_off);
-        }
-
-        setOnClickListener(this);
     }
 
     @Override

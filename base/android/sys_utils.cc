@@ -12,6 +12,8 @@
 #include "base/system/sys_info.h"
 #include "base/trace_event/trace_event.h"
 
+#include "base/android/jni_string.h"
+
 namespace base {
 namespace android {
 
@@ -42,6 +44,27 @@ static void JNI_SysUtils_LogPageFaultCountToTracing(JNIEnv* env) {
   process_metrics->GetPageFaultCounts(&counts);
   TRACE_EVENT_END2("memory", "CollectPageFaults", "minor", counts.minor,
                    "major", counts.major);
+}
+
+bool SysUtils::IsBottomToolbarEnabledFromJni() {
+  static bool was_result_loaded = false;
+  static bool cached_result = false;
+  if (!was_result_loaded) {
+    JNIEnv* env = AttachCurrentThread();
+    cached_result = Java_SysUtils_isBottomToolbarEnabled(env);
+    was_result_loaded = true;
+  }
+  return cached_result;
+}
+
+long SysUtils::FirstInstallDateFromJni() {
+  JNIEnv* env = AttachCurrentThread();
+  return Java_SysUtils_firstInstallDate(env);
+}
+
+std::string SysUtils::ReferrerStringFromJni() {
+  JNIEnv* env = AttachCurrentThread();
+  return ConvertJavaStringToUTF8(env, Java_SysUtils_referrerString(env));
 }
 
 }  // namespace android

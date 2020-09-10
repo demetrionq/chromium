@@ -61,6 +61,10 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+import org.chromium.base.ContextUtils;
+//import org.chromium.chrome.browser.util.FeatureUtilities;
+import org.chromium.chrome.browser.flags.FeatureUtilities;
+
 /**
  * Base class for layouts that show one or more stacks of tabs.
  */
@@ -659,12 +663,15 @@ public abstract class StackLayoutBase extends Layout {
         // we end up with 0 tabs if the animation for all tabs closing is still
         // running when a new tab is created.
         // See http://crbug.com/496557
+        forceAnimationToFinish();
         onUpdateAnimation(SystemClock.currentThreadTimeMillis(), true);
+        forceAnimationToFinish();
     }
 
     @Override
     public void onTabCreated(long time, int id, int tabIndex, int sourceId, boolean newIsIncognito,
             boolean background, float originX, float originY) {
+        forceAnimationToFinish();
         super.onTabCreated(
                 time, id, tabIndex, sourceId, newIsIncognito, background, originX, originY);
 
@@ -674,6 +681,7 @@ public abstract class StackLayoutBase extends Layout {
         mStacks.get(getTabStackIndex(id)).tabCreated(time, id);
 
         startMarginAnimation(false);
+        forceAnimationToFinish();
     }
 
     // This method is called if the following sequence of operations occurs:

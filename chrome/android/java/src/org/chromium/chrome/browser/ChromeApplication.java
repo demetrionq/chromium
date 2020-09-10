@@ -48,6 +48,8 @@ import org.chromium.components.embedder_support.application.FontPreloadingWorkar
 import org.chromium.components.module_installer.util.ModuleUtil;
 import org.chromium.ui.base.ResourceBundle;
 
+import org.chromium.chrome.browser.BackgroundExtensions;
+
 /**
  * Basic application functionality that should be shared among all browser applications that use
  * chrome layer.
@@ -56,6 +58,8 @@ public class ChromeApplication extends Application {
     private static final String COMMAND_LINE_FILE = "chrome-command-line";
     // Public to allow use in ChromeBackupAgent
     public static final String PRIVATE_DATA_DIRECTORY_SUFFIX = "chrome";
+
+    public BackgroundExtensions mBackgroundExtensions;
 
     /** Lock on creation of sComponent. */
     private static final Object sLock = new Object();

@@ -248,7 +248,7 @@ public class TabContentManager {
             return null;
         }
 
-        if (nativePage != null && nativePage instanceof InvalidationAwareThumbnailProvider) {
+        if (false /*nativePage != null && nativePage instanceof InvalidationAwareThumbnailProvider*/) {
             if (!((InvalidationAwareThumbnailProvider) nativePage).shouldCaptureThumbnail()) {
                 return null;
             }
@@ -282,7 +282,7 @@ public class TabContentManager {
         Canvas c = new Canvas(bitmap);
         c.scale(scale, scale);
         c.translate(leftMargin, -overlayTranslateY + topMargin);
-        if (nativePage != null && nativePage instanceof InvalidationAwareThumbnailProvider) {
+        if (false /*nativePage != null && nativePage instanceof InvalidationAwareThumbnailProvider*/) {
             ((InvalidationAwareThumbnailProvider) nativePage).captureThumbnail(c);
         } else {
             viewToDraw.draw(c);

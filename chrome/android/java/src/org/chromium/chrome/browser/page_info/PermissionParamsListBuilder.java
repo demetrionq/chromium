@@ -111,7 +111,7 @@ class PermissionParamsListBuilder {
         }
 
         // The ads permission requires an additional static subtitle.
-        if (permission.type == ContentSettingsType.ADS) {
+        if (permission.type == ContentSettingsType.ADS && false) {
             permissionParams.subtitleTextResource = R.string.page_info_permission_ads_subtitle;
         }
 

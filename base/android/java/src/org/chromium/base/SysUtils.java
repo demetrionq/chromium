@@ -27,6 +27,14 @@ import java.io.FileReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
+import java.util.Date;
+import java.util.Locale;
+import java.text.SimpleDateFormat;
+
+//import org.chromium.chrome.browser.flags.FeatureUtilities;
+
 /**
  * Exposes system related information about the current device.
  */
@@ -125,6 +133,32 @@ public class SysUtils {
         return sLowEndDevice.booleanValue();
     }
 
+    @CalledByNative
+    public static long firstInstallDate() {
+        Context context = ContextUtils.getApplicationContext();
+        if (context == null)
+            return 0;
+        PackageInfo packageInfo;
+        try {
+            packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+        } catch (NameNotFoundException e) {
+            packageInfo = null;
+        }
+        return packageInfo == null ? 0 : (packageInfo.firstInstallTime / 1000);
+    }
+
+    @CalledByNative
+    public static boolean isBottomToolbarEnabled() {
+        //return FeatureUtilities.isBottomToolbarEnabled();
+        //bottom_toolbar_enabled
+        return ContextUtils.getAppSharedPreferences().getBoolean("bottom_toolbar_enabled", false);
+    }
+
+    @CalledByNative
+    public static String referrerString() {
+        return ContextUtils.getAppSharedPreferences().getString("install_referrer", "");
+    }
+
     /**
      * @return Whether or not this device should be considered a low end device.
      */
@@ -169,12 +203,13 @@ public class SysUtils {
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     private static boolean detectLowEndDevice() {
-        assert CommandLine.isInitialized();
-        if (CommandLine.getInstance().hasSwitch(BaseSwitches.ENABLE_LOW_END_DEVICE_MODE)) {
-            return true;
-        }
-        if (CommandLine.getInstance().hasSwitch(BaseSwitches.DISABLE_LOW_END_DEVICE_MODE)) {
-            return false;
+        if (CommandLine.isInitialized()) {
+            if (CommandLine.getInstance().hasSwitch(BaseSwitches.ENABLE_LOW_END_DEVICE_MODE)) {
+                return true;
+            }
+            if (CommandLine.getInstance().hasSwitch(BaseSwitches.DISABLE_LOW_END_DEVICE_MODE)) {
+                return false;
+            }
         }
 
         sAmountOfPhysicalMemoryKB = detectAmountOfPhysicalMemoryKB();

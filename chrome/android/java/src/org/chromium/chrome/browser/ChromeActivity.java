@@ -197,6 +197,21 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import android.view.ViewTreeObserver;
+import android.util.Log;
+//import org.chromium.chrome.browser.ui.appmenu.AppMenu;
+import org.chromium.chrome.browser.share.ShareHelper;
+import org.chromium.chrome.browser.PersonalizeResults;
+import org.chromium.chrome.browser.Extensions;
+import org.chromium.chrome.browser.util.IntentUtils;
+import org.chromium.chrome.browser.settings.website.SiteSettingsCategory;
+import org.chromium.chrome.browser.settings.website.WebsitePreferenceBridge;
+import org.chromium.chrome.browser.BackgroundExtensions;
+import org.chromium.content_public.browser.JavaScriptCallback;
+import org.chromium.content_public.browser.JavascriptInjector;
+import org.chromium.content_public.common.BrowserControlsState;
+import org.chromium.chrome.browser.omnibox.LocationBar;
+
 /**
  * A {@link AsyncInitializationActivity} that builds and manages a {@link CompositorViewHolder}
  * and associated classes.
@@ -223,6 +238,12 @@ public abstract class ChromeActivity<C extends ChromeActivityComponent>
      */
     private static final int PARTNER_BROWSER_CUSTOMIZATIONS_TIMEOUT_MS = 10000;
 
+    /**
+     * Whether or not we should Exit the application when the count of tabs reaches 0
+     *
+     */
+    public static boolean mShouldExitApp = false;
+
     private C mComponent;
 
     protected ObservableSupplierImpl<TabModelSelector> mTabModelSelectorSupplier =
@@ -234,8 +255,6 @@ public abstract class ChromeActivity<C extends ChromeActivityComponent>
     private TabContentManager mTabContentManager;
     private UmaSessionStats mUmaSessionStats;
     private ContextReporter mContextReporter;
-
-    private boolean mPartnerBrowserRefreshNeeded;
 
     protected IntentHandler mIntentHandler;
 
@@ -350,11 +369,6 @@ public abstract class ChromeActivity<C extends ChromeActivityComponent>
 
         VrModuleProvider.getDelegate().doPreInflationStartup(this, getSavedInstanceState());
 
-        // Force a partner customizations refresh if it has yet to be initialized.  This can happen
-        // if Chrome is killed and you refocus a previous activity from Android recents, which does
-        // not go through ChromeLauncherActivity that would have normally triggered this.
-        mPartnerBrowserRefreshNeeded = !PartnerBrowserCustomizations.isInitialized();
-
         CommandLine commandLine = CommandLine.getInstance();
         if (!commandLine.hasSwitch(ChromeSwitches.DISABLE_FULLSCREEN)) {
             TypedValue threshold = new TypedValue();
@@ -367,6 +381,18 @@ public abstract class ChromeActivity<C extends ChromeActivityComponent>
         }
 
         getWindow().setBackgroundDrawable(getBackgroundDrawable());
+    }
+
+    /**
+     * @returns The profile on which all UI-based browsing data operations should be performed,
+     *         which is the currently active regular profile.
+     */
+    private static Profile getProfile() {
+        return Profile.getLastUsedProfile().getOriginalProfile();
+    }
+
+    public void focusOmnibox() {
+        getToolbarManager().setUrlBarFocus(true, LocationBar.OmniboxFocusReason.MENU_OR_KEYBOARD_ACTION);
     }
 
     protected RootUiCoordinator createRootUiCoordinator() {
@@ -469,6 +495,11 @@ public abstract class ChromeActivity<C extends ChromeActivityComponent>
                     .initialize(mFullscreenManager,
                             mManualFillingComponent.getKeyboardExtensionViewResizer());
 
+            ChromeApplication app = (ChromeApplication)ContextUtils.getApplicationContext();
+            if (app != null) {
+                app.mBackgroundExtensions = new BackgroundExtensions(this);
+            }
+
             // If onStart was called before postLayoutInflation (because inflation was done in a
             // background thread) then make sure to call the relevant methods belatedly.
             if (mStarted) {
@@ -538,6 +569,26 @@ public abstract class ChromeActivity<C extends ChromeActivityComponent>
             try (StrictModeContext ignored = StrictModeContext.allowDiskWrites()) {
                 TraceEvent.begin("setContentView(R.layout.main)");
                 setContentView(R.layout.main);
+                // TODO - make compiled the next lines
+                // requred main_bottombar.xml resource
+                /*
+                if (FeatureUtilities.isBottomToolbarEnabled()) {
+                    setContentView(R.layout.main_bottombar);
+                } else {
+                    setContentView(R.layout.main);
+                }
+                */
+                if (FeatureUtilities.isBottomToolbarEnabled()) {
+                    ViewGroup contentView = (ViewGroup)getWindow().getDecorView();
+                    contentView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                       @Override
+                       public void onGlobalLayout() {
+                        if (mCompositorViewHolder != null)
+                           mCompositorViewHolder.requestRender();
+                      }
+                   });
+                }
+
                 TraceEvent.end("setContentView(R.layout.main)");
                 if (getControlContainerLayoutId() != NO_CONTROL_CONTAINER) {
                     ViewStub toolbarContainerStub =
@@ -646,6 +697,22 @@ public abstract class ChromeActivity<C extends ChromeActivityComponent>
             public void onCrash(Tab tab) {
                 postDeferredStartupIfNeeded();
             }
+/*
+            @Override
+            public void onUrlUpdated(Tab tab){
+              PersonalizeResults.Execute(tab);
+            }
+*/
+/*
+            @Override
+            public void onDidFinishNavigation(Tab tab, String url, boolean isInMainFrame,
+                boolean isErrorPage, boolean hasCommitted, boolean isSameDocument,
+                boolean isFragmentNavigation, @Nullable Integer pageTransition, int errorCode,
+                int httpStatusCode)
+            {
+              Extensions.Execute(tab, url, isInMainFrame, isErrorPage, hasCommitted, isSameDocument, isFragmentNavigation, pageTransition, errorCode, httpStatusCode);
+            }
+*/
         };
 
         if (mAssistStatusHandler != null) {
@@ -1126,16 +1193,6 @@ public abstract class ChromeActivity<C extends ChromeActivityComponent>
         }
         super.onStart();
 
-        if (mPartnerBrowserRefreshNeeded) {
-            mPartnerBrowserRefreshNeeded = false;
-            PartnerBrowserCustomizations.initializeAsync(getApplicationContext(),
-                    PARTNER_BROWSER_CUSTOMIZATIONS_TIMEOUT_MS);
-            PartnerBrowserCustomizations.setOnInitializeAsyncFinished(() -> {
-                if (PartnerBrowserCustomizations.isIncognitoDisabled()) {
-                    terminateIncognitoSession();
-                }
-            });
-        }
         if (mCompositorViewHolder != null) mCompositorViewHolder.onStart();
 
         // Explicitly call checkAccessibility() so things are initialized correctly when Chrome has
@@ -1153,8 +1210,6 @@ public abstract class ChromeActivity<C extends ChromeActivityComponent>
     public void onStop() {
         super.onStop();
 
-        // We want to refresh partner browser provider every onStart().
-        mPartnerBrowserRefreshNeeded = true;
         if (mCompositorViewHolder != null) mCompositorViewHolder.onStop();
 
         // If postInflationStartup hasn't been called yet (because inflation was done asynchronously
@@ -1364,6 +1419,10 @@ public abstract class ChromeActivity<C extends ChromeActivityComponent>
             VrModuleProvider.getDelegate().onNewIntentWithNative(this, getIntent());
         }
         super.finishNativeInitialization();
+
+        // We force the icons for extensions to be preloaded (since they are loaded asynchronously)
+        // TODO - haw to make compiled the next line
+        //AppMenu.nativeGetRunningExtensions(getProfile(), null);
 
         mManualFillingComponent.initialize(getWindowAndroid(),
                 findViewById(R.id.keyboard_accessory_stub),
@@ -1860,7 +1919,11 @@ public abstract class ChromeActivity<C extends ChromeActivityComponent>
      */
     @NonNull
     protected ChromeFullscreenManager createFullscreenManager() {
-        return new ChromeFullscreenManager(this, ChromeFullscreenManager.ControlsPosition.TOP);
+        //return new ChromeFullscreenManager(this, ChromeFullscreenManager.ControlsPosition.TOP);
+        if (FeatureUtilities.isBottomToolbarEnabled())
+            return new ChromeFullscreenManager(this, ChromeFullscreenManager.ControlsPosition.NONE);
+        else
+            return new ChromeFullscreenManager(this, ChromeFullscreenManager.ControlsPosition.TOP);
     }
 
     /**
@@ -2138,6 +2201,12 @@ public abstract class ChromeActivity<C extends ChromeActivityComponent>
         if (id == R.id.preferences_id) {
             PreferencesLauncher.launchSettingsPage(this, null);
             RecordUserAction.record("MobileMenuSettings");
+        } else if (id == R.id.exit_id) {
+            RecordUserAction.record("MobileMenuExit");
+            mShouldExitApp = true;
+            getTabModelSelector().closeAllTabs();
+            ApplicationLifetime.terminate(false);
+            return true;
         }
 
         if (id == R.id.update_menu_id) {
@@ -2146,15 +2215,6 @@ public abstract class ChromeActivity<C extends ChromeActivityComponent>
         }
 
         final Tab currentTab = getActivityTab();
-
-        if (id == R.id.help_id) {
-            String url = currentTab != null ? currentTab.getUrl() : "";
-            Profile profile = mTabModelSelector.isIncognitoSelected()
-                    ? Profile.getLastUsedProfile().getOffTheRecordProfile()
-                    : Profile.getLastUsedProfile().getOriginalProfile();
-            startHelpAndFeedback(url, "MobileMenuFeedback", profile);
-            return true;
-        }
 
         if (id == R.id.open_history_menu_id) {
             // 'currentTab' could only be null when opening history from start surface, which is

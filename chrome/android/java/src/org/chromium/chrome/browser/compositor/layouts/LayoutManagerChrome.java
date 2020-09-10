@@ -456,7 +456,7 @@ public class LayoutManagerChrome extends LayoutManager implements OverviewModeCo
             if (mScrollDirection == ScrollDirection.UNKNOWN) return;
 
             if (mSupportSwipeDown && mOverviewLayout != null
-                    && mScrollDirection == ScrollDirection.DOWN) {
+                    && (mScrollDirection == ScrollDirection.DOWN || mScrollDirection == ScrollDirection.UP)) {
                 RecordUserAction.record("MobileToolbarSwipeOpenStackView");
                 showOverview(true);
             } else if (mScrollDirection == ScrollDirection.LEFT
@@ -498,6 +498,8 @@ public class LayoutManagerChrome extends LayoutManager implements OverviewModeCo
                 direction = ScrollDirection.RIGHT;
             } else if (swipeAngle < 270 + SWIPE_RANGE_DEG && swipeAngle > 270 - SWIPE_RANGE_DEG) {
                 direction = ScrollDirection.DOWN;
+            } else if (swipeAngle < 90 + SWIPE_RANGE_DEG && swipeAngle > 90 - SWIPE_RANGE_DEG) {
+                direction = ScrollDirection.UP;
             }
 
             return direction;
@@ -512,7 +514,7 @@ public class LayoutManagerChrome extends LayoutManager implements OverviewModeCo
                 return false;
             }
 
-            if (direction == ScrollDirection.DOWN) {
+            if (direction == ScrollDirection.DOWN || direction == ScrollDirection.UP) {
                 boolean isAccessibility = AccessibilityUtil.isAccessibilityEnabled();
                 return mOverviewLayout != null && !isAccessibility;
             }

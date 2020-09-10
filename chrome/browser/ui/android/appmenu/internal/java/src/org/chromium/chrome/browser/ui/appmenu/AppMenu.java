@@ -76,6 +76,8 @@ import org.chromium.base.annotations.CalledByNative;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import org.chromium.chrome.browser.flags.FeatureUtilities;
+
 
 /**
  * Shows a popup of menuitems anchored to a host view. When a item is selected we call
@@ -448,11 +450,14 @@ class AppMenu implements OnItemClickListener, OnKeyListener, AppMenuAdapter.OnCl
 
         int xPos = anchorViewX + offsets[0];
         int yPos = anchorViewY + offsets[1];
-        if (ContextUtils.getAppSharedPreferences().getBoolean("enable_bottom_toolbar", false)) {
+
+        //if (ContextUtils.getAppSharedPreferences().getBoolean("bottom_toolbar_enabled", false)) {
+        if (FeatureUtilities.isBottomToolbarEnabled()) {
            yPos = appRect.height() - popupHeight;
            if (yPos <= 0)
                yPos = 0;
         }
+
         int[] position = {xPos, yPos};
         return position;
     }

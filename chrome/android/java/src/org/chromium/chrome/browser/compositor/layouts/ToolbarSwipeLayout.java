@@ -31,6 +31,9 @@ import org.chromium.ui.resources.ResourceManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.chromium.base.ContextUtils;
+import org.chromium.chrome.browser.flags.FeatureUtilities;
+
 /**
  * Layout defining the animation and positioning of the tabs during the edge swipe effect.
  */
@@ -197,6 +200,10 @@ public class ToolbarSwipeLayout extends Layout {
         assert layoutTab != null;
         if (layoutTab.shouldStall()) layoutTab.setSaturation(0.0f);
         float heightDp = layoutTab.getOriginalContentHeight();
+        // Clip the layout tab so it doesn't leak into the toolbar if it's at the bottom
+        if (getFullscreenManager() != null && FeatureUtilities.isBottomToolbarEnabled()) {
+            heightDp = heightDp - getFullscreenManager().getBottomControlsHeight() / mDpToPx;
+        }
         layoutTab.setClipSize(layoutTab.getOriginalContentWidth(), heightDp);
         layoutTab.setScale(1.f);
         layoutTab.setBorderScale(1.f);

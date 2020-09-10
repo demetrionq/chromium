@@ -861,7 +861,8 @@ public class CompositorViewHolder extends FrameLayout
 
     @Override
     public void requestRender() {
-        mCompositorView.requestRender();
+        if (mCompositorView != null)
+            mCompositorView.requestRender();
     }
 
     @Override

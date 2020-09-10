@@ -167,10 +167,8 @@ public class SearchEngineAdapter extends BaseAdapter
         sortAndFilterUnnecessaryTemplateUrl(templateUrls, defaultSearchEngineTemplateUrl);
         boolean forceRefresh = mIsLocationPermissionChanged;
         mIsLocationPermissionChanged = false;
-        if (!didSearchEnginesChange(templateUrls)) {
-            if (forceRefresh) notifyDataSetChanged();
-            return;
-        }
+
+        notifyDataSetChanged();
 
         mPrepopulatedSearchEngines = new ArrayList<>();
         mRecentSearchEngines = new ArrayList<>();

@@ -65,7 +65,7 @@ public class AboutChromeSettings
      * versions are more useful.
      */
     public static String getApplicationVersion(Context context, String version) {
-        if (ChromeVersionInfo.isOfficialBuild()) {
+        if (false && ChromeVersionInfo.isOfficialBuild()) {
             return version;
         }
 
