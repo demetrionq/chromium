@@ -1245,7 +1245,7 @@ public class ChromeTabbedActivity extends ChromeActivity implements ScreenshotMo
 
         String url = HomepageManager.getHomepageUri();
         if (TextUtils.isEmpty(url)) {
-            url = UrlConstants.LOCAL_NTP_URL;
+            url = UrlConstants.NTP_URL;
         } else {
             boolean startupHomepageIsNtp = false;
             // Migrate legacy NTP URLs (chrome://newtab) to the newer format
@@ -1439,12 +1439,12 @@ public class ChromeTabbedActivity extends ChromeActivity implements ScreenshotMo
 
                     if (url == null || url.equals(UrlConstants.NTP_URL)) {
                         if (fromLauncherShortcut) {
-                            getTabCreator(true).launchUrl(UrlConstants.LOCAL_NTP_URL,
+                            getTabCreator(true).launchUrl(UrlConstants.NTP_URL,
                                     TabLaunchType.FROM_LAUNCHER_SHORTCUT);
                             recordLauncherShortcutAction(true);
                             reportNewTabShortcutUsed(true);
                         } else if (IncognitoTabLauncher.didCreateIntent(intent)) {
-                            Tab tab = getTabCreator(true).launchUrl(UrlConstants.LOCAL_NTP_URL,
+                            Tab tab = getTabCreator(true).launchUrl(UrlConstants.NTP_URL,
                                     TabLaunchType.FROM_LAUNCH_NEW_INCOGNITO_TAB);
                             if (IncognitoTabLauncher.shouldFocusOmnibox()) {
                                 // Since the Tab is created in the foreground, its View will gain
