@@ -1188,4 +1188,38 @@ BASE_EXPORT bool IsPathExecutable(const FilePath& path) {
 }
 #endif  // defined(OS_LINUX) || defined(OS_AIX)
 
+std::string TempFileNameJPG() {
+#if defined(OS_MACOSX)
+  return StringPrintf(".%s.XXXXXX", base::mac::BaseBundleID());
+#endif
+
+#if defined(GOOGLE_CHROME_BUILD)
+  return std::string(".com.google.Chrome.XXXXXX");
+#else
+  return std::string("screenshot.flowbrowser.XXXXXX.jpg");
+#endif
+}
+
+int CreateAndOpenFdForTemporaryFileInDirJPG(const FilePath& directory,
+                                         FilePath* path) {
+  internal::AssertBlockingAllowed();  // For call to mkstemp().
+  *path = directory.Append(TempFileNameJPG());
+  const std::string& tmpdir_string = path->value();
+  // this should be OK since mkstemp just replaces characters in place
+  char* buffer = const_cast<char*>(tmpdir_string.c_str());
+
+  return HANDLE_EINTR(mkstemps(buffer, 4));
+}
+
+FILE* CreateAndOpenTemporaryFileInDirJPG(const FilePath& dir, FilePath* path) {
+  int fd = CreateAndOpenFdForTemporaryFileInDirJPG(dir, path);
+  if (fd < 0)
+    return nullptr;
+
+  FILE* file = fdopen(fd, "a+");
+  if (!file)
+    close(fd);
+  return file;
+}
+
 }  // namespace base

@@ -73,6 +73,7 @@ void ToolbarSceneLayer::UpdateProgressBar(JNIEnv* env,
                                        jint progress_bar_background_height,
                                        jint progress_bar_background_color) {
   if (!toolbar_layer_) return;
+  return;
   toolbar_layer_->UpdateProgressBar(progress_bar_x,
                                     progress_bar_y,
                                     progress_bar_width,

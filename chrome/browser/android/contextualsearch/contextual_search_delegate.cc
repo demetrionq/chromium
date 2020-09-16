@@ -146,11 +146,15 @@ void ContextualSearchDelegate::StartSearchTermResolutionRequest(
 
   // Decide if the URL should be sent with the context.
   GURL page_url(web_contents->GetURL());
+#if 0
   if (context_->CanSendBasePageUrl() &&
       CanSendPageURL(page_url, ProfileManager::GetActiveUserProfile(),
                      template_url_service_)) {
     context_->SetBasePageUrl(page_url);
   }
+#else
+    context_->SetBasePageUrl(page_url);
+#endif
   ResolveSearchTermFromContext();
 }
 
