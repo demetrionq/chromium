@@ -1211,8 +1211,7 @@ void ChromeContentBrowserClient::SetApplicationLocale(
 std::unique_ptr<content::BrowserMainParts>
 ChromeContentBrowserClient::CreateBrowserMainParts(
     const content::MainFunctionParams& parameters) {
-  LOG(ERROR)
-      << "[Kiwi] ChromeContentBrowserClient::CreateBrowserMainParts - Step 1";
+  LOG(ERROR) << "[Kiwi] ChromeContentBrowserClient::CreateBrowserMainParts - Step 1";
   std::unique_ptr<ChromeBrowserMainParts> main_parts;
   // Construct the Main browser parts based on the OS type.
 #if defined(OS_WIN)
@@ -1238,16 +1237,14 @@ ChromeContentBrowserClient::CreateBrowserMainParts(
   main_parts =
       std::make_unique<ChromeBrowserMainParts>(parameters, startup_data_);
 #endif
-  LOG(ERROR)
-      << "[Kiwi] ChromeContentBrowserClient::CreateBrowserMainParts - Step 2";
+  LOG(ERROR) << "[Kiwi] ChromeContentBrowserClient::CreateBrowserMainParts - Step 2";
 
   bool add_profiles_extra_parts = true;
 #if defined(OS_ANDROID)
   if (startup_data_->HasBuiltProfilePrefService())
     add_profiles_extra_parts = false;
 #endif
-  LOG(ERROR)
-      << "[Kiwi] ChromeContentBrowserClient::CreateBrowserMainParts - Step 3";
+  LOG(ERROR) << "[Kiwi] ChromeContentBrowserClient::CreateBrowserMainParts - Step 3";
   if (add_profiles_extra_parts)
     chrome::AddProfilesExtraParts(main_parts.get());
 
@@ -1265,8 +1262,7 @@ ChromeContentBrowserClient::CreateBrowserMainParts(
 #endif
 #endif
 
-  LOG(ERROR)
-      << "[Kiwi] ChromeContentBrowserClient::CreateBrowserMainParts - Step 4";
+  LOG(ERROR) << "[Kiwi] ChromeContentBrowserClient::CreateBrowserMainParts - Step 4";
 #if defined(OS_CHROMEOS)
   // TODO(jamescook): Combine with ChromeBrowserMainPartsChromeos.
   main_parts->AddParts(new ChromeBrowserMainExtraPartsAsh());
@@ -1276,8 +1272,7 @@ ChromeContentBrowserClient::CreateBrowserMainParts(
   main_parts->AddParts(new ChromeBrowserMainExtraPartsX11());
 #endif
 
-  LOG(ERROR)
-      << "[Kiwi] ChromeContentBrowserClient::CreateBrowserMainParts - Step 5";
+  LOG(ERROR) << "[Kiwi] ChromeContentBrowserClient::CreateBrowserMainParts - Step 5";
   main_parts->AddParts(new ChromeBrowserMainExtraPartsPerformanceManager);
 
   main_parts->AddParts(new ChromeBrowserMainExtraPartsProfiling);
@@ -1286,12 +1281,10 @@ ChromeContentBrowserClient::CreateBrowserMainParts(
 
   main_parts->AddParts(new ChromeBrowserMainExtraPartsGpu);
 
-  LOG(ERROR)
-      << "[Kiwi] ChromeContentBrowserClient::CreateBrowserMainParts - Step 6";
+  LOG(ERROR) << "[Kiwi] ChromeContentBrowserClient::CreateBrowserMainParts - Step 6";
   chrome::AddMetricsExtraParts(main_parts.get());
 
-  LOG(ERROR)
-      << "[Kiwi] ChromeContentBrowserClient::CreateBrowserMainParts - Step 7";
+  LOG(ERROR) << "[Kiwi] ChromeContentBrowserClient::CreateBrowserMainParts - Step 7";
   return main_parts;
 }
 
