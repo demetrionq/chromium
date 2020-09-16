@@ -34,6 +34,9 @@ ChromeWebViewGuestDelegate::~ChromeWebViewGuestDelegate() {
 
 bool ChromeWebViewGuestDelegate::HandleContextMenu(
     const content::ContextMenuParams& params) {
+
+  return false;
+
   if ((params.source_type == ui::MENU_SOURCE_LONG_PRESS ||
        params.source_type == ui::MENU_SOURCE_LONG_TAP ||
        params.source_type == ui::MENU_SOURCE_TOUCH) &&

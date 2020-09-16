@@ -46,7 +46,7 @@ base::string16 GenerateUniqueFolderName(BookmarkModel* model,
                                         const base::string16& folder_name) {
   // Build a set containing the bookmark bar folder names.
   std::set<base::string16> existing_folder_names;
-  const BookmarkNode* bookmark_bar = model->bookmark_bar_node();
+  const BookmarkNode* bookmark_bar = model->mobile_node();
   for (const auto& node : bookmark_bar->children()) {
     if (node->is_folder())
       existing_folder_names.insert(node->GetTitle());
@@ -97,11 +97,13 @@ void ProfileWriter::AddHistoryPage(const history::URLRows& page,
                                          ServiceAccessType::EXPLICIT_ACCESS)
         ->AddPagesWithDetails(page, visit_source);
   // Measure the size of the history page after Auto Import on first run.
+#if 0
   if (first_run::IsChromeFirstRun() &&
       visit_source == history::SOURCE_IE_IMPORTED) {
     UMA_HISTOGRAM_COUNTS_1M("Import.ImportedHistorySize.AutoImportFromIE",
                             page.size());
   }
+#endif
 }
 
 void ProfileWriter::AddHomepage(const GURL& home_page) {

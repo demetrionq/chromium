@@ -257,8 +257,18 @@ void NotificationPlatformBridgeAndroid::Display(
 
   JNIEnv* env = AttachCurrentThread();
 
+#if 0
   GURL origin_url(notification.origin_url().GetOrigin());
+#else
+  LOG(INFO) << "[EXTENSIONS] NotificationPlatformBridgeAndroid::Display - Step 1";
+  GURL origin_url = GURL("chrome-extension://unknown/");
+  LOG(INFO) << "[EXTENSIONS] NotificationPlatformBridgeAndroid::Display - Step 2";
+  if (notification.origin_url().is_valid() && !(notification.origin_url().is_empty()) && notification.origin_url().GetOrigin().is_valid() && !(notification.origin_url().GetOrigin().is_empty()))
+    origin_url = notification.origin_url().GetOrigin();
+  LOG(INFO) << "[EXTENSIONS] NotificationPlatformBridgeAndroid::Display - Step 3";
+#endif
 
+#if 0
   // TODO(knollr): Reconsider the meta-data system to try to remove this branch.
   const PersistentNotificationMetadata* persistent_notification_metadata =
       PersistentNotificationMetadata::From(metadata.get());
@@ -266,6 +276,26 @@ void NotificationPlatformBridgeAndroid::Display(
   GURL scope_url = persistent_notification_metadata
                        ? persistent_notification_metadata->service_worker_scope
                        : origin_url;
+
+#else
+  if (notification_type != NotificationHandler::Type::WEB_PERSISTENT)
+      notification_type = NotificationHandler::Type::WEB_PERSISTENT;
+  //  DCHECK_EQ(notification_type, NotificationHandler::Type::WEB_PERSISTENT);
+  LOG(INFO) << "[EXTENSIONS] NotificationPlatformBridgeAndroid::Display - Step 4";
+  GURL scope_url = origin_url;
+  LOG(INFO) << "[EXTENSIONS] NotificationPlatformBridgeAndroid::Display - Step 5";
+  if (PersistentNotificationMetadata::From(metadata.get())
+   && PersistentNotificationMetadata::From(metadata.get())
+                     ->service_worker_scope.is_valid() && !(PersistentNotificationMetadata::From(metadata.get())
+                     ->service_worker_scope.is_empty())) {
+    LOG(INFO) << "[EXTENSIONS] NotificationPlatformBridgeAndroid::Display - Step 5a";
+    scope_url = PersistentNotificationMetadata::From(metadata.get())
+                       ->service_worker_scope;
+    LOG(INFO) << "[EXTENSIONS] NotificationPlatformBridgeAndroid::Display - Step 5b";
+  }
+  LOG(INFO) << "[EXTENSIONS] NotificationPlatformBridgeAndroid::Display - Step 6";
+#endif
+
   if (!scope_url.is_valid())
     scope_url = origin_url;
 

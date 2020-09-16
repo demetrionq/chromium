@@ -94,7 +94,7 @@ void GetDiscoveryNetworkInfoListImpl(
 
 std::vector<DiscoveryNetworkInfo> GetDiscoveryNetworkInfoList() {
   std::vector<DiscoveryNetworkInfo> network_ids;
-
+#if 0
   struct ifaddrs* if_list;
   if (getifaddrs(&if_list)) {
     DVLOG(2) << "getifaddrs() error: " << net::ErrorToString(errno);
@@ -104,6 +104,7 @@ std::vector<DiscoveryNetworkInfo> GetDiscoveryNetworkInfoList() {
   GetDiscoveryNetworkInfoListImpl(if_list, &network_ids);
   StableSortDiscoveryNetworkInfo(network_ids.begin(), network_ids.end());
   freeifaddrs(if_list);
+#endif
   return network_ids;
 }
 
