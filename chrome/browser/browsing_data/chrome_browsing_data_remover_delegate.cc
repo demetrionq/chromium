@@ -809,7 +809,7 @@ void ChromeBrowsingDataRemoverDelegate::RemoveEmbedderData(
     PermissionDecisionAutoBlocker::GetForProfile(profile_)->RemoveCountsByUrl(
         filter);
 
-#if BUILDFLAG(ENABLE_PLUGINS)
+#if false && BUILDFLAG(ENABLE_PLUGINS)
     host_content_settings_map_->ClearSettingsForOneTypeWithPredicate(
         ContentSettingsType::PLUGINS_DATA, base::Time(), base::Time::Max(),
         website_settings_filter);
@@ -1033,7 +1033,7 @@ void ChromeBrowsingDataRemoverDelegate::RemoveEmbedderData(
 // to BrowsingDataRemoverImpl in //content. Note that code in //content
 // can simply take advantage of PluginDataRemover directly to delete plugin
 // data in bulk.
-#if BUILDFLAG(ENABLE_PLUGINS)
+#if false && BUILDFLAG(ENABLE_PLUGINS)
   // Plugin is data not separated for protected and unprotected web origins. We
   // check the origin_type_mask_ to prevent unintended deletion.
   if ((remove_mask & DATA_TYPE_PLUGIN_DATA) &&
@@ -1073,7 +1073,7 @@ void ChromeBrowsingDataRemoverDelegate::RemoveEmbedderData(
     // Licenses.
     base::RecordAction(UserMetricsAction("ClearBrowsingData_ContentLicenses"));
 
-#if BUILDFLAG(ENABLE_PLUGINS)
+#if false && BUILDFLAG(ENABLE_PLUGINS)
     // Flash does not support filtering by domain, so skip this if clearing only
     // a specified set of sites.
     if (filter_builder->GetMode() != BrowsingDataFilterBuilder::WHITELIST) {

@@ -301,7 +301,7 @@ GURL GetNewTabPageURL(Profile* profile) {
   return NewTabURLDetails::ForProfile(profile).url;
 }
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 
 bool ShouldAssignURLToInstantRenderer(const GURL& url, Profile* profile) {
   return url.is_valid() && profile && IsInstantExtendedAPIEnabled() &&

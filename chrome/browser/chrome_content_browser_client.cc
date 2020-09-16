@@ -1466,7 +1466,7 @@ GURL ChromeContentBrowserClient::GetEffectiveURL(
   if (!profile)
     return url;
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
   // If the input |url| should be assigned to the Instant renderer, make its
   // effective URL distinct from other URLs on the search provider's domain.
   // This needs to happen even if |url| corresponds to an isolated origin; see
@@ -1529,7 +1529,7 @@ bool ChromeContentBrowserClient::ShouldUseProcessPerSite(
   if (effective_url == GURL(chrome::kChromeUIWebFooterExperimentURL))
     return true;
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
   if (search::ShouldUseProcessPerSiteForInstantURL(effective_url, profile))
     return true;
 #endif
@@ -1552,7 +1552,7 @@ bool ChromeContentBrowserClient::ShouldUseSpareRenderProcessHost(
   if (!profile)
     return false;
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
   // Instant renderers should not use a spare process, because they require
   // passing switches::kInstantProcess to the renderer process when it
   // launches.  A spare process is launched earlier, before it is known which
@@ -1737,7 +1737,7 @@ bool ChromeContentBrowserClient::IsSuitableHost(
   if (!profile)
     return true;
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
   // Instant URLs should only be in the instant process and instant process
   // should only have Instant URLs.
   InstantService* instant_service =
@@ -1811,7 +1811,7 @@ void ChromeContentBrowserClient::SiteInstanceGotProcess(
   if (!profile)
     return;
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
   // Remember the ID of the Instant process to signal the renderer process
   // on startup in |AppendExtraCommandLineSwitches| below.
   if (search::ShouldAssignURLToInstantRenderer(site_instance->GetSiteURL(),
@@ -2112,7 +2112,7 @@ void ChromeContentBrowserClient::AppendExtraCommandLineSwitches(
       if (prefs->GetBoolean(prefs::kPrintPreviewDisabled))
         command_line->AppendSwitch(switches::kDisablePrintPreview);
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
       InstantService* instant_service =
           InstantServiceFactory::GetForProfile(profile);
       if (instant_service &&
@@ -2805,6 +2805,15 @@ base::OnceClosure ChromeContentBrowserClient::SelectClientCertificate(
     return base::OnceClosure();
   }
 
+  if (true) {
+    LOG(WARNING) << "No client cert matched by policy and user selection is "
+                    "not allowed.";
+    // Continue without client certificate. We do this to mimic the case of no
+    // client certificate being present in the profile's certificate store.
+    delegate->ContinueWithCertificate(nullptr, nullptr);
+    return base::OnceClosure();
+  }
+
   GURL requesting_url("https://" + cert_request_info->host_and_port.ToString());
   DCHECK(requesting_url.is_valid())
       << "Invalid URL string: https://"
@@ -3394,7 +3403,7 @@ void ChromeContentBrowserClient::BrowserURLHandlerCreated(
   // Handler to rewrite chrome://newtab on Android.
   handler->AddHandlerPair(&chrome::android::HandleAndroidNativePageURL,
                           BrowserURLHandler::null_handler());
-#else   // defined(OS_ANDROID)
+  //#else   // defined(OS_ANDROID)
   // Handler to rewrite chrome://newtab for InstantExtended.
   handler->AddHandlerPair(&search::HandleNewTabURLRewrite,
                           &search::HandleNewTabURLReverseRewrite);
@@ -4515,6 +4524,22 @@ void ChromeContentBrowserClient::
                                              render_process_id));
   }
 #endif  // BUILDFLAG(ENABLE_EXTENSIONS)
+
+  if (true) {
+    Profile* profile =
+        Profile::FromBrowserContext(web_contents->GetBrowserContext());
+    InstantService* instant_service =
+        InstantServiceFactory::GetForProfile(profile);
+    // The test below matches what's done by ShouldServiceRequestIOThread in
+    // local_ntp_source.cc.
+    if (instant_service->IsInstantProcess(render_process_id)) {
+      factories->emplace(
+          chrome::kChromeSearchScheme,
+          content::CreateWebUIURLLoader(
+              frame_host, chrome::kChromeSearchScheme,
+              /*allowed_webui_hosts=*/base::flat_set<std::string>()));
+    }
+  }
 }
 
 bool ChromeContentBrowserClient::WillCreateURLLoaderFactory(
