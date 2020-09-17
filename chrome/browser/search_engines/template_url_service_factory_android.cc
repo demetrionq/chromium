@@ -35,6 +35,9 @@ static jboolean IsDefaultSearchEngineGoogle(JNIEnv* env) {
 
 static jboolean JNI_TemplateUrlServiceFactory_DoesDefaultSearchEngineHaveLogo(
     JNIEnv* env) {
+
+  return false;
+
   // |kSearchProviderLogoURL| applies to all search engines (Google or
   // third-party).
   if (base::CommandLine::ForCurrentProcess()->HasSwitch(

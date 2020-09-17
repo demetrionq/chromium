@@ -645,7 +645,7 @@ int PermissionManager::SubscribePermissionStatusChange(
   ContentSettingsType content_type = PermissionTypeToContentSetting(permission);
   auto subscription = std::make_unique<Subscription>();
 
-  // The RFH may be null if the request is for a worker.
+  // The RFH may be null if the request is for a worker.GetPluginContentSettingInternal
   GURL embedding_origin;
   if (render_frame_host) {
     content::WebContents* web_contents =

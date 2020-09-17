@@ -250,6 +250,7 @@ void TabManager::DiscardTab(LifecycleUnitDiscardReason reason,
 }
 
 WebContents* TabManager::DiscardTabByExtension(content::WebContents* contents) {
+#if 0
   if (contents) {
     TabLifecycleUnitExternal* tab_lifecycle_unit_external =
         TabLifecycleUnitExternal::FromWebContents(contents);
@@ -258,7 +259,7 @@ WebContents* TabManager::DiscardTabByExtension(content::WebContents* contents) {
       return tab_lifecycle_unit_external->GetWebContents();
     return nullptr;
   }
-
+#endif
   return DiscardTabImpl(LifecycleUnitDiscardReason::EXTERNAL);
 }
 
@@ -283,11 +284,15 @@ void TabManager::LogMemory(const std::string& title) {
 }
 
 void TabManager::AddObserver(TabLifecycleObserver* observer) {
+#if 0
   TabLifecycleUnitExternal::AddTabLifecycleObserver(observer);
+#endif
 }
 
 void TabManager::RemoveObserver(TabLifecycleObserver* observer) {
+#if 0
   TabLifecycleUnitExternal::RemoveTabLifecycleObserver(observer);
+#endif
 }
 
 size_t TabManager::GetBackgroundTabLoadingCount() const {
@@ -487,7 +492,7 @@ content::WebContents* TabManager::DiscardTabImpl(
     LifecycleUnitDiscardReason reason,
     TabDiscardDoneCB tab_discard_done) {
   DCHECK_CURRENTLY_ON(BrowserThread::UI);
-
+#if 0
   for (LifecycleUnit* lifecycle_unit : GetSortedLifecycleUnits()) {
     DecisionDetails decision_details;
     if (lifecycle_unit->CanDiscard(reason, &decision_details) &&
@@ -500,7 +505,7 @@ content::WebContents* TabManager::DiscardTabImpl(
       return tab_lifecycle_unit_external->GetWebContents();
     }
   }
-
+#endif
   return nullptr;
 }
 

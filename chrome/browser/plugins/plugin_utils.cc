@@ -27,7 +27,7 @@
 
 namespace {
 
-const char kFlashPluginID[] = "adobe-flash-player";
+//const char kFlashPluginID[] = "adobe-flash-player";
 
 void GetPluginContentSettingInternal(
     const HostContentSettingsMap* host_content_settings_map,
@@ -129,10 +129,12 @@ ContentSetting PluginUtils::GetFlashPluginContentSetting(
     const GURL& plugin_url,
     bool* is_managed) {
   ContentSetting plugin_setting = CONTENT_SETTING_DEFAULT;
+#if 0
   GetPluginContentSettingInternal(host_content_settings_map,
                                   false /* use_javascript_setting */,
                                   main_frame_origin, plugin_url, kFlashPluginID,
                                   &plugin_setting, nullptr, is_managed);
+#endif
   return plugin_setting;
 }
 
