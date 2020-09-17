@@ -32,7 +32,7 @@
 #include "chrome/browser/supervised_user/supervised_user_url_filter.h"
 #endif
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 #include "chrome/browser/search/instant_service.h"
 #include "chrome/browser/search/instant_service_factory.h"
 #endif
@@ -204,9 +204,6 @@ struct NewTabURLDetails {
 
 bool IsRenderedInInstantProcess(content::WebContents* contents,
                                 Profile* profile) {
-#if defined(OS_ANDROID)
-  return false;
-#else
   content::RenderProcessHost* process_host =
       contents->GetMainFrame()->GetProcess();
   if (!process_host)
@@ -218,7 +215,6 @@ bool IsRenderedInInstantProcess(content::WebContents* contents,
     return false;
 
   return instant_service->IsInstantProcess(process_host->GetID());
-#endif
 }
 
 }  // namespace

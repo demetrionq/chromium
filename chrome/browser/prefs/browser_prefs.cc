@@ -669,14 +669,14 @@ void RegisterLocalState(PrefRegistrySimple* registry) {
   // The native GCM is used on Android instead.
 //  gcm::GCMChannelStatusSyncer::RegisterPrefs(registry);
 //  gcm::RegisterPrefs(registry);
-  metrics::TabStatsTracker::RegisterPrefs(registry);
+//  metrics::TabStatsTracker::RegisterPrefs(registry);
   RegisterBrowserPrefs(registry);
-  StartupBrowserCreator::RegisterLocalStatePrefs(registry);
+//  StartupBrowserCreator::RegisterLocalStatePrefs(registry);
   task_manager::TaskManagerInterface::RegisterPrefs(registry);
-  UpgradeDetector::RegisterPrefs(registry);
+//  UpgradeDetector::RegisterPrefs(registry);
   enterprise_reporting::RegisterLocalStatePrefs(registry);
 #if !defined(OS_CHROMEOS)
-  RegisterDefaultBrowserPromptPrefs(registry);
+//  RegisterDefaultBrowserPromptPrefs(registry);
 #endif  // !defined(OS_CHROMEOS)
 #endif  // !defined(OS_ANDROID)
 

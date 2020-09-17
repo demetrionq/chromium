@@ -326,7 +326,7 @@ bool V4LocalDatabaseManager::CheckBrowseUrl(const GURL& url,
   DCHECK(!threat_types.empty());
   DCHECK(SBThreatTypeSetIsValidForCheckBrowseUrl(threat_types));
 
-  if (!enabled_ || !CanCheckUrl(url)) {
+  if (true || !enabled_ || !CanCheckUrl(url)) {
     return true;
   }
 
