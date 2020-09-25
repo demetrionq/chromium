@@ -49,6 +49,7 @@ TabModelJniBridge::TabModelJniBridge(JNIEnv* env,
     : TabModel(FindProfile(is_incognito), is_tabbed_activity),
       java_object_(env, env->NewWeakGlobalRef(jobj)) {
   TabModelList::AddTabModel(this);
+  profile_ = FindProfile(is_incognito);
 }
 
 void TabModelJniBridge::Destroy(JNIEnv* env, const JavaParamRef<jobject>& obj) {
@@ -73,6 +74,14 @@ void TabModelJniBridge::TabAddedToModel(JNIEnv* env,
   if (tab)
     tab->SetWindowSessionID(GetSessionId());
 
+  LOG(INFO) << "[EXTENSIONS] TabModelJniBridge::CreateTab called";
+  // If a first observer is being added then instantiate an observer bridge.
+  if (!observer_bridge_) {
+    JNIEnv* env = AttachCurrentThread();
+    observer_bridge_ =
+        std::make_unique<TabModelObserverJniBridge>(env, java_object_.get(env), profile_);
+  }
+
   if (IsOffTheRecord())
     UMA_HISTOGRAM_COUNTS_100("Tab.Count.Incognito", GetTabCount());
 }
@@ -94,6 +103,13 @@ int TabModelJniBridge::GetLastNonExtensionActiveIndex() const {
 
 void TabModelJniBridge::CreateTab(TabAndroid* parent,
                                   WebContents* web_contents) {
+  LOG(INFO) << "[EXTENSIONS] TabModelJniBridge::CreateTab called";
+  // If a first observer is being added then instantiate an observer bridge.
+  if (!observer_bridge_) {
+    JNIEnv* env = AttachCurrentThread();
+    observer_bridge_ =
+        std::make_unique<TabModelObserverJniBridge>(env, java_object_.get(env), profile_);
+  }
   JNIEnv* env = AttachCurrentThread();
   Java_TabModelJniBridge_createTabWithWebContents(
       env, java_object_.get(env), (parent ? parent->GetJavaObject() : nullptr),
@@ -197,7 +213,7 @@ void TabModelJniBridge::AddObserver(TabModelObserver* observer) {
   if (!observer_bridge_) {
     JNIEnv* env = AttachCurrentThread();
     observer_bridge_ =
-        std::make_unique<TabModelObserverJniBridge>(env, java_object_.get(env));
+        std::make_unique<TabModelObserverJniBridge>(env, java_object_.get(env), profile_);
   }
   observer_bridge_->AddObserver(observer);
 }

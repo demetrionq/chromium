@@ -41,7 +41,7 @@ using std::string;
 
 namespace {
 
-const char kUploadURL[] = "https://clients2.google.com/cr/report";
+const char kUploadURL[] = "https://127.0.0.1/cr/report";
 const char kCrashUploadContentType[] = "multipart/form-data";
 const char kCrashMultipartBoundary[] =
     "----**--yradnuoBgoLtrapitluMklaTelgooG--**----";

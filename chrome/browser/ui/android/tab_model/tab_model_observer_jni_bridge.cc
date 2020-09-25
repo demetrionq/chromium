@@ -10,6 +10,15 @@
 #include "chrome/browser/ui/android/tab_model/tab_model_jni_bridge.h"
 #include "chrome/browser/ui/android/tab_model/tab_model_observer.h"
 
+#include "chrome/browser/ui/android/tab_model/tab_model_list.h"
+#include "chrome/browser/profiles/profile.h"
+#include "chrome/browser/extensions/api/tabs/tabs_event_router.h"
+#include "chrome/browser/extensions/api/tabs/tabs_windows_api.h"
+#include "chrome/browser/ui/android/tab_model/tab_model_list_observer.h"
+#include "chrome/browser/ui/browser_navigator_params.h"
+#include "content/public/browser/web_contents.h"
+#include "chrome/browser/sessions/session_tab_helper.h"
+
 using base::android::AttachCurrentThread;
 using base::android::JavaObjectArrayReader;
 using base::android::JavaParamRef;
@@ -33,7 +42,9 @@ TabModel::TabSelectionType GetTabSelectionType(JNIEnv* env, int type) {
 
 TabModelObserverJniBridge::TabModelObserverJniBridge(
     JNIEnv* env,
-    const JavaRef<jobject>& tab_model) {
+    const JavaRef<jobject>& tab_model, Profile* profile) {
+  profile_ = profile;
+
   // Create the Java object. This immediately adds it as an observer on the
   // corresponding TabModel.
   java_object_.Reset(Java_TabModelObserverJniBridge_create(
@@ -51,7 +62,12 @@ void TabModelObserverJniBridge::DidSelectTab(JNIEnv* env,
                                              int jtype,
                                              int last_id) {
   TabAndroid* tab = TabAndroid::GetNativeTab(env, jtab);
+#if 0
   CHECK(tab);
+#else
+  if (!tab)
+    return;
+#endif
   TabModel::TabSelectionType type = GetTabSelectionType(env, jtype);
   for (auto& observer : observers_)
     observer.DidSelectTab(tab, type);
@@ -62,7 +78,30 @@ void TabModelObserverJniBridge::WillCloseTab(JNIEnv* env,
                                              const JavaParamRef<jobject>& jtab,
                                              bool animate) {
   TabAndroid* tab = TabAndroid::GetNativeTab(env, jtab);
+#if 0
   CHECK(tab);
+#else
+  if (!tab)
+    return;
+  if (tab) {
+      Profile *profile = profile_;
+      if (profile) {
+        extensions::TabsWindowsAPI* tabs_window_api = extensions::TabsWindowsAPI::Get(profile);
+        if (tabs_window_api) {
+           TabModel *tab_strip = nullptr;
+           if (!TabModelList::empty())
+             tab_strip = *(TabModelList::begin());
+           if (tab_strip) {
+             for (int i = 0; i < tab_strip->GetTabCount(); ++i) {
+               if (tab_strip->GetWebContentsAt(i) == tab->web_contents()) {
+                 tabs_window_api->tabs_event_router()->DispatchTabClosedAt(nullptr, tab->web_contents(), i, profile);
+               }
+             }
+          }
+       }
+     }
+  }
+#endif
   for (auto& observer : observers_)
     observer.WillCloseTab(tab, animate);
 }
@@ -80,7 +119,12 @@ void TabModelObserverJniBridge::WillAddTab(JNIEnv* env,
                                            const JavaParamRef<jobject>& jtab,
                                            int jtype) {
   TabAndroid* tab = TabAndroid::GetNativeTab(env, jtab);
+#if 0
   CHECK(tab);
+#else
+  if (!tab)
+    return;
+#endif
   TabModel::TabLaunchType type = GetTabLaunchType(env, jtype);
   for (auto& observer : observers_)
     observer.WillAddTab(tab, type);
@@ -91,10 +135,35 @@ void TabModelObserverJniBridge::DidAddTab(JNIEnv* env,
                                           const JavaParamRef<jobject>& jtab,
                                           int jtype) {
   TabAndroid* tab = TabAndroid::GetNativeTab(env, jtab);
+#if 0
   CHECK(tab);
+#else
+  if (!tab)
+    return;
+#endif
   TabModel::TabLaunchType type = GetTabLaunchType(env, jtype);
   for (auto& observer : observers_)
     observer.DidAddTab(tab, type);
+
+  if (tab) {
+      Profile *profile = profile_;
+      if (profile) {
+        extensions::TabsWindowsAPI* tabs_window_api = extensions::TabsWindowsAPI::Get(profile);
+        if (tabs_window_api) {
+           TabModel *tab_strip = nullptr;
+           if (!TabModelList::empty())
+             tab_strip = *(TabModelList::begin());
+           if (tab_strip) {
+             int index = tab_strip->GetTabCount() - 1;
+             if (index == -1)
+               index = 0;
+             if (tab->web_contents() != nullptr) {
+               tabs_window_api->tabs_event_router()->TabCreatedAt(tab->web_contents(), index, tab_strip->GetActiveWebContents() == tab->web_contents(), profile);
+             }
+          }
+       }
+     }
+  }
 }
 
 void TabModelObserverJniBridge::DidMoveTab(JNIEnv* env,
@@ -103,7 +172,12 @@ void TabModelObserverJniBridge::DidMoveTab(JNIEnv* env,
                                            int new_index,
                                            int cur_index) {
   TabAndroid* tab = TabAndroid::GetNativeTab(env, jtab);
+#if 0
   CHECK(tab);
+#else
+  if (!tab)
+    return;
+#endif
   for (auto& observer : observers_)
     observer.DidMoveTab(tab, new_index, cur_index);
 }
@@ -113,7 +187,12 @@ void TabModelObserverJniBridge::TabPendingClosure(
     const JavaParamRef<jobject>& jobj,
     const JavaParamRef<jobject>& jtab) {
   TabAndroid* tab = TabAndroid::GetNativeTab(env, jtab);
+#if 0
   CHECK(tab);
+#else
+  if (!tab)
+    return;
+#endif
   for (auto& observer : observers_)
     observer.TabPendingClosure(tab);
 }
@@ -123,7 +202,12 @@ void TabModelObserverJniBridge::TabClosureUndone(
     const JavaParamRef<jobject>& jobj,
     const JavaParamRef<jobject>& jtab) {
   TabAndroid* tab = TabAndroid::GetNativeTab(env, jtab);
+#if 0
   CHECK(tab);
+#else
+  if (!tab)
+    return;
+#endif
   for (auto& observer : observers_)
     observer.TabClosureUndone(tab);
 }
@@ -133,7 +217,12 @@ void TabModelObserverJniBridge::TabClosureCommitted(
     const JavaParamRef<jobject>& jobj,
     const JavaParamRef<jobject>& jtab) {
   TabAndroid* tab = TabAndroid::GetNativeTab(env, jtab);
+#if 0
   CHECK(tab);
+#else
+  if (!tab)
+    return;
+#endif
   for (auto& observer : observers_)
     observer.TabClosureCommitted(tab);
 }
@@ -150,7 +239,12 @@ void TabModelObserverJniBridge::AllTabsPendingClosure(
   tabs.reserve(jtabs_array.size());
   for (auto jtab : jtabs_array) {
     TabAndroid* tab = TabAndroid::GetNativeTab(env, jtab);
+#if 0
     CHECK(tab);
+#else
+    if (!tab)
+      return;
+#endif
     tabs.push_back(tab);
   }
 
@@ -169,7 +263,12 @@ void TabModelObserverJniBridge::TabRemoved(JNIEnv* env,
                                            const JavaParamRef<jobject>& jobj,
                                            const JavaParamRef<jobject>& jtab) {
   TabAndroid* tab = TabAndroid::GetNativeTab(env, jtab);
+#if 0
   CHECK(tab);
+#else
+  if (!tab)
+    return;
+#endif
   for (auto& observer : observers_)
     observer.TabRemoved(tab);
 }
