@@ -26,15 +26,19 @@ GURL ExclusiveAccessControllerBase::GetExclusiveAccessBubbleURL() const {
 }
 
 GURL ExclusiveAccessControllerBase::GetURLForExclusiveAccessBubble() const {
+#if 0
   if (tab_with_exclusive_access_)
     return tab_with_exclusive_access_->GetURL();
+#endif
   return GURL();
 }
 
 void ExclusiveAccessControllerBase::OnTabDeactivated(
     WebContents* web_contents) {
+#if 0
   if (web_contents == tab_with_exclusive_access_)
     ExitExclusiveAccessIfNecessary();
+#endif
 }
 
 void ExclusiveAccessControllerBase::OnTabDetachedFromView(
@@ -43,6 +47,7 @@ void ExclusiveAccessControllerBase::OnTabDetachedFromView(
 }
 
 void ExclusiveAccessControllerBase::OnTabClosing(WebContents* web_contents) {
+#if 0
   if (web_contents == tab_with_exclusive_access_) {
     ExitExclusiveAccessIfNecessary();
 
@@ -53,6 +58,7 @@ void ExclusiveAccessControllerBase::OnTabClosing(WebContents* web_contents) {
     // to clean up exclusive access tab related state.
     NotifyTabExclusiveAccessLost();
   }
+#endif
 }
 
 void ExclusiveAccessControllerBase::Observe(
@@ -81,13 +87,16 @@ void ExclusiveAccessControllerBase::SetTabWithExclusiveAccess(
     WebContents* tab) {
   // Tab should never be replaced with another tab, or
   // UpdateNotificationRegistrations would need updating.
+#if 0
   DCHECK(tab_with_exclusive_access_ == tab ||
          tab_with_exclusive_access_ == nullptr || tab == nullptr);
+#endif
   tab_with_exclusive_access_ = tab;
   UpdateNotificationRegistrations();
 }
 
 void ExclusiveAccessControllerBase::UpdateNotificationRegistrations() {
+#if 0
   if (tab_with_exclusive_access_ && registrar_.IsEmpty()) {
     registrar_.Add(this, content::NOTIFICATION_NAV_ENTRY_COMMITTED,
                    content::Source<content::NavigationController>(
@@ -95,4 +104,5 @@ void ExclusiveAccessControllerBase::UpdateNotificationRegistrations() {
   } else if (!tab_with_exclusive_access_ && !registrar_.IsEmpty()) {
     registrar_.RemoveAll();
   }
+#endif
 }

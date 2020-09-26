@@ -180,8 +180,10 @@ void SearchIPCRouter::FocusOmnibox(int page_seq_no, bool focus) {
   if (page_seq_no != commit_counter_)
     return;
 
+#if 0
   if (!policy_->ShouldProcessFocusOmnibox(is_active_tab_))
     return;
+#endif
 
   delegate_->FocusOmnibox(focus);
 }

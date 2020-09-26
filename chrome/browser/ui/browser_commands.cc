@@ -135,6 +135,10 @@
 #include "chrome/browser/feature_engagement/incognito_window/incognito_window_tracker_factory.h"
 #endif
 
+#include "chrome/browser/ui/android/tab_model/tab_model.h"
+#include "chrome/browser/ui/android/tab_model/tab_model_list.h"
+#include "content/public/browser/web_contents.h"
+
 namespace {
 
 const char kOsOverrideForTabletSite[] = "Linux; Android 9; Chrome tablet";
@@ -297,8 +301,12 @@ void ReloadInternal(Browser* browser,
       new_tab->Focus();
     }
 
+#if 0
     DevToolsWindow* devtools =
         DevToolsWindow::GetInstanceForInspectedWebContents(new_tab);
+#else
+    DevToolsWindow* devtools = NULL;
+#endif
     constexpr content::ReloadType kBypassingType =
         content::ReloadType::BYPASSING_CACHE;
     constexpr content::ReloadType kNormalType = content::ReloadType::NORMAL;
@@ -629,7 +637,7 @@ void NewTab(Browser* browser) {
   // user-initiated commands.
   UMA_HISTOGRAM_ENUMERATION("Tab.NewTab", TabStripModel::NEW_TAB_COMMAND,
                             TabStripModel::NEW_TAB_ENUM_COUNT);
-
+#if 0
   // Notify IPH that new tab was opened.
   auto* reopen_tab_iph =
       ReopenTabInProductHelpFactory::GetForProfile(browser->profile());
@@ -650,6 +658,10 @@ void NewTab(Browser* browser) {
     // See http://crbug.com/6380.
     b->tab_strip_model()->GetActiveWebContents()->RestoreFocus();
   }
+#else
+  TabModel* tab_model = TabModelList::get(0);
+  tab_model->CreateNewTabForDevTools(GURL());
+#endif
 }
 
 void CloseTab(Browser* browser) {

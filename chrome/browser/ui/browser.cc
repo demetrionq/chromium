@@ -364,7 +364,9 @@ Browser::CreateParams Browser::CreateParams::CreateForApp(
 Browser::CreateParams Browser::CreateParams::CreateForDevTools(
     Profile* profile) {
   CreateParams params(TYPE_DEVTOOLS, profile, true);
+#if 0
   params.app_name = DevToolsWindow::kDevToolsApp;
+#endif
   params.trusted_source = true;
   return params;
 }
@@ -504,10 +506,10 @@ Browser::Browser(const CreateParams& params)
         autofill::PersonalDataManagerFactory::GetForProfile(profile_));
 #endif  // defined(OS_WIN)
   }
-
+#if 0
   exclusive_access_manager_.reset(
       new ExclusiveAccessManager(window_->GetExclusiveAccessContext()));
-
+#endif
   BrowserList::AddBrowser(this);
 
   // SetIsInTabDragging() will set the fast resize bit for the web contents.
@@ -898,13 +900,17 @@ Browser::DownloadCloseType Browser::OkToCloseWithInProgressDownloads(
 // Browser, Tab adding/showing functions:
 
 void Browser::WindowFullscreenStateWillChange() {
+#if 0
   exclusive_access_manager_->fullscreen_controller()
       ->WindowFullscreenStateWillChange();
+#endif
 }
 
 void Browser::WindowFullscreenStateChanged() {
+#if 0
   exclusive_access_manager_->fullscreen_controller()
       ->WindowFullscreenStateChanged();
+#endif
   command_controller_->FullscreenStateChanged();
   UpdateBookmarkBarState(BOOKMARK_BAR_STATE_CHANGE_TOGGLE_FULLSCREEN);
 }
@@ -923,8 +929,10 @@ void Browser::OnFindBarVisibilityChanged() {
 // Browser, Assorted browser commands:
 
 void Browser::ToggleFullscreenModeWithExtension(const GURL& extension_url) {
+#if 0
   exclusive_access_manager_->fullscreen_controller()
       ->ToggleBrowserFullscreenModeWithExtension(extension_url);
+#endif
 }
 
 bool Browser::SupportsWindowFeature(WindowFeature feature) const {
@@ -986,13 +994,14 @@ void Browser::UpdateUIForNavigationInTab(WebContents* contents,
 
   bool contents_is_selected =
       contents == tab_strip_model_->GetActiveWebContents();
+#if 0
   if (user_initiated && contents_is_selected && window()->GetLocationBar()) {
     // Forcibly reset the location bar if the url is going to change in the
     // current tab, since otherwise it won't discard any ongoing user edits,
     // since it doesn't realize this is a user-initiated action.
     window()->GetLocationBar()->Revert();
   }
-
+#endif
   if (GetStatusBubble())
     GetStatusBubble()->Hide();
 
@@ -1190,21 +1199,27 @@ void Browser::SetFocusToLocationBar() {
 content::KeyboardEventProcessingResult Browser::PreHandleKeyboardEvent(
     content::WebContents* source,
     const NativeWebKeyboardEvent& event) {
+#if 0
   // Forward keyboard events to the manager for fullscreen / mouse lock. This
   // may consume the event (e.g., Esc exits fullscreen mode).
   // TODO(koz): Write a test for this http://crbug.com/100441.
   if (exclusive_access_manager_->HandleUserKeyEvent(event))
     return content::KeyboardEventProcessingResult::HANDLED;
+#endif
 
   return window()->PreHandleKeyboardEvent(event);
 }
 
 bool Browser::HandleKeyboardEvent(content::WebContents* source,
                                   const NativeWebKeyboardEvent& event) {
+#if 0
   DevToolsWindow* devtools_window =
       DevToolsWindow::GetInstanceForInspectedWebContents(source);
   return (devtools_window && devtools_window->ForwardKeyboardEvent(event)) ||
          window()->HandleKeyboardEvent(event);
+#else
+  return false;
+#endif
 }
 
 bool Browser::TabsNeedBeforeUnloadFired() {
@@ -1213,9 +1228,11 @@ bool Browser::TabsNeedBeforeUnloadFired() {
 
 bool Browser::PreHandleGestureEvent(content::WebContents* source,
                                     const blink::WebGestureEvent& event) {
+#if 0
   // Disable pinch zooming in undocked dev tools window due to poor UX.
   if (app_name() == DevToolsWindow::kDevToolsApp)
     return blink::WebInputEvent::IsPinchGestureEventType(event.GetType());
+#endif
   return false;
 }
 
@@ -1425,7 +1442,11 @@ bool Browser::IsFrameLowPriority(
 }
 
 bool Browser::IsMouseLocked() const {
+#if 0
   return exclusive_access_manager_->mouse_lock_controller()->IsMouseLocked();
+#else
+  return false;
+#endif
 }
 
 void Browser::OnWindowDidShow() {
@@ -1452,11 +1473,13 @@ void Browser::OnWindowDidShow() {
 
 WebContents* Browser::OpenURLFromTab(WebContents* source,
                                      const OpenURLParams& params) {
+#if 0
   if (is_type_devtools()) {
     DevToolsWindow* window = DevToolsWindow::AsDevToolsWindow(source);
     DCHECK(window);
     return window->OpenURLFromTab(source, params);
   }
+#endif
 
   NavigateParams nav_params(this, params.url, params.transition);
   nav_params.FillNavigateParamsFromOpenURLParams(params);
@@ -1486,6 +1509,8 @@ WebContents* Browser::OpenURLFromTab(WebContents* source,
 
 void Browser::NavigationStateChanged(WebContents* source,
                                      content::InvalidateTypes changed_flags) {
+  if (true)
+    return;
   // Only update the UI when something visible has changed.
   if (changed_flags)
     ScheduleUIUpdate(source, changed_flags);
@@ -1588,7 +1613,9 @@ void Browser::UpdateTargetURL(WebContents* source, const GURL& url) {
 void Browser::ContentsMouseEvent(WebContents* source,
                                  bool motion,
                                  bool exited) {
+#if 0
   exclusive_access_manager_->OnUserInput();
+#endif
 
   // Mouse motion events update the status bubble, if it exists.
   if (!GetStatusBubble() || (!motion && !exited))
@@ -1612,9 +1639,11 @@ bool Browser::TakeFocus(content::WebContents* source, bool reverse) {
 void Browser::BeforeUnloadFired(WebContents* web_contents,
                                 bool proceed,
                                 bool* proceed_to_fire_unload) {
+#if 0
   if (is_type_devtools() && DevToolsWindow::HandleBeforeUnload(
                                 web_contents, proceed, proceed_to_fire_unload))
     return;
+#endif
 
   *proceed_to_fire_unload =
       unload_controller_.BeforeUnloadFired(web_contents, proceed);
@@ -1768,18 +1797,26 @@ void Browser::EnterFullscreenModeForTab(
     WebContents* web_contents,
     const GURL& origin,
     const blink::mojom::FullscreenOptions& options) {
+#if 0
   exclusive_access_manager_->fullscreen_controller()->EnterFullscreenModeForTab(
       web_contents, origin);
+#endif
 }
 
 void Browser::ExitFullscreenModeForTab(WebContents* web_contents) {
+#if 0
   exclusive_access_manager_->fullscreen_controller()->ExitFullscreenModeForTab(
       web_contents);
+#endif
 }
 
 bool Browser::IsFullscreenForTabOrPending(const WebContents* web_contents) {
+#if 0
   return exclusive_access_manager_->fullscreen_controller()
       ->IsFullscreenForTabOrPending(web_contents);
+#else
+  return false;
+#endif
 }
 
 blink::mojom::DisplayMode Browser::GetDisplayMode(
@@ -1823,7 +1860,9 @@ void Browser::RegisterProtocolHandler(WebContents* web_contents,
     tab_content_settings->set_pending_protocol_handler(handler);
     tab_content_settings->set_previous_protocol_handler(
         registry->GetHandlerFor(handler.protocol()));
+#if 0
     window_->GetLocationBar()->UpdateContentSettingsIcons();
+#endif
     return;
   }
 
@@ -1831,7 +1870,9 @@ void Browser::RegisterProtocolHandler(WebContents* web_contents,
   // ungestured and gestured RPH calls.
   if (window_) {
     tab_content_settings->ClearPendingProtocolHandler();
+#if 0
     window_->GetLocationBar()->UpdateContentSettingsIcons();
+#endif
   }
 
   PermissionRequestManager* permission_request_manager =
@@ -1883,23 +1924,31 @@ void Browser::FindReply(WebContents* web_contents,
 void Browser::RequestToLockMouse(WebContents* web_contents,
                                  bool user_gesture,
                                  bool last_unlocked_by_target) {
+#if 0
   exclusive_access_manager_->mouse_lock_controller()->RequestToLockMouse(
       web_contents, user_gesture, last_unlocked_by_target);
+#endif
 }
 
 void Browser::LostMouseLock() {
+#if 0
   exclusive_access_manager_->mouse_lock_controller()->LostMouseLock();
+#endif
 }
 
 void Browser::RequestKeyboardLock(WebContents* web_contents,
                                   bool esc_key_locked) {
+#if 0
   exclusive_access_manager_->keyboard_lock_controller()->RequestKeyboardLock(
       web_contents, esc_key_locked);
+#endif
 }
 
 void Browser::CancelKeyboardLockRequest(WebContents* web_contents) {
+#if 0
   exclusive_access_manager_->keyboard_lock_controller()
       ->CancelKeyboardLockRequest(web_contents);
+#endif
 }
 
 void Browser::RequestMediaAccessPermission(
@@ -2173,7 +2222,9 @@ void Browser::OnTabClosing(WebContents* contents) {
       page_load_metrics::MetricsWebContentsObserver::FromWebContents(contents);
   metrics_observer->WebContentsWillSoonBeDestroyed();
 
+#if 0
   exclusive_access_manager_->OnTabClosing(contents);
+#endif
   SessionService* session_service =
       SessionServiceFactory::GetForProfile(profile_);
   if (session_service)
@@ -2198,18 +2249,25 @@ void Browser::OnTabDetached(WebContents* contents, bool was_active) {
 }
 
 void Browser::OnTabDeactivated(WebContents* contents) {
+#if 0
   exclusive_access_manager_->OnTabDeactivated(contents);
   SearchTabHelper::FromWebContents(contents)->OnTabDeactivated();
 
   // Save what the user's currently typing, so it can be restored when we
   // switch back to this tab.
   window_->GetLocationBar()->SaveStateToContents(contents);
+#else
+  SearchTabHelper::FromWebContents(contents)->OnTabDeactivated();
+#endif
 }
 
 void Browser::OnActiveTabChanged(WebContents* old_contents,
                                  WebContents* new_contents,
                                  int index,
                                  int reason) {
+  LOG(INFO) << "[EXTENSIONS] Browser::ActiveTabChanged - Active tab has changed and we skipped the element";
+  if (true)
+      return;
   TRACE_EVENT0("ui", "Browser::OnActiveTabChanged");
 // Mac correctly sets the initial background color of new tabs to the theme
 // background color, so it does not need this block of code. Aura should
@@ -2245,7 +2303,9 @@ void Browser::OnActiveTabChanged(WebContents* old_contents,
   // is updated.
   window_->OnActiveTabChanged(old_contents, new_contents, index, reason);
 
+#if 0
   exclusive_access_manager_->OnTabDetachedFromView(old_contents);
+#endif
 
   // If we have any update pending, do it now.
   if (chrome_updater_factory_.HasWeakPtrs() && old_contents)
@@ -2304,7 +2364,9 @@ void Browser::OnTabReplacedAt(WebContents* old_contents,
                               int index) {
   bool was_active = index == tab_strip_model_->active_index();
   TabDetachedAtImpl(old_contents, was_active, DETACH_TYPE_REPLACE);
+#if 0
   exclusive_access_manager_->OnTabClosing(old_contents);
+#endif
   SessionService* session_service =
       SessionServiceFactory::GetForProfile(profile_);
   if (session_service)
@@ -2621,9 +2683,11 @@ void Browser::TabDetachedAtImpl(content::WebContents* contents,
     // location bar, saving the current tab's location bar state to a
     // non-selected tab can corrupt both tabs.
     if (was_active) {
+#if 0
       LocationBar* location_bar = window()->GetLocationBar();
       if (location_bar)
         location_bar->SaveStateToContents(contents);
+#endif
     }
 
     if (!tab_strip_model_->closing_all())

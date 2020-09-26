@@ -240,6 +240,7 @@ class BookmarkButton : public BookmarkButtonBase {
 
   // views::View:
   base::string16 GetTooltipText(const gfx::Point& p) const override {
+#if 0
     const views::TooltipManager* tooltip_manager =
         GetWidget()->GetTooltipManager();
     gfx::Point location(p);
@@ -253,6 +254,9 @@ class BookmarkButton : public BookmarkButtonBase {
           max_tooltip_width_, tooltip_manager->GetFontList(), url_, GetText());
     }
     return tooltip_text_;
+#else
+    return base::string16();
+#endif
   }
 
   void SetText(const base::string16& text) override {

@@ -175,6 +175,7 @@ void InvertBubbleView::OpenLink(const std::string& url, int event_flags) {
 }  // namespace
 
 void MaybeShowInvertBubbleView(BrowserView* browser_view) {
+#if 0
   Browser* browser = browser_view->browser();
   PrefService* pref_service = browser->profile()->GetPrefs();
   views::View* anchor =
@@ -184,6 +185,7 @@ void MaybeShowInvertBubbleView(BrowserView* browser_view) {
     pref_service->SetBoolean(prefs::kInvertNotificationShown, true);
     ShowInvertBubbleView(browser, anchor);
   }
+#endif
 }
 
 void ShowInvertBubbleView(Browser* browser, views::View* anchor) {

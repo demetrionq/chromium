@@ -152,7 +152,11 @@ void BrowserFrame::GetWindowPlacement(gfx::Rect* bounds,
 
 content::KeyboardEventProcessingResult BrowserFrame::PreHandleKeyboardEvent(
     const content::NativeWebKeyboardEvent& event) {
+#if 0
   return native_browser_frame_->PreHandleKeyboardEvent(event);
+#else
+  return content::KeyboardEventProcessingResult::NOT_HANDLED;
+#endif
 }
 
 bool BrowserFrame::HandleKeyboardEvent(

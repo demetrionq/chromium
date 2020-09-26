@@ -110,7 +110,7 @@
 #include "chrome/browser/banners/app_banner_manager_android.h"
 #include "chrome/browser/ui/android/context_menu_helper.h"
 #include "chrome/browser/ui/android/view_android_helper.h"
-#else
+//#else
 #include "chrome/browser/banners/app_banner_manager_desktop.h"
 #include "chrome/browser/safe_browsing/safe_browsing_tab_observer.h"
 #include "chrome/browser/ui/bookmarks/bookmark_tab_helper.h"
@@ -127,6 +127,8 @@
 #if defined(OS_WIN) || defined(OS_MACOSX) || defined(OS_LINUX)
 #include "chrome/browser/ui/blocked_content/framebust_block_tab_helper.h"
 #include "chrome/browser/ui/hats/hats_helper.h"
+#else
+#include "chrome/browser/ui/blocked_content/framebust_block_tab_helper.h"
 #endif
 
 #if BUILDFLAG(ENABLE_CAPTIVE_PORTAL_DETECTION)
@@ -193,7 +195,7 @@ void TabHelpers::AttachTabHelpers(WebContents* web_contents) {
   // helpers may rely on that.
   SessionTabHelper::CreateForWebContents(web_contents);
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
   // ZoomController comes before common tab helpers since ChromeAutofillClient
   // may want to register as a ZoomObserver with it.
   zoom::ZoomController::CreateForWebContents(web_contents);
@@ -296,8 +298,9 @@ void TabHelpers::AttachTabHelpers(WebContents* web_contents) {
 
   SearchGeolocationDisclosureTabHelper::CreateForWebContents(web_contents);
   ViewAndroidHelper::CreateForWebContents(web_contents);
-#else
-  banners::AppBannerManagerDesktop::CreateForWebContents(web_contents);
+//#else
+  SearchTabHelper::CreateForWebContents(web_contents);
+  //banners::AppBannerManagerDesktop::CreateForWebContents(web_contents);
   BookmarkTabHelper::CreateForWebContents(web_contents);
   BrowserSyncedTabDelegate::CreateForWebContents(web_contents);
   extensions::ChromeExtensionWebContentsObserver::CreateForWebContents(
@@ -311,7 +314,7 @@ void TabHelpers::AttachTabHelpers(WebContents* web_contents) {
       web_contents, std::make_unique<ChromePDFWebContentsHelperClient>());
   SadTabHelper::CreateForWebContents(web_contents);
   safe_browsing::SafeBrowsingTabObserver::CreateForWebContents(web_contents);
-  SearchTabHelper::CreateForWebContents(web_contents);
+  //SearchTabHelper::CreateForWebContents(web_contents);
   if (base::FeatureList::IsEnabled(features::kSyncEncryptionKeysWebApi)) {
     SyncEncryptionKeysTabHelper::CreateForWebContents(web_contents);
   }

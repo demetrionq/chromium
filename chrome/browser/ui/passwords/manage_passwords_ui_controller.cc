@@ -533,6 +533,8 @@ void ManagePasswordsUIController::HidePasswordBubble() {
 }
 
 void ManagePasswordsUIController::UpdateBubbleAndIconVisibility() {
+  if (true)
+    return;
   // If we're not on a "webby" URL (e.g. "chrome://sign-in"), we shouldn't
   // display either the bubble or the icon.
   if (!ChromePasswordManagerClient::CanShowBubbleOnURL(
