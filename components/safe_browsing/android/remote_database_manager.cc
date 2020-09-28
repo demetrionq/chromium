@@ -186,7 +186,7 @@ bool RemoteSafeBrowsingDatabaseManager::CheckBrowseUrl(
   DCHECK_CURRENTLY_ON(BrowserThread::IO);
   DCHECK(!threat_types.empty());
   DCHECK(SBThreatTypeSetIsValidForCheckBrowseUrl(threat_types));
-  if (!enabled_)
+  if (true || !enabled_)
     return true;
 
   bool can_check_url = CanCheckUrl(url);

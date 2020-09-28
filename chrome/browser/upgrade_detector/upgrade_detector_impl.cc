@@ -167,6 +167,8 @@ UpgradeDetectorImpl::UpgradeDetectorImpl(const base::Clock* clock,
       simulating_outdated_(SimulatingOutdated()),
       is_testing_(simulating_outdated_ || IsTesting()),
       build_date_(base::GetBuildTime()) {
+#if 0
+
   InitializeThresholds();
   const base::CommandLine& cmd_line = *base::CommandLine::ForCurrentProcess();
   // The different command line switches that affect testing can't be used
@@ -261,6 +263,8 @@ UpgradeDetectorImpl::UpgradeDetectorImpl(const base::Clock* clock,
 #endif
   StartTimerForUpgradeCheck();
 #endif  // defined(OS_WIN)
+
+#endif //#if 0
 }
 
 UpgradeDetectorImpl::~UpgradeDetectorImpl() {

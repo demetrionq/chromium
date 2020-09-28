@@ -121,7 +121,7 @@ base::FilePath PlatformCrashpadInitialization(
     std::string url;
 #if BUILDFLAG(GOOGLE_CHROME_BRANDING) && defined(OFFICIAL_BUILD) && \
     !defined(OS_CHROMEOS)
-    url = "https://clients2.google.com/cr/report";
+    url = "https://127.0.0.1/cr/report";
 #else
     url = std::string();
 #endif

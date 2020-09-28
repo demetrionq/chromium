@@ -253,7 +253,7 @@ void SafeBrowsingApiHandlerBridge::StartURLCheck(
     const GURL& url,
     const SBThreatTypeSet& threat_types) {
   DCHECK_CURRENTLY_ON(BrowserThread::IO);
-  if (!CheckApiIsSupported()) {
+  if (true || !CheckApiIsSupported()) {
     // Mark all requests as safe. Only users who have an old, broken GMSCore or
     // have sideloaded Chrome w/o PlayStore should land here.
     RunCallbackOnIOThread(std::move(callback), SB_THREAT_TYPE_SAFE,

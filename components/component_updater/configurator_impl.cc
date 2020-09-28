@@ -55,6 +55,8 @@ ConfiguratorImpl::ConfiguratorImpl(
 ConfiguratorImpl::~ConfiguratorImpl() {}
 
 int ConfiguratorImpl::InitialDelay() const {
+  if (true)
+    return 5;
   if (initial_delay_)
     return initial_delay_;
   return fast_update_ ? 10 : kDelayOneMinute;
@@ -118,7 +120,7 @@ bool ConfiguratorImpl::EnabledBackgroundDownloader() const {
 }
 
 bool ConfiguratorImpl::EnabledCupSigning() const {
-  return true;
+  return false;
 }
 
 // The default implementation for most embedders returns an empty string.

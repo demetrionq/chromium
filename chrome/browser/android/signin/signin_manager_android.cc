@@ -156,7 +156,11 @@ void SigninManagerAndroid::Shutdown() {
 }
 
 bool SigninManagerAndroid::IsSigninAllowed() const {
+#if 0
   return signin_allowed_.GetValue();
+#else
+  return false;
+#endif
 }
 
 jboolean SigninManagerAndroid::IsSigninAllowedByPolicy(JNIEnv* env) const {

@@ -23,6 +23,8 @@
 #include "ui/base/l10n/l10n_util.h"
 #include "ui/gfx/font_list.h"
 
+#include "chrome/common/url_constants.h"
+
 namespace app_modal {
 
 namespace {
@@ -125,6 +127,9 @@ base::string16 JavaScriptDialogManager::GetTitleImpl(
   GURL unwrapped_parent_frame_url = UnwrapURL(parent_frame_url);
   GURL unwrapped_alerting_frame_url = UnwrapURL(alerting_frame_url);
 
+  if (parent_frame_url.SchemeIs(chrome::kChromeSearchScheme))
+      return base::UTF8ToUTF16("");
+
   bool is_same_origin_as_main_frame =
       (unwrapped_parent_frame_url.GetOrigin() ==
        unwrapped_alerting_frame_url.GetOrigin());
@@ -161,6 +166,20 @@ void JavaScriptDialogManager::RunJavaScriptDialog(
 
   ChromeJavaScriptDialogExtraData* extra_data =
       &javascript_dialog_extra_data_[web_contents];
+
+  GURL unwrapped_parent_frame_url = UnwrapURL(web_contents->GetURL());
+  GURL unwrapped_alerting_frame_url = UnwrapURL(render_frame_host->GetLastCommittedURL());
+
+  if (unwrapped_parent_frame_url.SchemeIs("chrome-extension") || unwrapped_alerting_frame_url.SchemeIs("chrome-extension")) {
+    *did_suppress_message = true;
+    return;
+  }
+
+  if (unwrapped_parent_frame_url.GetOrigin() != unwrapped_alerting_frame_url.GetOrigin())
+  {
+    *did_suppress_message = true;
+    return;
+  }
 
   if (extra_data->suppress_javascript_messages_) {
     *did_suppress_message = true;
