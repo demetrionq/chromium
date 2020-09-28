@@ -36,9 +36,10 @@ const int kMinimumDialogLabelWidth = 400;
 std::unique_ptr<views::Link> CreateExtraView(views::LinkListener* listener) {
   auto advanced_link = std::make_unique<views::Link>(
       l10n_util::GetStringUTF16(IDS_ONE_CLICK_SIGNIN_DIALOG_ADVANCED));
-
+#if 0
   advanced_link->set_listener(listener);
   advanced_link->SetHorizontalAlignment(gfx::ALIGN_LEFT);
+#endif
   return advanced_link;
 }
 
@@ -70,8 +71,10 @@ bool OneClickSigninDialogView::IsShowing() {
 
 // static
 void OneClickSigninDialogView::Hide() {
+#if 0
   if (IsShowing())
     dialog_view_->GetWidget()->Close();
+#endif
 }
 
 OneClickSigninDialogView::OneClickSigninDialogView(
@@ -124,7 +127,9 @@ void OneClickSigninDialogView::Init() {
 
   auto learn_more_link =
       std::make_unique<views::Link>(l10n_util::GetStringUTF16(IDS_LEARN_MORE));
+#if 0
   learn_more_link->set_listener(this);
+#endif
   learn_more_link->SetHorizontalAlignment(gfx::ALIGN_LEFT);
   learn_more_link_ =
       layout->AddView(std::move(learn_more_link), 1, 1,
@@ -153,7 +158,9 @@ void OneClickSigninDialogView::LinkClicked(views::Link* source,
     delegate_->OnLearnMoreLinkClicked(true);
   } else if (source == advanced_link_) {
     std::move(confirmed_callback_).Run(true);
+#if 0
     GetWidget()->Close();
+#endif
   }
 }
 

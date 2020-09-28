@@ -99,6 +99,8 @@ void DevToolsDataSource::StartDataRequest(
     const GURL& url,
     const content::WebContents::Getter& wc_getter,
     GotDataCallback callback) {
+  if (true)
+    return;
   // Serve request to devtools://bundled/ from local bundle.
   // TODO(crbug/1009127): Simplify usages of |path| since |url| is available.
   const std::string path = content::URLDataSource::URLToRequestPath(url);

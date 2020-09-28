@@ -131,9 +131,25 @@ class TabHoverCardEventSniffer : public ui::EventHandler {
       : hover_card_(hover_card),
         tab_strip_(tab_strip),
         widget_(tab_strip->GetWidget()) {
+#if 0
+#if defined(OS_MACOSX)
+    if (widget_->GetRootView())
+      widget_->GetRootView()->AddPreTargetHandler(this);
+#else
+    if (widget_->GetNativeWindow())
+      widget_->GetNativeWindow()->AddPreTargetHandler(this);
+#endif
+#endif
   }
 
   ~TabHoverCardEventSniffer() override {
+#if 0
+#if defined(OS_MACOSX)
+    widget_->GetRootView()->RemovePreTargetHandler(this);
+#else
+    widget_->GetNativeWindow()->RemovePreTargetHandler(this);
+#endif
+#endif
   }
 
  protected:
@@ -465,7 +481,11 @@ class TabStrip::TabDragContextImpl : public TabDragContext {
   }
 
   bool IsDragSessionActive() const override {
+#if 0
     return drag_controller_ != nullptr;
+#else
+    return false;
+#endif
   }
 
   bool IsActiveDropTarget() const override {
@@ -1016,12 +1036,20 @@ bool TabStrip::IsPositionInWindowCaption(const gfx::Point& point) {
 }
 
 bool TabStrip::IsTabStripCloseable() const {
+#if 0
   return !drag_context_->IsDragSessionActive();
+#else
+  return true;
+#endif
 }
 
 bool TabStrip::IsTabStripEditable() const {
+#if 0
   return !drag_context_->IsDragSessionActive() &&
          !drag_context_->IsActiveDropTarget();
+#else
+  return true;
+#endif
 }
 
 bool TabStrip::IsTabCrashed(int tab_index) const {
@@ -1117,8 +1145,10 @@ void TabStrip::AddTabAt(int model_index, TabRendererData data, bool is_active) {
   // find a tab given a model index can go off the end of |tabs_|. As such, it
   // is important that we complete the drag *after* adding the tab so that the
   // model and tabstrip are in sync.
+#if 0
   if (!drag_context_->IsMutating() && drag_context_->IsDraggingWindow())
     EndDrag(END_DRAG_COMPLETE);
+#endif
 
   Profile* profile = controller()->GetProfile();
   if (profile) {
@@ -1197,8 +1227,10 @@ void TabStrip::RemoveTabAt(content::WebContents* contents,
   // to find a tab given a model index can go off the end of |tabs_|. As such,
   // it is important that we complete the drag *after* removing the tab so that
   // the model and tabstrip are in sync.
+#if 0
   if (!drag_context_->IsMutating() && drag_context_->IsDraggingTab(contents))
     EndDrag(END_DRAG_COMPLETE);
+#endif
 }
 
 void TabStrip::SetTabData(int model_index, TabRendererData data) {
@@ -1665,6 +1697,7 @@ void TabStrip::MaybeStartDrag(
     TabSlotView* source,
     const ui::LocatedEvent& event,
     const ui::ListSelectionModel& original_selection) {
+#if 0
   // Don't accidentally start any drag operations during animations if the
   // mouse is down... during an animation tabs are being resized automatically,
   // so the View system can misinterpret this easily if the mouse is down that
@@ -1680,14 +1713,21 @@ void TabStrip::MaybeStartDrag(
   }
 
   drag_context_->MaybeStartDrag(source, event, original_selection);
+#endif
 }
 
 void TabStrip::ContinueDrag(views::View* view, const ui::LocatedEvent& event) {
+#if 0
   drag_context_->ContinueDrag(view, event);
+#endif
 }
 
 bool TabStrip::EndDrag(EndDragReason reason) {
+#if 0
   return drag_context_->EndDrag(reason);
+#else
+  return false;
+#endif
 }
 
 Tab* TabStrip::GetTabAt(const gfx::Point& point) {
@@ -2631,6 +2671,7 @@ void TabStrip::OnTabCloseAnimationCompleted(Tab* tab) {
   std::unique_ptr<Tab> deleter(tab);
   layout_helper_->OnTabDestroyed(tab);
 
+#if 0
   // Send the Container a message to simulate a mouse moved event at the current
   // mouse position. This tickles the Tab the mouse is currently over to show
   // the "hot" state of the close button.  Note that this is not required (and
@@ -2643,6 +2684,7 @@ void TabStrip::OnTabCloseAnimationCompleted(Tab* tab) {
     if (widget)
       widget->SynthesizeMouseMoveEvent();
   }
+#endif
 }
 
 void TabStrip::OnGroupCloseAnimationCompleted(TabGroupId group) {

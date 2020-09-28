@@ -622,6 +622,7 @@ void PageInfoBubbleView::SetCookieInfo(const CookieInfoList& cookie_info_list) {
     info.is_incognito =
         Profile::FromBrowserContext(web_contents()->GetBrowserContext())
             ->IsOffTheRecord();
+#if 0
     const gfx::ImageSkia icon =
         PageInfoUI::GetPermissionIcon(info, GetRelatedTextColor());
 
@@ -635,6 +636,7 @@ void PageInfoBubbleView::SetCookieInfo(const CookieInfoList& cookie_info_list) {
             base::string16())
             .release();
     site_settings_view_->AddChildView(cookie_button_);
+#endif
   }
 
   // Update the text displaying the number of allowed cookies.

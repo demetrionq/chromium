@@ -105,6 +105,7 @@ InlineLoginUI::InlineLoginUI(content::WebUI* web_ui) : WebDialogUI(web_ui) {
   Profile* profile = Profile::FromWebUI(web_ui);
   content::WebUIDataSource::Add(profile, CreateWebUIDataSource());
 
+#if 0
 #if defined(OS_CHROMEOS)
   web_ui->AddMessageHandler(
       std::make_unique<chromeos::InlineLoginHandlerChromeOS>(
@@ -113,6 +114,7 @@ InlineLoginUI::InlineLoginUI(content::WebUI* web_ui) : WebDialogUI(web_ui) {
 #else
   web_ui->AddMessageHandler(std::make_unique<InlineLoginHandlerImpl>());
 #endif  // defined(OS_CHROMEOS)
+#endif
 
   web_ui->AddMessageHandler(std::make_unique<MetricsHandler>());
 
