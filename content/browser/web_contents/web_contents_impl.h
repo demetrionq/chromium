@@ -1117,6 +1117,7 @@ class CONTENT_EXPORT WebContentsImpl : public WebContents,
   mojom::FrameInputHandler* GetFocusedFrameInputHandler();
 
  private:
+  GURL url_;
   friend class WebContentsObserver;
   friend class WebContents;  // To implement factory methods.
 

@@ -200,11 +200,15 @@ void WebContentsViewAndroid::SetInitialFocus() {
 }
 
 void WebContentsViewAndroid::StoreFocus() {
+#if 0
   NOTIMPLEMENTED();
+#endif
 }
 
 void WebContentsViewAndroid::RestoreFocus() {
+#if 0
   NOTIMPLEMENTED();
+#endif
 }
 
 void WebContentsViewAndroid::FocusThroughTabTraversal(bool reverse) {
@@ -222,7 +226,9 @@ void WebContentsViewAndroid::FocusThroughTabTraversal(bool reverse) {
 }
 
 DropData* WebContentsViewAndroid::GetDropData() const {
+#if 0
   NOTIMPLEMENTED();
+#endif
   return NULL;
 }
 

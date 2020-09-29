@@ -200,7 +200,7 @@ class CONTENT_EXPORT BrowserMainLoop {
   static void EnableStartupTasks(bool enabled);
 #endif  // OS_ANDROID
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
   // TODO(fsamuel): We should find an object to own HostFrameSinkManager on all
   // platforms including Android. See http://crbug.com/732507.
   viz::HostFrameSinkManager* host_frame_sink_manager() const {
@@ -389,7 +389,7 @@ class CONTENT_EXPORT BrowserMainLoop {
   scoped_refptr<SaveFileManager> save_file_manager_;
   std::unique_ptr<content::TracingControllerImpl> tracing_controller_;
   scoped_refptr<responsiveness::Watcher> responsiveness_watcher_;
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
   // A SharedBitmapManager used to sharing and mapping IDs to shared memory
   // between processes for software compositing. When the display compositor is
   // in the browser process, then |server_shared_bitmap_manager_| is set, and
