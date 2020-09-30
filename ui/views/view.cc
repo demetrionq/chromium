@@ -156,11 +156,19 @@ View::~View() {
 
 const Widget* View::GetWidget() const {
   // The root view holds a reference to this view hierarchy's Widget.
+#if 0
   return parent_ ? parent_->GetWidget() : nullptr;
+#else
+  return nullptr;
+#endif
 }
 
 Widget* View::GetWidget() {
+#if 0
   return const_cast<Widget*>(const_cast<const View*>(this)->GetWidget());
+#else
+  return nullptr;
+#endif
 }
 
 void View::ReorderChildView(View* view, int index) {
@@ -1070,6 +1078,7 @@ bool View::CanProcessEventsWithinSubtree() const {
 }
 
 View* View::GetTooltipHandlerForPoint(const gfx::Point& point) {
+#if 0
   // TODO(tdanderson): Move this implementation into ViewTargetDelegate.
   if (!HitTestPoint(point) || !CanProcessEventsWithinSubtree())
     return nullptr;
@@ -1088,6 +1097,7 @@ View* View::GetTooltipHandlerForPoint(const gfx::Point& point) {
     if (handler)
       return handler;
   }
+#endif
   return this;
 }
 
@@ -1805,6 +1815,7 @@ void View::OnPaintLayer(const ui::PaintContext& context) {
 
 void View::OnDeviceScaleFactorChanged(float old_device_scale_factor,
                                       float new_device_scale_factor) {
+#if 0
   snap_layer_to_pixel_boundary_ =
       (new_device_scale_factor - std::floor(new_device_scale_factor)) != 0.0f;
 
@@ -1824,6 +1835,7 @@ void View::OnDeviceScaleFactorChanged(float old_device_scale_factor,
   } else {
     SnapLayerToPixelBoundary(LayerOffsetData());
   }
+#endif
 }
 
 void View::CreateOrDestroyLayer() {
@@ -1839,6 +1851,7 @@ void View::CreateOrDestroyLayer() {
 }
 
 void View::ReorderLayers() {
+#if 0
   View* v = this;
   while (v && !v->layer())
     v = v->parent();
@@ -1862,6 +1875,7 @@ void View::ReorderLayers() {
     // an ancestor with a layer.
     widget->ReorderNativeViews();
   }
+#endif
 }
 
 void View::ReorderChildLayers(ui::Layer* parent_layer) {
@@ -1930,10 +1944,12 @@ void View::Blur() {
 // Tooltips --------------------------------------------------------------------
 
 void View::TooltipTextChanged() {
+#if 0
   Widget* widget = GetWidget();
   // TooltipManager may be null if there is a problem creating it.
   if (widget && widget->GetTooltipManager())
     widget->GetTooltipManager()->TooltipTextChanged(this);
+#endif
 }
 
 // Drag and drop ---------------------------------------------------------------
@@ -2307,7 +2323,6 @@ void View::PropagateRemoveNotifications(View* old_parent,
 
 void View::PropagateAddNotifications(const ViewHierarchyChangedDetails& details,
                                      bool is_added_to_widget) {
-#if 0
   {
     internal::ScopedChildrenLock lock(this);
     for (auto* child : children_)
@@ -2319,7 +2334,6 @@ void View::PropagateAddNotifications(const ViewHierarchyChangedDetails& details,
     for (ViewObserver& observer : observers_)
       observer.OnViewAddedToWidget(this);
   }
-#endif
 }
 
 void View::PropagateNativeViewHierarchyChanged() {
@@ -2835,12 +2849,14 @@ void View::PropagateDeviceScaleFactorChanged(float old_device_scale_factor,
 // Tooltips --------------------------------------------------------------------
 
 void View::UpdateTooltip() {
+#if 0
   Widget* widget = GetWidget();
   // TODO(beng): The TooltipManager nullptr check can be removed when we
   //             consolidate Init() methods and make views_unittests Init() all
   //             Widgets that it uses.
   if (widget && widget->GetTooltipManager())
     widget->GetTooltipManager()->UpdateTooltip();
+#endif
 }
 
 // Drag and drop ---------------------------------------------------------------
