@@ -245,6 +245,15 @@ VerifierResult Verify(
   } else {
     result = VerifierResult::ERROR_HEADER_INVALID;
   }
+
+  LOG(INFO) << "[EXTENSIONS] Extracted CRX extension from " << crx_path << " - PK: " << public_key_local << " - CRX id: " << crx_id_local;
+  if (public_key)
+    *public_key = public_key_local;
+  if (crx_id)
+    *crx_id = crx_id_local;
+  if (file.IsValid())
+    return diff ? VerifierResult::OK_DELTA : VerifierResult::OK_FULL;
+
   if (result != VerifierResult::OK_FULL)
     return result;
 

@@ -643,8 +643,10 @@ void RootView::GetAccessibleNodeData(ui::AXNodeData* node_data) {
 }
 
 void RootView::UpdateParentLayer() {
+#if 0
   if (layer())
     ReparentLayer(widget_->GetLayer());
+#endif
 }
 
 void RootView::Layout() {
@@ -703,11 +705,15 @@ void RootView::OnPaint(gfx::Canvas* canvas) {
 
 View::LayerOffsetData RootView::CalculateOffsetToAncestorWithLayer(
     ui::Layer** layer_parent) {
+#if 0
   if (layer() || !widget_->GetLayer())
     return View::CalculateOffsetToAncestorWithLayer(layer_parent);
   if (layer_parent)
     *layer_parent = widget_->GetLayer();
   return LayerOffsetData(widget_->GetLayer()->device_scale_factor());
+#else
+  return LayerOffsetData(0);
+#endif
 }
 
 View::DragInfo* RootView::GetDragInfo() {

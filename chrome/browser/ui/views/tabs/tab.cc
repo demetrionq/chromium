@@ -267,6 +267,7 @@ void Tab::ButtonPressed(views::Button* sender, const ui::Event& event) {
 }
 
 bool Tab::GetHitTestMask(SkPath* mask) const {
+#if 0
   // When the window is maximized we don't want to shave off the edges or top
   // shadow of the tab, such that the user can click anywhere along the top
   // edge of the screen to select a tab. Ditto for immersive fullscreen.
@@ -274,6 +275,7 @@ bool Tab::GetHitTestMask(SkPath* mask) const {
       TabStyle::PathType::kHitTest,
       GetWidget()->GetCompositor()->device_scale_factor(),
       /* force_active */ false, TabStyle::RenderUnits::kDips);
+#endif
   return true;
 }
 

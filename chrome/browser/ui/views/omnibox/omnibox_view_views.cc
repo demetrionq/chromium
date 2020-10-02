@@ -572,7 +572,9 @@ ui::TextInputType OmniboxViewViews::GetTextInputType() const {
 
 void OmniboxViewViews::AddedToWidget() {
   views::Textfield::AddedToWidget();
+#if 0
   scoped_compositor_observer_.Add(GetWidget()->GetCompositor());
+#endif
 }
 
 void OmniboxViewViews::RemovedFromWidget() {
@@ -995,15 +997,27 @@ bool OmniboxViewViews::OnAfterPossibleChange(bool allow_keyword_ui_change) {
 }
 
 gfx::NativeView OmniboxViewViews::GetNativeView() const {
+#if 0
   return GetWidget()->GetNativeView();
+#else
+  return gfx::NativeView();
+#endif
 }
 
 gfx::NativeView OmniboxViewViews::GetRelativeWindowForPopup() const {
+#if 0
   return GetWidget()->GetTopLevelWidget()->GetNativeView();
+#else
+  return gfx::NativeView();
+#endif
 }
 
 int OmniboxViewViews::GetWidth() const {
+#if 0
   return location_bar_view_ ? location_bar_view_->width() : 0;
+#else
+  return 0;
+#endif
 }
 
 bool OmniboxViewViews::IsImeShowingPopup() const {
@@ -1042,6 +1056,8 @@ void OmniboxViewViews::SetEmphasis(bool emphasize, const gfx::Range& range) {
 }
 
 void OmniboxViewViews::UpdateSchemeStyle(const gfx::Range& range) {
+  if (true)
+    return;
   DCHECK(range.IsValid());
   DCHECK(!model()->user_input_in_progress());
 

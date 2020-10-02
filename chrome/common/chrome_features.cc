@@ -168,7 +168,7 @@ const base::Feature kDMServerOAuthForChildUser{
 #if defined(OS_ANDROID)
 // Enables clearing of browsing data which is older than given time period.
 const base::Feature kClearOldBrowsingData{"ClearOldBrowsingData",
-                                          base::FEATURE_DISABLED_BY_DEFAULT};
+                                          base::FEATURE_ENABLED_BY_DEFAULT};
 #endif
 
 const base::Feature kClickToOpenPDFPlaceholder{
@@ -704,7 +704,7 @@ const base::Feature kSmbFs{"SmbFs", base::FEATURE_DISABLED_BY_DEFAULT};
 const base::Feature kSoundContentSetting{"SoundContentSetting",
                                          base::FEATURE_ENABLED_BY_DEFAULT};
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 // Enables or disables the Javascript API to propagate sync encryption keys.
 const base::Feature kSyncEncryptionKeysWebApi{
     "SyncEncryptionKeysWebApi", base::FEATURE_DISABLED_BY_DEFAULT};

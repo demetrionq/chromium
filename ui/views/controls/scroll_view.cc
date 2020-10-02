@@ -591,6 +591,7 @@ void ScrollView::OnScrollEvent(ui::ScrollEvent* event) {
   if (!contents_)
     return;
 
+#if 0
   ui::ScrollInputHandler* compositor_scroller =
       GetWidget()->GetCompositor()->scroll_input_handler();
   if (compositor_scroller) {
@@ -600,6 +601,7 @@ void ScrollView::OnScrollEvent(ui::ScrollEvent* event) {
       event->StopPropagation();
     }
   }
+#endif
 
   // A direction might not be known when the event stream starts, notify both
   // scrollbars that they may be about scroll, or that they may need to cancel
@@ -878,12 +880,20 @@ void ScrollView::UpdateBorder() {
   if (!draw_border_ || !GetWidget())
     return;
 
+#if 0
   SetBorder(CreateSolidBorder(
       1,
       GetNativeTheme()->GetSystemColor(
           draw_focus_indicator_
               ? ui::NativeTheme::kColorId_FocusedBorderColor
               : ui::NativeTheme::kColorId_UnfocusedBorderColor)));
+#else
+  SetBorder(CreateSolidBorder(
+      1,
+          draw_focus_indicator_
+              ? ui::NativeTheme::kColorId_FocusedBorderColor
+              : ui::NativeTheme::kColorId_UnfocusedBorderColor));
+#endif
 }
 
 void ScrollView::UpdateBackground() {
@@ -905,7 +915,11 @@ void ScrollView::UpdateBackground() {
 
 SkColor ScrollView::GetBackgroundColor() const {
   return use_color_id_
+#if 0
              ? GetNativeTheme()->GetSystemColor(background_color_data_.color_id)
+#else
+             ? background_color_data_.color_id
+#endif
              : background_color_data_.color;
 }
 

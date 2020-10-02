@@ -80,7 +80,11 @@ void PrimaryAccountPolicyManagerImpl::OnGoogleServicesUsernamePatternChanged(
 }
 
 bool PrimaryAccountPolicyManagerImpl::IsSigninAllowed() const {
+#if 0
   return signin_allowed_.GetValue();
+#else
+  return false;
+#endif
 }
 
 void PrimaryAccountPolicyManagerImpl::OnSigninAllowedPrefChanged(

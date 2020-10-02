@@ -151,7 +151,7 @@
 
 #if defined(OS_ANDROID)
 #include "chrome/renderer/sandbox_status_extension_android.h"
-#else
+//#else
 #include "chrome/renderer/searchbox/search_bouncer.h"
 #include "chrome/renderer/searchbox/searchbox.h"
 #include "chrome/renderer/searchbox/searchbox_extension.h"
@@ -381,7 +381,7 @@ void ChromeContentRendererClient::RenderThreadStarted() {
   thread->AddObserver(prerender_dispatcher_.get());
   thread->AddObserver(subresource_filter_ruleset_dealer_.get());
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
   thread->AddObserver(SearchBouncer::GetInstance());
 #endif
 
@@ -592,7 +592,7 @@ void ChromeContentRendererClient::RenderFrameCreated(
         render_frame_observer->associated_interfaces(), render_frame);
   }
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
   base::CommandLine* command_line = base::CommandLine::ForCurrentProcess();
   if (command_line->HasSwitch(switches::kInstantProcess) &&
       render_frame->IsMainFrame()) {
@@ -634,7 +634,7 @@ bool ChromeContentRendererClient::IsPluginHandledExternally(
     const blink::WebElement& plugin_element,
     const GURL& original_url,
     const std::string& mime_type) {
-#if false && BUILDFLAG(ENABLE_EXTENSIONS) && BUILDFLAG(ENABLE_PLUGINS)
+#if BUILDFLAG(ENABLE_EXTENSIONS) && BUILDFLAG(ENABLE_PLUGINS)
   DCHECK(plugin_element.HasHTMLTagName("object") ||
          plugin_element.HasHTMLTagName("embed"));
   // Blink will next try to load a WebPlugin which would end up in
@@ -1201,7 +1201,7 @@ bool ChromeContentRendererClient::ShouldSuppressErrorPage(
 
   // Do not flash an error page if the Instant new tab page fails to load.
   bool is_instant_ntp = false;
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
   is_instant_ntp = SearchBouncer::GetInstance()->IsNewTabPage(url);
 #endif
   return is_instant_ntp;
@@ -1209,7 +1209,7 @@ bool ChromeContentRendererClient::ShouldSuppressErrorPage(
 
 bool ChromeContentRendererClient::ShouldTrackUseCounter(const GURL& url) {
   bool is_instant_ntp = false;
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
   is_instant_ntp = SearchBouncer::GetInstance()->IsNewTabPage(url);
 #endif
   return !is_instant_ntp;
@@ -1329,7 +1329,7 @@ void ChromeContentRendererClient::WillSendRequest(
   if (!url.ProtocolIs(chrome::kChromeSearchScheme))
     return;
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
   SearchBox* search_box =
       SearchBox::Get(content::RenderFrame::FromWebFrame(frame->LocalRoot()));
   if (search_box) {

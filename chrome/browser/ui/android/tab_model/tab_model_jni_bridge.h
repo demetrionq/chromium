@@ -77,6 +77,7 @@ class TabModelJniBridge : public TabModel {
 
  protected:
   JavaObjectWeakGlobalRef java_object_;
+  Profile* profile_;
 
   // The observer bridge. This exists as long as there are registered observers.
   // It corresponds to a Java observer that is registered with the corresponding

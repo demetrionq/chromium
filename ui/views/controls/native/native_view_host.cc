@@ -186,6 +186,7 @@ void NativeViewHost::ViewHierarchyChanged(
     return;
   }
 
+#if 0
   if (details.is_add && this_widget) {
     if (!native_wrapper_.get())
       native_wrapper_.reset(NativeViewHostWrapper::CreateWrapper(this));
@@ -193,6 +194,7 @@ void NativeViewHost::ViewHierarchyChanged(
   } else if (!details.is_add && native_wrapper_) {
     native_wrapper_->RemovedFromWidget();
   }
+#endif
 }
 
 void NativeViewHost::OnFocus() {

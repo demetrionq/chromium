@@ -209,6 +209,7 @@ gfx::Size NewTabButton::CalculatePreferredSize() const {
 }
 
 bool NewTabButton::GetHitTestMask(SkPath* mask) const {
+#if 0
   DCHECK(mask);
 
   const float scale = GetWidget()->GetCompositor()->device_scale_factor();
@@ -216,6 +217,7 @@ bool NewTabButton::GetHitTestMask(SkPath* mask) const {
   SkPath border = GetBorderPath(GetContentsBounds().origin(), scale,
                                 tab_strip_->controller()->IsFrameCondensed());
   mask->addPath(border, SkMatrix::MakeScale(1 / scale));
+#endif
   return true;
 }
 

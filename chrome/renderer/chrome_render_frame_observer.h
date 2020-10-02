@@ -111,7 +111,7 @@ class ChromeRenderFrameObserver : public content::RenderFrameObserver,
   // Owned by ChromeContentRendererClient and outlive us.
   web_cache::WebCacheImpl* web_cache_impl_;
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
   // Save the JavaScript to preload if ExecuteWebUIJavaScript is invoked.
   std::vector<base::string16> webui_javascript_;
 #endif

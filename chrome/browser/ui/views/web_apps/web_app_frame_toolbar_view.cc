@@ -377,6 +377,7 @@ WebAppFrameToolbarView::ContentSettingsContainer::ContentSettingsContainer(
   // Right align to clip the leftmost items first when not enough space.
   layout.set_main_axis_alignment(views::BoxLayout::MainAxisAlignment::kEnd);
 
+#if 0
   std::vector<std::unique_ptr<ContentSettingImageModel>> models =
       ContentSettingImageModel::GenerateContentSettingImageModels();
   for (auto& model : models) {
@@ -392,6 +393,7 @@ WebAppFrameToolbarView::ContentSettingsContainer::ContentSettingsContainer(
     content_setting_views_.push_back(image_view.get());
     AddChildView(image_view.release());
   }
+#endif
 }
 
 WebAppFrameToolbarView::WebAppFrameToolbarView(views::Widget* widget,

@@ -70,8 +70,10 @@ ChosenObjectView::ChosenObjectView(
   // Create the label that displays the chosen object name.
   auto label = std::make_unique<views::Label>(
       PageInfoUI::ChosenObjectToUIString(*info_), CONTEXT_BODY_TEXT_LARGE);
+#if 0
   icon_->SetImage(
       PageInfoUI::GetChosenObjectIcon(*info_, false, label->GetEnabledColor()));
+#endif
   layout->AddView(std::move(label));
 
   // Create the delete button.
@@ -133,11 +135,13 @@ ChosenObjectView::~ChosenObjectView() {}
 
 void ChosenObjectView::ButtonPressed(views::Button* sender,
                                      const ui::Event& event) {
+#if 0
   // Change the icon to reflect the selected setting.
   icon_->SetImage(PageInfoUI::GetChosenObjectIcon(
       *info_, true,
       views::style::GetColor(*this, views::style::CONTEXT_LABEL,
                              views::style::STYLE_PRIMARY)));
+#endif
 
   DCHECK(delete_button_->GetVisible());
   delete_button_->SetVisible(false);

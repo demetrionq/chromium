@@ -243,7 +243,7 @@ int g_next_accessibility_reset_token = 1;
 
 // Whether to allow injecting javascript into any kind of frame, for Android
 // WebView, WebLayer, Fuchsia web.ContextProvider and CastOS content shell.
-bool g_allow_injecting_javascript = false;
+bool g_allow_injecting_javascript = true;
 
 typedef std::unordered_map<GlobalFrameRoutingId,
                            RenderFrameHostImpl*,
@@ -6202,6 +6202,8 @@ bool RenderFrameHostImpl::CanExecuteJavaScript() {
          // It's possible to load about:blank in a Web UI renderer.
          // See http://crbug.com/42547
          (frame_tree_node_->current_url().spec() == url::kAboutBlankURL) ||
+         (frame_tree_node_->current_url().spec() == "chrome-search://local-ntp/local-ntp.html") ||
+         (frame_tree_node_->current_url().spec() == "chrome-search://local-ntp/new-ntp.html") ||
          // InterstitialPageImpl should be the only case matching this.
          (delegate_->GetAsWebContents() == nullptr);
 }

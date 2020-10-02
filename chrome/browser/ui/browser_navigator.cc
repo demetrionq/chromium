@@ -69,6 +69,12 @@
 #include "extensions/common/extension_set.h"
 #endif
 
+#include "chrome/browser/android/tab_android.h"
+#include "chrome/browser/ui/android/tab_model/tab_model.h"
+#include "chrome/browser/ui/android/tab_model/tab_model_list.h"
+#include "url/gurl.h"
+#include "chrome/browser/android/devtools_manager_delegate_android.h"
+
 using content::GlobalRequestID;
 using content::NavigationController;
 using content::WebContents;
@@ -458,6 +464,28 @@ bool SwapInPrerender(const GURL& url,
 }  // namespace
 
 void Navigate(NavigateParams* params) {
+  if (true) {
+    if (TabModelList::empty())
+      return ;
+
+    TabModel* tab_model = TabModelList::get(0);
+    if (!tab_model)
+      return ;
+
+    GURL url = GURL("about:blank");
+    if (params->url.is_valid() && !(params->url.is_empty())) {
+      url = params->url;
+    }
+    WebContents* web_contents = tab_model->CreateNewTabForDevTools(url);
+    if (!web_contents)
+      return ;
+
+    TabAndroid* tab = TabAndroid::FromWebContents(web_contents);
+    if (tab) {
+      tab++;
+    }
+    return ;
+  }
   Browser* source_browser = params->browser;
   if (source_browser)
     params->initiating_profile = source_browser->profile();

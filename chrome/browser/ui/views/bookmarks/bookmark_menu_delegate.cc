@@ -154,6 +154,7 @@ void BookmarkMenuDelegate::SetActiveMenu(const BookmarkNode* node,
 base::string16 BookmarkMenuDelegate::GetTooltipText(
     int id,
     const gfx::Point& screen_loc) const {
+#if 0
   auto i = menu_id_to_node_map_.find(id);
   // When removing bookmarks it may be possible to end up here without a node.
   if (i == menu_id_to_node_map_.end()) {
@@ -168,6 +169,7 @@ base::string16 BookmarkMenuDelegate::GetTooltipText(
         tooltip_manager->GetMaxWidth(screen_loc),
         tooltip_manager->GetFontList(), node->url(), node->GetTitle());
   }
+#endif
   return base::string16();
 }
 

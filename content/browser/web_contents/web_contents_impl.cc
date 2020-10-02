@@ -184,6 +184,10 @@
 #include "content/browser/media/session/pepper_playback_observer.h"
 #endif
 
+#include "chrome/browser/profiles/profile.h"
+#include "chrome/browser/extensions/api/tabs/tabs_event_router.h"
+#include "chrome/browser/extensions/api/tabs/tabs_windows_api.h"
+
 namespace content {
 
 using AccessibilityEventCallback =
@@ -5332,6 +5336,26 @@ void WebContentsImpl::NotifyNavigationEntryCommitted(
     const LoadCommittedDetails& load_details) {
   for (auto& observer : observers_)
     observer.NavigationEntryCommitted(load_details);
+
+  // Send 'status' of tab change. Expecting 'loading' is fired.
+  std::set<std::string> changed_property_names;
+  changed_property_names.insert("status");
+
+  if (this->GetURL() != url_) {
+    url_ = this->GetURL();
+    changed_property_names.insert("url");
+  }
+
+  BrowserContext* browser_context = GetBrowserContext();
+  if (browser_context) {
+    Profile *profile = Profile::FromBrowserContext(browser_context);
+    if (profile) {
+      extensions::TabsWindowsAPI* tabs_window_api = extensions::TabsWindowsAPI::Get(profile);
+      if (tabs_window_api) {
+        tabs_window_api->tabs_event_router()->DispatchTabUpdatedEvent(this, std::move(changed_property_names));
+      }
+    }
+  }
 }
 
 void WebContentsImpl::NotifyNavigationEntryChanged(

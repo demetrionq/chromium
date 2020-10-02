@@ -45,6 +45,7 @@ void SetDragImage(const GURL& url,
                   const gfx::Point* press_pt,
                   const views::Widget& widget,
                   ui::OSExchangeData* data) {
+#if 0
   // Create a button to render the drag image for us.
   views::LabelButton button(
       nullptr, title.empty() ? base::UTF8ToUTF16(url.spec()) : title);
@@ -90,6 +91,7 @@ void SetDragImage(const GURL& url,
       size));
   gfx::ImageSkia image(gfx::ImageSkiaRep(bitmap, raster_scale));
   data->provider().SetDragImage(image, press_point);
+#endif
 }
 
 }  // namespace button_drag_utils

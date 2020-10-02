@@ -496,6 +496,11 @@ bool HttpResponseHeaders::GetNormalizedHeader(const std::string& name,
   // If you hit this assertion, please use EnumerateHeader instead!
   DCHECK(!HttpUtil::IsNonCoalescingHeader(name));
 
+  if (!value) {
+    LOG(INFO) << "[Kiwi] HttpResponseHeaders::GetNormalizedHeader value is empty, this is strange";
+    return false;
+  }
+
   value->clear();
 
   bool found = false;

@@ -540,11 +540,15 @@ void SearchTabHelper::OnSelectLocalBackgroundImage() {
 }
 
 const OmniboxView* SearchTabHelper::GetOmniboxView() const {
+#if 0
   Browser* browser = chrome::FindBrowserWithWebContents(web_contents_);
   if (!browser)
     return nullptr;
 
   return browser->window()->GetLocationBar()->GetOmniboxView();
+#else
+  return nullptr;
+#endif
 }
 
 void SearchTabHelper::OnBlocklistSearchSuggestion(int task_version,

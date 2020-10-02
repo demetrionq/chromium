@@ -57,7 +57,7 @@
 #include "ui/gfx/geometry/size_f.h"
 #include "url/gurl.h"
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
 #include "chrome/renderer/searchbox/searchbox_extension.h"
 #endif  // !defined(OS_ANDROID)
 
@@ -331,7 +331,7 @@ void ChromeRenderFrameObserver::SetClientSidePhishingDetection(
 
 void ChromeRenderFrameObserver::ExecuteWebUIJavaScript(
     const base::string16& javascript) {
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
   webui_javascript_.push_back(javascript);
 #endif
 }
@@ -409,7 +409,7 @@ void ChromeRenderFrameObserver::DidCommitProvisionalLoad(
   view_count_key.Set(
       base::NumberToString(content::RenderView::GetRenderViewCount()));
 
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
   if (render_frame()->GetEnabledBindings() &
       content::kWebUIBindingsPolicyMask) {
     for (const auto& script : webui_javascript_)
@@ -420,7 +420,7 @@ void ChromeRenderFrameObserver::DidCommitProvisionalLoad(
 }
 
 void ChromeRenderFrameObserver::DidClearWindowObject() {
-#if !defined(OS_ANDROID)
+#if true || !defined(OS_ANDROID)
   const base::CommandLine& command_line =
       *base::CommandLine::ForCurrentProcess();
   if (command_line.HasSwitch(switches::kInstantProcess))

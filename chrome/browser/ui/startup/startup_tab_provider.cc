@@ -46,7 +46,7 @@ bool ProfileHasOtherTabbedBrowser(Profile* profile) {
 
 StartupTabs StartupTabProviderImpl::GetOnboardingTabs(Profile* profile) const {
 // Chrome OS has its own welcome flow provided by OOBE.
-#if defined(OS_CHROMEOS)
+#if 1
   return StartupTabs();
 #else
   if (!profile)
